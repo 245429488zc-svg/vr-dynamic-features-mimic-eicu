@@ -1,0 +1,24 @@
+Variable,Definition / time window,Units / notes
+vr_initial,First valid paired P/F–VR measurement in ICU hours 0–48,VR units
+vr_last,Last valid paired measurement in the window,VR units
+vr_mean,Mean of all valid paired measurements,VR units
+vr_max,Maximum of all valid paired measurements,VR units
+vr_min,Minimum of all valid paired measurements,VR units
+vr_auc,Trapezoidal integration of VR over time divided by the observation span (time-weighted mean VR),VR units
+vr_delta,Last minus first valid paired measurement,VR units
+vr_slope,Linear-regression slope of VR against time,VR units per hour
+vr_time_span_h,"Interval between first and last paired measurements (median 22.8 h, IQR 9.5–37.0)",hours
+n_points,"Number of valid paired P/F–VR measurements in the window (cohort median 5, IQR 4–8)",count
+pf_initial / pf_min,First / minimum valid paired PaO2/FiO2 ratio in the window,ratio
+hospital_expire_flag,Died during the index hospitalization (from the derived admission table; matches official MIMIC-IV v3.1 admission records),0/1
+pair_lag_hours,Time difference between the blood-gas and the matched ventilator record (nearest-neighbor within ±2 h),hours
+hour,Measurement time relative to ICU admission (0–48),hours
+age / sex,Admission,fixed demographics
+charlson,Admission (pre-ICU history),weighted comorbidity score
+sepsis3,Admission / first stay,Sepsis-3 criteria
+copd / chf,Pre-ICU history,documented comorbidity diagnoses
+sofa,First 24 h,24-hour SOFA score
+hr / map / temp,First 24 h (hospital day 1),mean of documented values
+lactate / bun / creatinine / wbc,First 24 h (hospital day 1),maximum documented value
+bicarbonate,First 24 h (hospital day 1),minimum documented value
+peep / driving_pressure / vt_pbw,0–48 h,means of documented ventilator settings; driving pressure = mean plateau pressure − mean PEEP
