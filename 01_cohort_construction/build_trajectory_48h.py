@@ -64,10 +64,11 @@ def nearest_neighbor_pair(bg, mv, id_col, time_col, window=PAIR_WINDOW):
     return pd.DataFrame(out) if out else bg.assign(minute_volume=np.nan, pair_lag_hours=np.nan)
 
 
-RAW_RAW_DIR = "/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/mimiciv_derived/mimiciv_derived"
 
 
-RAW_RAW_DIR = "/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/mimiciv_derived/mimiciv_derived"
+
+
+RAW_RAW_DIR = str(ROOT / "原始数据")  # PhysioNet flat exports; override if placed elsewhere
 
 
 def build_mimic_48h():

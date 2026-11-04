@@ -10,9 +10,9 @@ This repository contains **no patient data**. MIMIC-IV v3.1 and eICU-CRD v2.0 ar
 
 | Placed at | Source |
 |---|---|
-| `raw_data/mimiciv_derived/mimiciv_derived/` | mimic-iv derived tables (`icustay_detail`, `ventilation`, `ventilator_setting`, `bg`, `first_day_height`, `first_day_weight`, `first_day_*`, `sofa`, `charlson`, `sepsis3`, `norepinephrine_equivalent_dose`, `rrt`) |
-| `raw_data/core/icustays.csv`, `raw_data/hosp/admissions.csv`, `raw_data/hosp/diagnoses_icd.csv` | official MIMIC-IV core tables (window truncation, vital status, ICD-coded sepsis) |
-| `raw_data/eICU/eICU/` | eICU-CRD tables (`icustay_detail`, `ventilation_events`, `pivoted_bg`, `respiratorycharting`, `pivoted_vital`, `labsfirstday`, `admissiondx`, `charlson`, `apacheapsvar`, `patient`) |
+| `原始数据/mimiciv_derived/mimiciv_derived/` | mimic-iv derived tables (`icustay_detail`, `ventilation`, `ventilator_setting`, `bg`, `first_day_height`, `first_day_weight`, `first_day_*`, `sofa`, `charlson`, `sepsis3`, `norepinephrine_equivalent_dose`, `rrt`) |
+| `原始数据/core/icustays.csv`, `原始数据/core/admissions.csv`, `原始数据/core/diagnoses_icd.csv` (flat CSV) | official MIMIC-IV core tables (window truncation, vital status, ICD-coded sepsis) |
+| `原始数据/eICU/eICU/` | eICU-CRD tables (`icustay_detail`, `ventilation_events`, `pivoted_bg`, `respiratorycharting`, `pivoted_vital`, `labsfirstday`, `admissiondx`, `charlson`, `apacheapsvar`, `patient`) |
 | `1_队列数据/` | rebuilt analysis-ready cohort files produced by `05_round2_rebuild/run_mimic_rebuild_round2.py` and `run_eicu_rebuild_round2.py` |
 
 ## Input/output map (run order)
