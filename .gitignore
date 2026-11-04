@@ -1,0 +1,14 @@
+# PhysioNet source data and built cohorts are NOT redistributable — never commit
+原始数据/
+1_队列数据/
+outputs/
+*.csv.gz
+*.parquet
+trajectory_*.csv
+mimic_analysis_ready*.csv
+eicu_analysis_ready*.csv
+*n_points*.csv
+truncation_verification.csv
+__pycache__/
+.DS_Store
+.ipynb_checkpoints/
