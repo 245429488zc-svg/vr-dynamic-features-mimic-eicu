@@ -21,12 +21,12 @@ OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis3", "peep", "vt_pbw", "hr",
+    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep", "vt_pbw", "hr",
     "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]

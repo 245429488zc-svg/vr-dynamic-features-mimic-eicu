@@ -64,6 +64,12 @@ def nearest_neighbor_pair(bg, mv, id_col, time_col, window=PAIR_WINDOW):
     return pd.DataFrame(out) if out else bg.assign(minute_volume=np.nan, pair_lag_hours=np.nan)
 
 
+RAW_RAW_DIR = "/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/mimiciv_derived/mimiciv_derived"
+
+
+RAW_RAW_DIR = "/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/mimiciv_derived/mimiciv_derived"
+
+
 def build_mimic_48h():
     detail = pd.read_csv(MIMIC_DERIVED / "icustay_detail.csv")
     detail["icu_intime"] = pd.to_datetime(detail["icu_intime"], dayfirst=True, errors="coerce")
@@ -112,6 +118,62 @@ def build_mimic_48h():
     bg_valid = bg[bg["has_pf"] & bg["has_pco2"]]
     paired = nearest_neighbor_pair(bg_valid, vs, "stay_id", "hour")
     paired = paired.merge(cohort[["stay_id", "pbw"]], on="stay_id", how="left", suffixes=("", "_c"))
+
+    # ---- EXPLICIT TRUNCATION (manuscript-stated; round-2 implementation) ----
+    # The observation window ends at the earliest of (a) 48 h after ICU admission,
+    # (b) hospital death, (c) ICU (unit) discharge, (d) hospital discharge, and
+    # (e) terminal extubation (the end of the LAST InvasiveVent segment with
+    # starttime within/before the window). A pair is retained only if BOTH its
+    # ABG timestamp and its ventilator-setting timestamp fall inside the window.
+    core = Path(RAW_RAW_DIR) if RAW_RAW_DIR else None
+    if core is not None:
+        icu_t = pd.read_csv(core / "icustays.csv")             if (core / "icustays.csv").exists() else None
+        adm_t = pd.read_csv(core / "admissions.csv", usecols=["hadm_id", "dischtime", "deathtime"])             if (core / "admissions.csv").exists() else None
+    else:
+        icu_t = adm_t = None
+    if icu_t is not None and adm_t is not None:
+        seg_end = inv.groupby("stay_id")["endtime"].max().rename("vent_end").reset_index()
+        pb = (paired.merge(icu_t[["stay_id", "intime", "outtime", "hadm_id"]], on="stay_id", how="left")
+                    .merge(adm_t, on="hadm_id", how="left")
+                    .merge(seg_end, on="stay_id", how="left"))
+        for c in ["intime", "outtime", "dischtime", "deathtime", "vent_end"]:
+            pb[c] = pd.to_datetime(pb[c], errors="coerce")
+        t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
+        t_mv = pb["intime"] + pd.to_timedelta(pb["hour"] + pb["pair_lag_hours"], unit="h")
+        t_end = pb["intime"] + pd.Timedelta(hours=48)
+        for _src in ["outtime", "dischtime", "deathtime", "vent_end"]:
+            _v = pb[_src]
+            t_end = t_end.mask(_v.notna() & (_v < t_end), _v)
+        _keep = (t_abg <= t_end) & (t_mv <= t_end) & t_mv.notna()
+        paired = pb.loc[_keep, paired.columns].copy()
+
+    # ---- EXPLICIT TRUNCATION (manuscript-stated; round-2 implementation) ----
+    # The observation window ends at the earliest of (a) 48 h after ICU admission,
+    # (b) hospital death, (c) ICU (unit) discharge, (d) hospital discharge, and
+    # (e) terminal extubation (the end of the LAST InvasiveVent segment with
+    # starttime within/before the window). A pair is retained only if BOTH its
+    # ABG timestamp and its ventilator-setting timestamp fall inside the window.
+    core = Path(RAW_RAW_DIR) if RAW_RAW_DIR else None
+    if core is not None:
+        icu_t = pd.read_csv(core / "icustays.csv")             if (core / "icustays.csv").exists() else None
+        adm_t = pd.read_csv(core / "admissions.csv", usecols=["hadm_id", "dischtime", "deathtime"])             if (core / "admissions.csv").exists() else None
+    else:
+        icu_t = adm_t = None
+    if icu_t is not None and adm_t is not None:
+        seg_end = inv.groupby("stay_id")["endtime"].max().rename("vent_end").reset_index()
+        pb = (paired.merge(icu_t[["stay_id", "intime", "outtime", "hadm_id"]], on="stay_id", how="left")
+                    .merge(adm_t, on="hadm_id", how="left")
+                    .merge(seg_end, on="stay_id", how="left"))
+        for c in ["intime", "outtime", "dischtime", "deathtime", "vent_end"]:
+            pb[c] = pd.to_datetime(pb[c], errors="coerce")
+        t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
+        t_mv = pb["intime"] + pd.to_timedelta(pb["hour"] + pb["pair_lag_hours"], unit="h")
+        t_end = pb["intime"] + pd.Timedelta(hours=48)
+        for _src in ["outtime", "dischtime", "deathtime", "vent_end"]:
+            _v = pb[_src]
+            t_end = t_end.mask(_v.notna() & (_v < t_end), _v)
+        _keep = (t_abg <= t_end) & (t_mv <= t_end) & t_mv.notna()
+        paired = pb.loc[_keep, paired.columns].copy()
     paired["pbw"] = paired["pbw"].fillna(paired["pbw_c"])
     denom = paired["pbw"] * 100 * 37.5 / 1000
     paired["vr"] = paired["minute_volume"] * pd.to_numeric(paired["pco2"], errors="coerce") / denom

@@ -1,0 +1,7 @@
+Analysis,N,Deaths,VR initial OR (95% CI),VR initial P value,VR delta OR (95% CI),VR delta P value,AUROC,Brier
+primary_cc,10349,2143.0,1.631 (1.494-1.781),<0.001,1.341 (1.243-1.446),<0.001,0.847,0.109
+"mice (m=10, outcome in model)",12694,2514.0,1.693 (1.566-1.831),<0.001,1.359 (1.270-1.455),<0.001,,
+48-h landmark (alive and hospitalized at 48 h),9882,1696.0,1.462 (1.332-1.604),<0.001,1.204 (1.110-1.305),<0.001,0.834,0.102
+ABG–ventilator pairs matched within ±1 h,9413,,1.550 (1.417-1.695),<0.001,1.310 (1.212-1.415),<0.001,,
+features restricted to the first 24 h,9989,2040.0,1.633 (1.491-1.788),<0.001,1.307 (1.209-1.414),<0.001,0.852,0.107
+adjusted for measurement count and observation span,10349,2143.0,1.607 (1.470-1.758),<0.001,1.339 (1.241-1.446),<0.001,0.863,0.107

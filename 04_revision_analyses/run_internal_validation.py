@@ -19,7 +19,7 @@ OUT = ROOT / "39_内部验证"
 OUT.mkdir(exist_ok=True)
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
-BASE_A = ["age", "sex", "charlson", "sepsis3", "sofa", "peep",
+BASE_A = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
           "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
           "bun", "creatinine", "wbc", "bicarbonate"]
 PF = ["pf_initial", "pf_min"]
@@ -83,7 +83,7 @@ def main() -> None:
     stamp(f"已保存: {OUT / 'internal_validation_cv.csv'}")
     (OUT / "internal_validation_log.md").write_text(
         "# 内部验证日志（R2.5）\n\n"
-        "- 口径：与已发表Table 3内部模型一致（BASE_A 16协变量+pf_initial/pf_min+vr_initial/vr_delta，完整病例n=10,791）。\n"
+        "- 口径：与已发表Table 3内部模型一致（BASE_A 18协变量(含COPD/CHF)+pf_initial/pf_min+vr_initial/vr_delta，完整病例n=10,791）。\n"
         "- 方法：5折分层交叉验证（shuffle, seed=20260721，与原CV一致）；折外预测汇总后计算AUROC与Brier；"
         "折外校准截距/斜率由 logit(p_oof) 对结局的logistic回归得到。\n\n" + "\n".join(LOG), encoding="utf-8")
 
