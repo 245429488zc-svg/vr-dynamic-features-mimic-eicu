@@ -238,6 +238,39 @@ def build_eicu_48h():
     bg_valid = bg[bg["has_pf"] & bg["has_pco2"]]
     paired = nearest_neighbor_pair(bg_valid, mv_chart, "stay_id", "hour")
     paired = paired.merge(cohort[["stay_id", "pbw"]], on="stay_id", how="left")
+
+    # ---- EXPLICIT TRUNCATION for eICU (round-2; all quantities in HOURS) ----
+    # window end = earliest of (unit admit + 48 h, ICU discharge, hospital
+    # discharge/death, terminal mechanvent end). Terminal semantics: if the last
+    # mechvent event is a "start", ventilation is ongoing (no vent cutoff); if it
+    # is an "end", the window ends at that time.
+    ev = pd.read_csv(RAW / "eICU" / "eICU" / "ventilation_events.csv",
+                     usecols=["patientunitstayid", "event", "hrs"], low_memory=False)
+    ev = ev.rename(columns={"patientunitstayid": "stay_id"})
+    ev["hrs"] = pd.to_numeric(ev["hrs"].astype(str).str.replace(r"[^0-9.\-]", "", regex=True), errors="coerce")
+    e_start = ev[ev["event"].eq("mechvent start")].groupby("stay_id")["hrs"].max().rename("e_start")
+    e_end = ev[ev["event"].eq("mechvent end")].groupby("stay_id")["hrs"].max().rename("e_end")
+    pat = pd.read_csv(RAW / "eICU" / "eICU" / "patient.csv",
+                      usecols=["patientunitstayid", "hospitaldischargeoffset"],
+                      usecols=["patientunitstayid", "hospitaldischargeoffset", "unitdischargeoffset"],
+                      low_memory=False).rename(columns={"patientunitstayid": "stay_id"})
+    pb = (paired.merge(e_start.reset_index(), on="stay_id", how="left")
+                .merge(e_end.reset_index(), on="stay_id", how="left")
+                .merge(pat[["stay_id", "hospitaldischargeoffset", "unitdischargeoffset"]],
+                       on="stay_id", how="left"))
+    pb["t_mv_h"] = pb["hour"] + pd.to_numeric(pb["pair_lag_hours"], errors="coerce")
+    t_end = pd.DataFrame({"end": pb["hour"] + WINDOW_H})
+    for src in ["hospitaldischargeoffset", "unitdischargeoffset"]:
+        v = pd.to_numeric(pb[src], errors="coerce") / 60.0
+        t_end["end"] = t_end["end"].mask(v.notna() & (v < t_end["end"]), v)
+    ongoing = (pb["e_start"].notna()) & (pb["e_start"].fillna(-1e9) > pb["e_end"].fillna(-1e9))
+    vent_end_h = pb["e_end"]
+    t_end["end"] = t_end["end"].mask((~ongoing) & vent_end_h.notna() & (vent_end_h < t_end["end"]), vent_end_h)
+    _keep = (pd.to_numeric(pb["pair_lag_hours"], errors="coerce").notna()) & \
+            (pb["hour"] <= t_end["end"]) & (pb["t_mv_h"] <= t_end["end"])
+    paired = pb.loc[_keep, paired.columns].copy()
+    print(f"[truncation-eICU] pairs retained: {len(paired)} of {len(pb)}")
+
     denom = paired["pbw"] * 100 * 37.5 / 1000
     paired["vr"] = paired["minute_volume"] * pd.to_numeric(paired["paco2"], errors="coerce") / denom
     paired["has_vr"] = paired["vr"].between(VR_MIN, VR_MAX) & paired["pf"].between(PF_MIN, PF_MAX)
