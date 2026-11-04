@@ -1,0 +1,1 @@
+Published-spec continuity run: the fully adjusted specification incl. COPD/CHF (round-1 correction) on the PRE-REVISION cohort (full-cohort cc n=10,791; old-DEF landmark n=10,263) — reproduces the published CV AUROCs 0.840/0.846 exactly (R2-3① evidence). The REBUILT-cohort CV values are in fullcohort_corrected_spec_cv_round2.csv and landmark_incremental_mimic.csv.

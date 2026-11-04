@@ -1,7 +1,0 @@
-Framework,Model,N,Deaths,AUROC apparent,AUROC cross-validated,Optimism,Brier apparent,Brier cross-validated,Calibration intercept (OOF),Calibration slope (OOF)
-Landmark cohort (prediction framework),Base,10263,1725,0.828,0.825,0.0030,0.102,0.103,-0.025,0.979
-Landmark cohort (prediction framework),Base + P/F,10263,1725,0.828,0.825,0.0033,0.102,0.103,-0.027,0.977
-Landmark cohort (prediction framework),Base + P/F + VR,10263,1725,0.833,0.829,0.0032,0.101,0.102,-0.025,0.978
-"Full cohort complete cases (corrected spec, association framework)",Base,10791,2230,0.842,0.840,0.0015,0.110,0.111,-0.015,0.987
-"Full cohort complete cases (corrected spec, association framework)",Base + P/F,10791,2230,0.842,0.840,0.0018,0.110,0.111,-0.016,0.986
-"Full cohort complete cases (corrected spec, association framework)",Base + P/F + VR,10791,2230,0.848,0.846,0.0019,0.108,0.109,-0.016,0.986
