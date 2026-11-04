@@ -12,3 +12,10 @@ truncation_verification.csv
 __pycache__/
 .DS_Store
 .ipynb_checkpoints/
+eicu_landmark_round2.csv
+eicu_cc_round2.csv
+harm_landmark_mimic.csv
+landmark_cohort_round2.csv
+association_cohort_round2_ids.csv
+anchor_features_per_stay.csv
+SuppFigure_DCA_calibration_predictions.csv

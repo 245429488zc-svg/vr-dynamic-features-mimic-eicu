@@ -23,18 +23,19 @@ Output: mimic_analysis_ready_round2.csv (+ truncation log, cohort summary log).
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-TRAJ = ROOT / "22_研究归档_20260722" / "01_cohort_data" / "trajectory_mimic_48h.csv"
-READY = ROOT / "1_队列数据" / "MIMIC_IV_analysis_ready.csv"
-VENT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/mimiciv_derived/mimiciv_derived/ventilation.csv")
-ICU = Path("/Volumes/tongtong/数据库/public/mimmc4/原始数据和相关文件/MIMICsql/mimic-iv-3.1/icu/icustays.csv.gz")
-ADM = Path("/Volumes/tongtong/数据库/public/mimmc4/原始数据和相关文件/MIMICsql/mimic-iv-3.1/hosp/admissions.csv.gz")
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+TRAJ = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "trajectory_mimic_48h.csv"
+READY = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "enhanced" / "mimic_enhanced.csv"
+VENT = ROOT / "原始数据" / "mimiciv_derived" / "mimiciv_derived" / "ventilation.csv"
+ICU = ROOT / "原始数据" / "core" / "icustays.csv.gz"
+ADM = ROOT / "原始数据" / "core" / "admissions.csv.gz"
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 LOG: list[str] = []
 

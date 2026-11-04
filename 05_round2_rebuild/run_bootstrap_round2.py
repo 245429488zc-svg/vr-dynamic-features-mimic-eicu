@@ -14,6 +14,7 @@ Outputs: round2_bootstrap.csv + log md.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -22,8 +23,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 B = 2000

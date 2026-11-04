@@ -23,16 +23,17 @@ Output: eicu_analysis_ready_round2.csv + logs.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-EICU = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/eICU/eICU")
-TRAJ = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目2/outputs/pf_vr_dynamic_analysis/trajectory_eicu_48h.csv")
-READY = ROOT / "1_队列数据" / "eICU_analysis_ready.csv"
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+EICU = ROOT / "原始数据" / "eICU" / "eICU"
+TRAJ = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "trajectory_eicu_48h.csv"
+READY = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "enhanced" / "eicu_enhanced.csv"
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 LOG: list[str] = []
 

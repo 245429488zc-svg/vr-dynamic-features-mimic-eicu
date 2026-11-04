@@ -15,6 +15,7 @@ Outputs: sepsis_h tables, eICU association/landmark cohorts, harmonized ladder t
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import math
@@ -25,11 +26,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 MIMIC_READY = OUTDIR / "mimic_analysis_ready_round2.csv"
 EICU_READY = OUTDIR / "eicu_analysis_ready_round2.csv"
-DX = Path("/Volumes/tongtong/数据库/public/mimmc4/原始数据和相关文件/MIMICsql/mimic-iv-3.1/hosp/diagnoses_icd.csv.gz")
+DX = ROOT / "原始数据" / "core" / "diagnoses_icd.csv.gz"
 
 OUTCOME = "hospital_expire_flag"
 BASE_FULL = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
@@ -102,11 +103,11 @@ def main() -> None:
     # ---------- eICU covariate fill via the published builder (covers recovered stays) ----------
     import importlib.util
     spec = importlib.util.spec_from_file_location(
-        "enh_cov", ROOT / "42_GitHub仓库" / "vr-dynamic-features-code" / "02_covariates" /
+        "enh_cov", ROOT / "02_covariates" /
         "enhanced_covariates_analysis.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    mod.EICU = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/eICU/eICU")
+    mod.EICU = ROOT / "原始数据" / "eICU" / "eICU"
     gate_ids = set(eic["stay_id"].astype(int))
     cov = mod.build_eicu_covariates(sorted(gate_ids))
     cov = cov.set_index("stay_id")
@@ -131,7 +132,7 @@ def main() -> None:
     eic["sepsis_h"] = eic["sepsis3"].astype(int)  # eICU's own sepsis3 column IS the admitDx text def
     stamp(f"eICU sepsis_h(admitDx): {int(eic['sepsis_h'].sum())}/{len(eic)} ({eic['sepsis_h'].mean():.1%})")
     # 重挂 discharge offset（特征重建的落盘文件不携带它们）
-    pat2 = pd.read_csv(Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4/原始数据/eICU/eICU") / "patient.csv",
+    pat2 = pd.read_csv(ROOT / "原始数据" / "eICU" / "eICU" / "patient.csv",
                        usecols=["patientunitstayid", "hospitaldischargeoffset", "unitdischargeoffset"],
                        low_memory=False).rename(columns={"patientunitstayid": "stay_id"})
     eic = eic.merge(pat2, on="stay_id", how="left", suffixes=("", "_pat"))

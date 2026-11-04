@@ -86,13 +86,18 @@ def apply_truncation_mimic(paired: pd.DataFrame) -> pd.DataFrame:
     if not ICU_PATH.exists() or not ADM_PATH.exists():
         print("[truncation-MIMIC] core/icustays.csv or core/admissions.csv not found; SKIPPING truncation (not expected)")
         return paired
-    icu_t = pd.read_csv(ICU_PATH, usecols=["stay_id", "intime", "outtime"])
+    # Hospital death/discharge belong to the stay's hospitalization as linked by the
+    # official core table — reconstruct hadm from it (do not trust the hadm_id carried
+    # by bg chart rows, which can differ for multi-hospitalization subjects).
+    icu_t = pd.read_csv(ICU_PATH, usecols=["stay_id", "hadm_id", "intime", "outtime"])
     for c in ["intime", "outtime"]:
         icu_t[c] = pd.to_datetime(icu_t[c], errors="coerce")
     adm_t = pd.read_csv(ADM_PATH, usecols=["hadm_id", "dischtime", "deathtime"])
     for c in ["dischtime", "deathtime"]:
         adm_t[c] = pd.to_datetime(adm_t[c], errors="coerce")
-    pb = paired.merge(icu_t, on="stay_id", how="left").merge(adm_t, on="hadm_id", how="left")
+    pb = paired.drop(columns=["hadm_id"]).merge(
+        icu_t.rename(columns={"hadm_id": "hadm_link"}), on="stay_id", how="left")
+    pb = pb.merge(adm_t, left_on="hadm_link", right_on="hadm_id", how="left")
     vent = pd.read_csv(MIMIC_DERIVED / "ventilation.csv",
                        names=["stay_id", "starttime", "endtime", "ventilation_status"],
                        skiprows=1, low_memory=False)
@@ -104,8 +109,8 @@ def apply_truncation_mimic(paired: pd.DataFrame) -> pd.DataFrame:
     pb = pb.merge(seg_end, on="stay_id", how="left")
 
     t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
-    t_mv = pb["intime"] + pd.to_timedelta(
-        pb["hour"] + pd.to_numeric(pb["pair_lag_hours"], errors="coerce"), unit="h")
+    t_mv = t_abg + pd.to_timedelta(
+        pd.to_numeric(pb["pair_lag_hours"], errors="coerce"), unit="h")
     t_end = pb["intime"] + pd.Timedelta(hours=WINDOW_H)
     for src in ["outtime", "dischtime", "deathtime", "vent_end"]:
         v = pb[src]

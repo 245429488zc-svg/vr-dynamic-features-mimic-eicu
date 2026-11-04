@@ -11,14 +11,15 @@ use the same algorithm as the original submission.
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 B = 2000
@@ -40,7 +41,7 @@ def stamp(msg: str) -> None:
 
 def main() -> None:
     spec = importlib.util.spec_from_file_location(
-        "incmod", ROOT / "42_GitHub仓库" / "vr-dynamic-features-code" / "03_main_analyses" /
+        "incmod", ROOT / "03_main_analyses" /
         "run_revised_incremental_pf_vr_pf_initial_min.py")
     inc = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(inc)

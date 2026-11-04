@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -22,7 +23,7 @@ from sklearn.preprocessing import StandardScaler
 ROOT = Path(__file__).resolve().parents[1]
 OUTDIR = Path(__file__).resolve().parent
 OUTDIR.mkdir(exist_ok=True)
-DATA = Path(__file__).resolve().parent / "eicu_analysis_ready_round2.csv"
+DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_analysis_ready_round2.csv"
 OUTCOME = "hospital_expire_flag"
 
 VR = ["vr_initial", "vr_delta"]

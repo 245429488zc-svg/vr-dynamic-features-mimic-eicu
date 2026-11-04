@@ -10,6 +10,7 @@ set, m=10, burn-in=5, Rubin pooling, same RNG seed) with one change: the outcome
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -19,10 +20,10 @@ from statsmodels.imputation.mice import MICEData
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
+OUT = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUT.mkdir(exist_ok=True)
-DATA = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 MICE_M = 10

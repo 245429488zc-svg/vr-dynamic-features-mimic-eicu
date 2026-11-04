@@ -11,6 +11,7 @@ primary estimates (Table 2 Model 3 / Table 4 primary row).
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -19,11 +20,11 @@ import statsmodels.api as sm
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
+OUT = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUT.mkdir(exist_ok=True)
-TRAJ = Path(__file__).resolve().parent / "trajectory_mimic_48h_round2.csv"
-ARD = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+TRAJ = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "trajectory_mimic_48h.csv"
+ARD = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
 
 OUTCOME = "hospital_expire_flag"
 BASE_A = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
@@ -47,6 +48,15 @@ PRIMARY_OR = {  # Round-2 rebuilt primary estimates (Table 2, fully adjusted sin
     "vr_delta": "1.341 (1.243-1.446)",
     "vr_slope": "0.992 (0.931-1.057)",
 }
+def load_primary_joint():
+    """Round-2 primary joint estimates (Table 4's primary complete-case row), read live."""
+    t4 = pd.read_csv(Path(__file__).resolve().parent / "Table4_round2.csv")
+    r = t4[t4["Analysis"].astype(str).str.startswith("primary")].iloc[0]
+    return {"vr_initial": str(r["VR initial OR (95% CI)"]),
+            "vr_delta": str(r["VR delta OR (95% CI)"])}
+
+
+PRIMARY_JOINT = load_primary_joint()
 INTERVALS = [(0, 12), (12, 24), (24, 36), (36, 48)]
 LOG: list[str] = []
 
@@ -175,12 +185,15 @@ def main() -> None:
         "compared with the published primary estimates. VR delta was modeled conditional on VR initial.")
     rr.font.name = "Times New Roman"; rr.font.size = Pt(6.5)
     tbl = [["Variable", "N", "Deaths", "Anchor-point OR (95% CI)", "P value", "Primary OR (95% CI)"]]
-    tbl.append([f"Joint model: VR initial (n = {joint_out['N']:,}; {joint_out['Deaths']} deaths after assessment)", joint_out["N"],
-                joint_out["Deaths"], joint_or.loc[joint_or.variable.eq("vr_initial"), "OR_CI"].iloc[0],
-                joint_or.loc[joint_or.variable.eq("vr_initial"), "p"], "1.684 (1.545-1.835)"])
+    tbl.append([f"Joint model: VR initial (n = {joint_out['N']:,}; {joint_out['Deaths']} deaths after assessment)",
+                joint_out["N"], joint_out["Deaths"],
+                str(joint_or.loc[joint_or.variable.eq("vr_initial"), "OR_CI"].iloc[0]),
+                str(joint_or.loc[joint_or.variable.eq("vr_initial"), "p"].iloc[0]),
+                PRIMARY_JOINT["vr_initial"]])
     tbl.append(["Joint model: VR delta (conditional on VR initial)", joint_out["N"], joint_out["Deaths"],
-                joint_or.loc[joint_or.variable.eq("vr_delta"), "OR_CI"], joint_or.loc[joint_or.variable.eq("vr_delta"), "p"],
-                "1.395 (1.296-1.502)"])
+                str(joint_or.loc[joint_or.variable.eq("vr_delta"), "OR_CI"].iloc[0]),
+                str(joint_or.loc[joint_or.variable.eq("vr_delta"), "p"].iloc[0]),
+                PRIMARY_JOINT["vr_delta"]])
     for _, r in single_df.iterrows():
         tbl.append([f"{r.label} (single-feature model)", r.N, r.Deaths, r.OR_CI, r.p, r["Primary OR (95% CI)"]])
     t = doc.add_table(rows=len(tbl), cols=len(tbl[0]))

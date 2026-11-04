@@ -8,6 +8,7 @@ harmonized, and eICU external validation analyses.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -20,11 +21,11 @@ from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
 
-ROOT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目2/审稿材料")
+ROOT = Path(__file__).resolve().parents[1]
 OUTDIR = Path(__file__).resolve().parent
-MIMIC_PATH = Path(__file__).resolve().parent / "landmark_cohort_round2.csv"
-HARM_PATH = Path(__file__).resolve().parent / "harm_landmark_mimic.csv"
-EICU_LM_PATH = Path(__file__).resolve().parent / "eicu_landmark_round2.csv"
+MIMIC_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv"
+HARM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "harm_landmark_mimic.csv"
+EICU_LM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_landmark_round2.csv"
 
 
 OUTCOME = "hospital_expire_flag"

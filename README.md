@@ -34,14 +34,27 @@ This repository contains **no patient data**. MIMIC-IV v3.1 and eICU-CRD v2.0 ar
 
 ## Reproduction note (Reviewer 2, Comment 3)
 
-Running `01_cohort_construction/build_trajectory_48h.py` end-to-end on the official PhysioNet table exports reproduces the derivation cohort as follows:
+The committed pipeline was run end-to-end in the repository exactly in the README order
+(`outputs/round2_repro` as the working directory, ROUND2_OUT override as documented):
 
-| Quantity | Published (paper) | Committed-pipeline run |
+| Quantity | Paper | Committed-pipeline run |
 |---|---|---|
-| MIMIC-IV: stays with >=3 paired P/F-VR points after explicit window truncation | 12,694 | 12,702 |
-| eICU: stays with >=3 paired P/F-VR points after explicit window truncation | 1,425 | 1,425 (exact) |
+| MIMIC-IV: adult first ICU stays | 85,242 | 85,242 (exact) |
+| MIMIC-IV: early invasive ventilation | 28,387 | 28,387 (exact) |
+| MIMIC-IV: >=3 paired P/F-VR points in the truncated window | 12,694 | 12,694 (exact) |
+| eICU: early invasive ventilation | 4,141 | 4,141 (exact) |
+| eICU: >=3 paired P/F-VR points in the truncated window | 1,425 | 1,425 (exact) |
 
-The MIMIC-IV residual (8 stays, 0.06%) traces to boundary-pair-level differences between the table exports used for the analysis in July and the current official copies; point values are identical to 1e-9 wherever both exist (`05_round2_rebuild/repro_evidence_12702.csv`). With the pipeline run applied, every reported MIMIC-IV estimate is unchanged at the manuscript's reporting precision: Table 2 Model-3 ORs 1.289 vs 1.290 (VR initial) and 1.345 vs 1.341 (VR delta); landmark ladder 0.830/0.830/0.834 (identical); harmonized ladder 0.795/0.796/0.801 (identical).
+All downstream analyses (association ladder, 48-h landmark ladder, bootstrap CIs, DeLong tests,
+MICE, anchor-point and narrow-window sensitivity analyses, and every manuscript table and figure)
+regenerate from the committed scripts on these cohorts; the comparison against the paper-canonical
+result files is recorded in `05_round2_rebuild/repro_comparison_log.md`.
+
+Two boundary-level implementation defects were found and fixed while establishing this: the
+window truncation now links each stay's hospital death/discharge through the official core
+table (the hadm carried by chart rows can differ for multi-hospitalization subjects), and the
+paired ventilator-setting timestamp is added in the same order as the published rebuild
+(ABG time + pair lag) so the identical boundary set is retained on both sides.
 
 ## Environment
 

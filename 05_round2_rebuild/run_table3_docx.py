@@ -13,12 +13,13 @@ in the table footnote, not as a row.
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = ROOT / "43_第二轮重分析"
+ROOT = Path(__file__).resolve().parents[1]
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 LOG: list[str] = []
 
@@ -100,8 +101,12 @@ def main() -> None:
                  "NRI events/non-events": f"{nre}/{nrn}"})
 
     t3 = pd.DataFrame(rows)
-    t3.insert(1, "N", [9882, n_h, n_e])
-    t3.insert(2, "Deaths", [1696, d_h, d_e])
+    n_f = int(lad.loc[(lad["Row"] == "MIMIC landmark FULL SPEC (internal)") &
+                      (lad["Model"] == "Base + P/F + VR"), "N"].iloc[0])
+    d_f = int(lad.loc[(lad["Row"] == "MIMIC landmark FULL SPEC (internal)") &
+                      (lad["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
+    t3.insert(1, "N", [n_f, n_h, n_e])
+    t3.insert(2, "Deaths", [d_f, d_h, d_e])
     t3.to_csv(OUTDIR / "Table3_round2.csv", index=False)
     stamp("Table3 rows assembled:")
     print(t3.to_string(index=False))
@@ -111,8 +116,9 @@ def main() -> None:
         "hospitalized at 48 hours after ICU admission, with hospital death after the landmark time as the outcome, "
         "following the Round-2 rebuild (observation window truncated at the earliest of death, terminal extubation, "
         "ICU discharge, or hospital discharge; vital status ascertained from the official admissions tables; "
-        "569 MIMIC-IV stays that no longer met the three-pair requirement after truncation were excluded, and 569 "
-        "stays with legacy missing mortality in the rebuilt outcome file were re-included via the official join). "
+        "569 MIMIC-IV stays no longer met the three-pair requirement after window-boundary truncation and were "
+        "excluded, and hospital mortality was re-ascertained from the official admissions tables for every "
+        "eligible stay — the legacy outcome files lacked it for 110 MIMIC-IV and 167 eICU stays). "
         "Before = Base + P/F model; After = additional inclusion of VR initial and VR delta (per 1-SD increase, "
         "modeled conditional on VR initial). Row 1 uses the fully adjusted specification (age, sex, Charlson index, "
         "sepsis (Sepsis-3), COPD, CHF, SOFA, PEEP, driving pressure, Vt/PBW, heart rate, MAP, temperature, lactate, "
@@ -122,11 +128,12 @@ def main() -> None:
         "unchanged (fixed coefficients and the MIMIC-fitted scaler) to the eICU landmark cohort in Row 3. "
         "Delta/IDI/NRI are paired-model statistics with bootstrap 95% confidence intervals (2,000 draws; derivation "
         "settings refit per resample; eICU transported evaluated with fixed coefficients per resample). "
-        "For continuity, the association-framework ladder on the rebuilt complete-case cohort (n=10,349) gives "
-        "AUROC 0.842 to 0.848 (Delta 0.0052, 95% CI 0.0031-0.0077; 5-fold CV 0.840 to 0.846, optimism 0.002, "
-        "out-of-sample calibration -0.016/0.986). Within the landmark framework, the fully adjusted models showed "
-        "5-fold cross-validated AUROCs of 0.827 (Base), 0.827 (Base + P/F), and 0.831 (Base + P/F + VR), optimism "
-        "<=0.003, with out-of-sample calibration -0.034/0.973."
+        "For continuity, the association-framework ladder (corrected specification: the fully adjusted 18 "
+        "covariates including COPD and CHF) on the rebuilt complete-case cohort (n=10,428) gives apparent AUROC "
+        "0.842 to 0.847 (VR-step Delta 0.0050, 95% CI 0.0031-0.0073; 5-fold cross-validated AUROC 0.840 to "
+        "0.844, optimism <=0.003, out-of-sample calibration -0.018/0.983). Within the landmark framework, the "
+        "fully adjusted models showed 5-fold cross-validated AUROCs of 0.828 (Base), 0.827 (Base + P/F), and "
+        "0.831 (Base + P/F + VR), optimism <=0.004, with out-of-sample calibration -0.024/0.978."
     )
     m4.OUTDIR = OUTDIR
     m4.build_docx(t3, "Table 3. Incremental predictive value of early VR features beyond P/F ratio (48-hour landmark framework).",

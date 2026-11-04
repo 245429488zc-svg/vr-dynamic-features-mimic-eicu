@@ -68,9 +68,9 @@ def scale_covariates(cc: pd.DataFrame, variables: list[str]) -> pd.DataFrame:
 def get_complete_case() -> pd.DataFrame:
     df = pd.read_csv(DATA)
     cc = df.dropna(subset=[OUTCOME] + FULL_VARS).copy()
-    if len(cc) != 10349 or int(cc[OUTCOME].sum()) != 2143:
+    if len(cc) != 10428 or int(cc[OUTCOME].sum()) != 2178:
         raise ValueError(
-            f"Unexpected complete-case cohort: n={len(cc)}, deaths={int(cc[OUTCOME].sum())}; expected n=10349, deaths=2143"
+            f"Unexpected complete-case cohort: n={len(cc)}, deaths={int(cc[OUTCOME].sum())}; expected n=10428, deaths=2178"
         )
     return cc
 
@@ -241,7 +241,7 @@ def write_log(meta_df: pd.DataFrame) -> None:
         "",
         "## Analysis cohort and model",
         "",
-        "- Fully adjusted complete-case cohort: n=10,349; deaths=2,143.",
+        "- Fully adjusted complete-case cohort: n=10,428; deaths=2,178.",
         "- RCS variables: VR initial and VR delta.",
         "- Knots used the 5th, 35th, 65th, and 95th percentiles of the target VR variable.",
         "- Curves are plotted across the 1st to 99th percentile range.",

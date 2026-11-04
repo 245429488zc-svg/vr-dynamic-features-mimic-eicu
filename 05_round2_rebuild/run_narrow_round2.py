@@ -12,6 +12,7 @@ from narrow pairs only; joint fully adjusted model, per 1-SD.
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +21,7 @@ import statsmodels.api as sm
 from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
-OUTDIR = Path("/Volumes/tongtong/论文/icuVR与死亡的关联/43_第二轮重分析")
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 BASE_A = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
           "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",

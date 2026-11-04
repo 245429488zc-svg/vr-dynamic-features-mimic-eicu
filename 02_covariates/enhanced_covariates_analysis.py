@@ -487,6 +487,10 @@ def aggregate_features_from_long(long_csv, id_col="stay_id"):
         rows.append(rec)
     return pd.DataFrame(rows)
 
+
+def main():
+    log = []
+    OUT.mkdir(parents=True, exist_ok=True)
     # Load features from 48h ≥2 points long data
     m_feat = aggregate_features_from_long(OUT / "trajectory_mimic_48h.csv", "stay_id")
     e_feat = aggregate_features_from_long(OUT / "trajectory_eicu_48h.csv", "stay_id")
@@ -511,13 +515,15 @@ def aggregate_features_from_long(long_csv, id_col="stay_id"):
             mimic = mimic.drop(columns=[f"{c}_cov"])
             eicu[c] = eicu[c].fillna(eicu[f"{c}_cov"])
             eicu = eicu.drop(columns=[f"{c}_cov"])
+    # Save FULL frames first (round-2: the rebuild re-joins the outcome from the
+    # official tables; the enhanced carryover must cover every gated stay).
+    mimic.to_csv(RES / "mimic_enhanced.csv", index=False)
+    eicu.to_csv(RES / "eicu_enhanced.csv", index=False)
+    # Analysis frames for this script's own legacy metrics (complete cases).
     mimic = mimic.dropna(subset=["hospital_expire_flag"]).copy()
     eicu = eicu.dropna(subset=["hospital_expire_flag"]).copy()
     mimic["hospital_expire_flag"] = mimic["hospital_expire_flag"].astype(int)
     eicu["hospital_expire_flag"] = eicu["hospital_expire_flag"].astype(int)
-
-    mimic.to_csv(RES / "mimic_enhanced.csv", index=False)
-    eicu.to_csv(RES / "eicu_enhanced.csv", index=False)
     log.append(f"[{now()}] Saved enhanced data: MIMIC={len(mimic)}, eICU={len(eicu)}")
 
     # Table 1 with grouped race

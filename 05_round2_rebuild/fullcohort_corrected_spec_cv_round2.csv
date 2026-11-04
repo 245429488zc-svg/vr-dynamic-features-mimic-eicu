@@ -1,0 +1,4 @@
+Framework,Model,N,Deaths,AUROC apparent,AUROC cross-validated,Optimism,Brier apparent,Calibration intercept (OOF),Calibration slope (OOF)
+"Full cohort complete cases (corrected spec, association framework — REBUILT round-2 cohort)",Base,10428,2178,0.842,0.84,0.0017,0.111,-0.015,0.986
+"Full cohort complete cases (corrected spec, association framework — REBUILT round-2 cohort)",Base + P/F,10428,2178,0.842,0.84,0.0023,0.111,-0.018,0.983
+"Full cohort complete cases (corrected spec, association framework — REBUILT round-2 cohort)",Base + P/F + VR,10428,2178,0.847,0.844,0.0024,0.11,-0.018,0.983
