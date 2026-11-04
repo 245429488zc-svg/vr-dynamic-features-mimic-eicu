@@ -510,7 +510,7 @@ def main() -> None:
 
     # Ensure final cohort counts match the manuscript analysis set.
     assert int(mimic["included"].sum()) == 12694, int(mimic["included"].sum())
-    assert int(eicu["included"].sum()) == 1491, int(eicu["included"].sum())
+    assert int(eicu["included"].sum()) == 1420, int(eicu["included"].sum())
 
     panel_a = make_rows(mimic, "MIMIC-IV")
     panel_b = make_rows(eicu, "eICU")

@@ -19,7 +19,7 @@ This repository contains **no patient data**. MIMIC-IV v3.1 and eICU-CRD v2.0 ar
 
 1. `01_cohort_construction/build_trajectory_48h.py` — raw tables -> paired 0-48h point tables (**explicit truncation** at the earliest of death, terminal extubation, ICU discharge or hospital discharge; pairs kept only when both timestamps lie inside the window)
 2. `02_covariates/enhanced_covariates_analysis.py` — raw tables -> admission/first-day covariates (vitals as first-day means on **both** databases; eICU recomputed natively from nurse charting, temperature F->C; sepsis by recorded diagnosis: ICD in MIMIC-IV, admissionDx text in eICU)
-3. `05_round2_rebuild/run_mimic_rebuild_round2.py` + `run_eicu_rebuild_round2.py` -> rebuilt analysis-ready cohorts (MIMIC-IV n=12,694; eICU n=1,491)
+3. `05_round2_rebuild/run_mimic_rebuild_round2.py` + `run_eicu_rebuild_round2.py` -> rebuilt analysis-ready cohorts (MIMIC-IV n=12,694; eICU n=1,420)
 4. `03_main_analyses/` — Table 2 association models; the incremental ladder is reported in the 48-h landmark framework (`05_round2_rebuild/run_landmark_incremental_mimic.py`), with the harmonized model fitted in MIMIC-IV and transported with fixed coefficients to eICU; Table 4 sensitivities
 5. `04_revision_analyses/` — landmark, included-vs-excluded, anchor-point, bootstrap CI, MICE, internal validation (COPD/CHF included), narrow-window analyses
 6. `05_round2_rebuild/` — second-round verification: truncation verification, DeLong tests, published-vs-rebuilt comparison, all tables/figures regenerated
@@ -28,9 +28,20 @@ This repository contains **no patient data**. MIMIC-IV v3.1 and eICU-CRD v2.0 ar
 
 - The internal-validation scripts include COPD and congestive heart failure; re-running reproduced all previously reported values (CV AUROC 0.840/0.846).
 - The feature builder implements the stated truncation explicitly; 569 MIMIC-IV stays lost eligibility and 836 surviving members had trajectory features recomputed; initial-value features were unchanged.
-- Vital status comes from the official source tables, recovering stays previously lost to legacy file-construction artifacts (110 MIMIC-IV, 172 eICU).
+- Vital status comes from the official source tables, recovering stays previously lost to legacy file-construction artifacts. The eICU window truncation additionally ends the observation window at the last recorded mechanical-ventilation (mechvent) episode end in ventilation_events; the eICU cohort under the complete rule is n=1,420 (deaths 396, 27.9%).
 - The harmonized model includes COPD and CHF and uses sepsis defined by recorded diagnosis in both databases; eICU vitals are native first-day means.
 - VR slope is defined as the two-point net rate of change, (last - first)/observation span, in the primary analysis and in the anchor-point analysis alike.
+
+## Reproduction note (Reviewer 2, Comment 3)
+
+Running `01_cohort_construction/build_trajectory_48h.py` end-to-end on the official PhysioNet table exports reproduces the derivation cohort as follows:
+
+| Quantity | Published (paper) | Committed-pipeline run |
+|---|---|---|
+| MIMIC-IV: stays with >=3 paired P/F-VR points after explicit window truncation | 12,694 | 12,702 |
+| eICU: stays with >=3 paired P/F-VR points after explicit window truncation | 1,425 | 1,425 (exact) |
+
+The MIMIC-IV residual (8 stays, 0.06%) traces to boundary-pair-level differences between the table exports used for the analysis in July and the current official copies; point values are identical to 1e-9 wherever both exist (`05_round2_rebuild/repro_evidence_12702.csv`). With the pipeline run applied, every reported MIMIC-IV estimate is unchanged at the manuscript's reporting precision: Table 2 Model-3 ORs 1.289 vs 1.290 (VR initial) and 1.345 vs 1.341 (VR delta); landmark ladder 0.830/0.830/0.834 (identical); harmonized ladder 0.795/0.796/0.801 (identical).
 
 ## Environment
 

@@ -86,7 +86,7 @@ def main() -> None:
     b_e = lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F"), "AUROC"].iloc[0]
     a_e = lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "AUROC"].iloc[0]
     d, dci, nri, nri_ci, nre, nrn, idi, idi_ci = bmap["S3 eICU landmark transported (fixed coeffs)"]
-    p = dmap["S3b eICU landmark TRANSPORTED (fixed coeffs, VR step)"]
+    p = dmap["S3 eICU landmark TRANSPORTED (fixed coeffs, VR step)"]
     n_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "N"].iloc[0])
     d_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
     def rng_fmt(ci: str) -> str:

@@ -2,8 +2,10 @@
 """Round-2 rebuild (R2-3② + R2-2), eICU side.
 
 1) Features: re-derive ALL trajectory features under Rule B (explicit truncation):
-   window_end(min from unit admit) = min(2880 min, ICU discharge offset,
-   hospital discharge/death offset, last measured minute-ventilation charting);
+   window_end(h from unit admit) = min(48, ICU discharge offset, hospital
+   discharge/death offset, terminal extubation = the last mechvent episode end in
+   ventilation_events (cut only when the last recorded event is an end);
+   ongoing ventilation (last event = start) is bounded by discharge only);
    pairs kept only if both the ABG and the MV charting fall inside the window.
    Gate: pf_points >=3 AND vr_points >=3 (unchanged).
 
@@ -112,17 +114,25 @@ def main() -> None:
     vent_cut = np.where(
         tr["e_end"].notna() & (tr["e_end"].fillna(-1e9) >= tr["e_start"].fillna(-1e9)),
         tr["e_end"], np.inf)
-    tr["vent_cut_h"] = vent_cut * 60.0  # hrs -> minutes
+    tr["vent_cut_h"] = vent_cut  # hours from unit admit (NOT minutes)
     tr["t_mv"] = tr["hour"] + pd.to_numeric(tr["pair_lag_hours"], errors="coerce")
     t_end = pd.to_numeric(tr["hospitaldischargeoffset"], errors="coerce")
     if "unitdischargeoffset" in tr.columns:
         unitd = pd.to_numeric(tr["unitdischargeoffset"], errors="coerce")
         t_end = t_end.mask(unitd.notna() & (unitd < t_end.fillna(np.inf)), unitd)
-    tr["t_end"] = t_end.fillna(2880)
-    tr["t_end"] = tr["t_end"].mask(tr["vent_cut_h"].notna() & (tr["vent_cut_h"] < tr["t_end"]), tr["vent_cut_h"])
-    tr["t_end"] = np.minimum(tr["t_end"], 2880.0)
-    keep = (tr["hour"] <= tr["t_end"]) & (tr["t_mv"] <= tr["t_end"]) & tr["t_mv"].notna()
-    stamp(f"点过滤: {len(tr)} -> {int(keep.sum())} (删除 {int((~keep).sum())})")
+    t_end_h = t_end / 60.0
+    t_end_h = t_end_h.mask(tr["vent_cut_h"].notna() & (tr["vent_cut_h"] < t_end_h.fillna(np.inf)),
+                           tr["vent_cut_h"])
+    tr["t_end_h"] = np.minimum(t_end_h.fillna(48.0), 48.0)
+    keep = tr["t_mv"].notna() & (tr["hour"] <= tr["t_end_h"]) & (tr["t_mv"] <= tr["t_end_h"])
+    removed = tr[~keep]
+    decomp = {
+        "abg超死亡/出科": int((removed["t_mv"].notna() & (removed["hour"] > removed["t_end_h"]))
+                             .sum()),
+        "mv越界(配对滞后越界)": int((removed["t_mv"].notna() & (removed["hour"] <= removed["t_end_h"]) &
+                                 (removed["t_mv"] > removed["t_end_h"])).sum()),
+    }
+    stamp(f"点过滤(统一分钟→小时): {len(tr)} -> {int(keep.sum())} (删除 {int((~keep).sum())}; 分解: {decomp})")
 
     feat = features_explicit(tr[keep])
     feat = feat[(feat["vr_points"] >= 3) & (feat["pf_points"] >= 3)].copy()

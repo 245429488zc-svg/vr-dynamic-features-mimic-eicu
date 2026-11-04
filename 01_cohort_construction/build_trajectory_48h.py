@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
-"""Build 0-48h P/F+VR trajectory data with ±2h nearest-neighbor pairing.
-Extends the 24h window to 48h to increase point density and trajectory stability.
+"""Build 0-48h P/F+VR trajectory data with ±2h nearest-neighbor pairing,
+with EXPLICIT truncation of the observation window (round-2 revision).
+
+Truncation rule: the observation window ends at the earliest of
+  (a) 48 h after ICU/unit admission,
+  (b) hospital death,
+  (c) ICU (unit) discharge,
+  (d) hospital discharge,
+  (e) terminal extubation — the end of the LAST InvasiveVent (MIMIC) or
+      mechvent period (eICU; eICU terminal semantics: if the last recorded
+      mechvent event is a "start", ventilation is ongoing at that time and the
+      window continues to the discharge boundary).
+A pair is retained only if BOTH its ABG timestamp and its ventilator-setting
+timestamp fall inside the window.
 """
 from __future__ import annotations
 from pathlib import Path
@@ -10,6 +22,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "原始数据"
 OUT = ROOT / "outputs" / "pf_vr_dynamic_analysis"
+CORE = RAW / "core"
 MIMIC_DERIVED = RAW / "mimiciv_derived" / "mimiciv_derived"
 EICU = RAW / "eICU" / "eICU"
 WINDOW_H = 48
@@ -19,6 +32,10 @@ PF_MIN, PF_MAX = 30, 700
 VR_MIN, VR_MAX = 0.2, 10
 MV_MIN, MV_MAX = 1, 30
 PCO2_MIN, PCO2_MAX = 10, 150
+
+ICU_PATH = CORE / "icustays.csv.gz"
+ADM_PATH = CORE / "admissions.csv.gz"
+PAT_PATH = EICU / "patient.csv"
 
 
 def norm_fio2(x):
@@ -36,7 +53,7 @@ def pbw_from_height_sex(h, s):
 
 
 def nearest_neighbor_pair(bg, mv, id_col, time_col, window=PAIR_WINDOW):
-    """For each bg point, find nearest mv within ±window hours."""
+    """For each bg point, find nearest mv within ±window hours (ties -> preceding)."""
     if bg.empty or mv.empty:
         return bg.assign(minute_volume=np.nan, pair_lag_hours=np.nan)
     out = []
@@ -64,11 +81,69 @@ def nearest_neighbor_pair(bg, mv, id_col, time_col, window=PAIR_WINDOW):
     return pd.DataFrame(out) if out else bg.assign(minute_volume=np.nan, pair_lag_hours=np.nan)
 
 
+def apply_truncation_mimic(paired: pd.DataFrame) -> pd.DataFrame:
+    """MIMIC: window end in calendar time from official core tables + last InvasiveVent segment end."""
+    if not ICU_PATH.exists() or not ADM_PATH.exists():
+        print("[truncation-MIMIC] core/icustays.csv or core/admissions.csv not found; SKIPPING truncation (not expected)")
+        return paired
+    icu_t = pd.read_csv(ICU_PATH, usecols=["stay_id", "intime", "outtime"])
+    for c in ["intime", "outtime"]:
+        icu_t[c] = pd.to_datetime(icu_t[c], errors="coerce")
+    adm_t = pd.read_csv(ADM_PATH, usecols=["hadm_id", "dischtime", "deathtime"])
+    for c in ["dischtime", "deathtime"]:
+        adm_t[c] = pd.to_datetime(adm_t[c], errors="coerce")
+    pb = paired.merge(icu_t, on="stay_id", how="left").merge(adm_t, on="hadm_id", how="left")
+    vent = pd.read_csv(MIMIC_DERIVED / "ventilation.csv",
+                       names=["stay_id", "starttime", "endtime", "ventilation_status"],
+                       skiprows=1, low_memory=False)
+    vent = vent[vent["stay_id"].astype(str).str.isdigit()].copy()
+    vent["stay_id"] = vent["stay_id"].astype(int)
+    inv_end = vent[vent["ventilation_status"].eq("InvasiveVent")].copy()
+    inv_end["end_dt"] = pd.to_datetime(inv_end["endtime"], format="%d/%m/%Y %H:%M:%S", errors="coerce")
+    seg_end = inv_end.groupby("stay_id")["end_dt"].max().rename("vent_end").reset_index()
+    pb = pb.merge(seg_end, on="stay_id", how="left")
+
+    t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
+    t_mv = pb["intime"] + pd.to_timedelta(
+        pb["hour"] + pd.to_numeric(pb["pair_lag_hours"], errors="coerce"), unit="h")
+    t_end = pb["intime"] + pd.Timedelta(hours=WINDOW_H)
+    for src in ["outtime", "dischtime", "deathtime", "vent_end"]:
+        v = pb[src]
+        t_end = t_end.mask(v.notna() & (v < t_end), v)
+    keep = t_mv.notna() & (t_abg <= t_end) & (t_mv <= t_end)
+    pb = pb.loc[keep]
+    print(f"[truncation-MIMIC] pairs retained: {len(pb)} of {len(pb) + int((~keep).sum())}")
+    return pb[paired.columns].copy()
 
 
-
-
-RAW_RAW_DIR = str(ROOT / "原始数据")  # PhysioNet flat exports; override if placed elsewhere
+def apply_truncation_eicu(paired: pd.DataFrame) -> pd.DataFrame:
+    """eICU: window end in HOURS from unit admission."""
+    t_mv = paired["hour"] + pd.to_numeric(paired["pair_lag_hours"], errors="coerce")
+    if not PAT_PATH.exists():
+        print("[truncation-eICU] patient.csv not found; truncation skipped")
+        return paired
+    pat = pd.read_csv(PAT_PATH, usecols=["patientunitstayid", "hospitaldischargeoffset",
+                                         "hospitaldischargestatus", "unitdischargeoffset"], low_memory=False)
+    pat = pat.rename(columns={"patientunitstayid": "stay_id"})
+    pb = paired.merge(pat, on="stay_id", how="left")
+    t_end = (pd.to_numeric(pb["hospitaldischargeoffset"], errors="coerce") / 60.0).fillna(np.inf)
+    unitd = pd.to_numeric(pb["unitdischargeoffset"], errors="coerce") / 60.0
+    t_end = t_end.mask(unitd.notna() & (unitd < t_end), unitd)
+    if (EICU / "ventilation_events.csv").exists():
+        ev = pd.read_csv(EICU / "ventilation_events.csv", usecols=["patientunitstayid", "event", "hrs"], low_memory=False)
+        ev = ev.rename(columns={"patientunitstayid": "stay_id"})
+        ev["hrs"] = pd.to_numeric(ev["hrs"].astype(str).str.replace(r"[^0-9.\-]", "", regex=True), errors="coerce")
+        e_start = ev[ev["event"].eq("mechvent start")].groupby("stay_id")["hrs"].max().rename("e_start")
+        e_end = ev[ev["event"].eq("mechvent end")].groupby("stay_id")["hrs"].max().rename("e_end")
+        pb = pb.merge(e_start.reset_index(), on="stay_id", how="left").merge(e_end.reset_index(), on="stay_id", how="left")
+        cut = pb["e_end"].notna() & (pb["e_end"] >= pb["e_start"].fillna(-1e9))
+        t_end = t_end.mask(cut & (pb["e_end"] < t_end), pb["e_end"])
+    t_end = np.minimum(t_end.fillna(WINDOW_H), WINDOW_H)
+    kept = (pd.to_numeric(pb["pair_lag_hours"], errors="coerce").notna()) & \
+           (pb["hour"] <= t_end) & (t_mv <= t_end)
+    pb = pb.loc[kept]
+    print(f"[truncation-eICU] pairs retained: {len(pb)} of {len(pb) + int((~kept).sum())}")
+    return pb[paired.columns].copy()
 
 
 def build_mimic_48h():
@@ -91,7 +166,6 @@ def build_mimic_48h():
     cohort = cohort.merge(height, on="stay_id", how="left")
     cohort["pbw"] = pbw_from_height_sex(cohort["height"], cohort["gender"])
 
-    # bg 0-48h
     bg = pd.read_csv(MIMIC_DERIVED / "bg.csv",
                      usecols=["subject_id", "hadm_id", "charttime", "po2", "pco2", "fio2", "pao2fio2ratio", "ph"])
     bg["charttime"] = pd.to_datetime(bg["charttime"], dayfirst=True, errors="coerce")
@@ -106,7 +180,6 @@ def build_mimic_48h():
     bg["has_pf"] = bg["pf"].between(PF_MIN, PF_MAX)
     bg["has_pco2"] = pd.to_numeric(bg["pco2"], errors="coerce").between(PCO2_MIN, PCO2_MAX)
 
-    # minute ventilation 0-48h
     vs = pd.read_csv(MIMIC_DERIVED / "ventilator_setting.csv", usecols=["stay_id", "charttime", "minute_volume"])
     vs["charttime"] = pd.to_datetime(vs["charttime"], dayfirst=True, errors="coerce")
     vs = vs.merge(cohort[["stay_id", "icu_intime"]], on="stay_id", how="inner")
@@ -115,66 +188,11 @@ def build_mimic_48h():
     vs["minute_volume"] = pd.to_numeric(vs["minute_volume"], errors="coerce")
     vs = vs[vs["minute_volume"].between(MV_MIN, MV_MAX)]
 
-    # NN pairing
     bg_valid = bg[bg["has_pf"] & bg["has_pco2"]]
     paired = nearest_neighbor_pair(bg_valid, vs, "stay_id", "hour")
     paired = paired.merge(cohort[["stay_id", "pbw"]], on="stay_id", how="left", suffixes=("", "_c"))
+    paired = apply_truncation_mimic(paired)
 
-    # ---- EXPLICIT TRUNCATION (manuscript-stated; round-2 implementation) ----
-    # The observation window ends at the earliest of (a) 48 h after ICU admission,
-    # (b) hospital death, (c) ICU (unit) discharge, (d) hospital discharge, and
-    # (e) terminal extubation (the end of the LAST InvasiveVent segment with
-    # starttime within/before the window). A pair is retained only if BOTH its
-    # ABG timestamp and its ventilator-setting timestamp fall inside the window.
-    core = Path(RAW_RAW_DIR) if RAW_RAW_DIR else None
-    if core is not None:
-        icu_t = pd.read_csv(core / "icustays.csv")             if (core / "icustays.csv").exists() else None
-        adm_t = pd.read_csv(core / "admissions.csv", usecols=["hadm_id", "dischtime", "deathtime"])             if (core / "admissions.csv").exists() else None
-    else:
-        icu_t = adm_t = None
-    if icu_t is not None and adm_t is not None:
-        seg_end = inv.groupby("stay_id")["endtime"].max().rename("vent_end").reset_index()
-        pb = (paired.merge(icu_t[["stay_id", "intime", "outtime", "hadm_id"]], on="stay_id", how="left")
-                    .merge(adm_t, on="hadm_id", how="left")
-                    .merge(seg_end, on="stay_id", how="left"))
-        for c in ["intime", "outtime", "dischtime", "deathtime", "vent_end"]:
-            pb[c] = pd.to_datetime(pb[c], errors="coerce")
-        t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
-        t_mv = pb["intime"] + pd.to_timedelta(pb["hour"] + pb["pair_lag_hours"], unit="h")
-        t_end = pb["intime"] + pd.Timedelta(hours=48)
-        for _src in ["outtime", "dischtime", "deathtime", "vent_end"]:
-            _v = pb[_src]
-            t_end = t_end.mask(_v.notna() & (_v < t_end), _v)
-        _keep = (t_abg <= t_end) & (t_mv <= t_end) & t_mv.notna()
-        paired = pb.loc[_keep, paired.columns].copy()
-
-    # ---- EXPLICIT TRUNCATION (manuscript-stated; round-2 implementation) ----
-    # The observation window ends at the earliest of (a) 48 h after ICU admission,
-    # (b) hospital death, (c) ICU (unit) discharge, (d) hospital discharge, and
-    # (e) terminal extubation (the end of the LAST InvasiveVent segment with
-    # starttime within/before the window). A pair is retained only if BOTH its
-    # ABG timestamp and its ventilator-setting timestamp fall inside the window.
-    core = Path(RAW_RAW_DIR) if RAW_RAW_DIR else None
-    if core is not None:
-        icu_t = pd.read_csv(core / "icustays.csv")             if (core / "icustays.csv").exists() else None
-        adm_t = pd.read_csv(core / "admissions.csv", usecols=["hadm_id", "dischtime", "deathtime"])             if (core / "admissions.csv").exists() else None
-    else:
-        icu_t = adm_t = None
-    if icu_t is not None and adm_t is not None:
-        seg_end = inv.groupby("stay_id")["endtime"].max().rename("vent_end").reset_index()
-        pb = (paired.merge(icu_t[["stay_id", "intime", "outtime", "hadm_id"]], on="stay_id", how="left")
-                    .merge(adm_t, on="hadm_id", how="left")
-                    .merge(seg_end, on="stay_id", how="left"))
-        for c in ["intime", "outtime", "dischtime", "deathtime", "vent_end"]:
-            pb[c] = pd.to_datetime(pb[c], errors="coerce")
-        t_abg = pb["intime"] + pd.to_timedelta(pb["hour"], unit="h")
-        t_mv = pb["intime"] + pd.to_timedelta(pb["hour"] + pb["pair_lag_hours"], unit="h")
-        t_end = pb["intime"] + pd.Timedelta(hours=48)
-        for _src in ["outtime", "dischtime", "deathtime", "vent_end"]:
-            _v = pb[_src]
-            t_end = t_end.mask(_v.notna() & (_v < t_end), _v)
-        _keep = (t_abg <= t_end) & (t_mv <= t_end) & t_mv.notna()
-        paired = pb.loc[_keep, paired.columns].copy()
     paired["pbw"] = paired["pbw"].fillna(paired["pbw_c"])
     denom = paired["pbw"] * 100 * 37.5 / 1000
     paired["vr"] = paired["minute_volume"] * pd.to_numeric(paired["pco2"], errors="coerce") / denom
@@ -185,7 +203,6 @@ def build_mimic_48h():
     keep = counts[counts >= MIN_POINTS].index
     pts = pts[pts["stay_id"].isin(keep)].copy()
 
-    # merge outcomes
     out = pd.read_csv(OUT / "mimic_outcome_vent7d.csv")
     pts = pts.merge(out[["stay_id", "vent_7d", "hospital_expire_flag", "los_icu"]], on="stay_id", how="left")
     pts["los_icu_days"] = pd.to_numeric(pts["los_icu"], errors="coerce")
@@ -239,37 +256,7 @@ def build_eicu_48h():
     bg_valid = bg[bg["has_pf"] & bg["has_pco2"]]
     paired = nearest_neighbor_pair(bg_valid, mv_chart, "stay_id", "hour")
     paired = paired.merge(cohort[["stay_id", "pbw"]], on="stay_id", how="left")
-
-    # ---- EXPLICIT TRUNCATION for eICU (round-2; all quantities in HOURS) ----
-    # window end = earliest of (unit admit + 48 h, ICU discharge, hospital
-    # discharge/death, terminal mechanvent end). Terminal semantics: if the last
-    # mechvent event is a "start", ventilation is ongoing (no vent cutoff); if it
-    # is an "end", the window ends at that time.
-    ev = pd.read_csv(RAW / "eICU" / "eICU" / "ventilation_events.csv",
-                     usecols=["patientunitstayid", "event", "hrs"], low_memory=False)
-    ev = ev.rename(columns={"patientunitstayid": "stay_id"})
-    ev["hrs"] = pd.to_numeric(ev["hrs"].astype(str).str.replace(r"[^0-9.\-]", "", regex=True), errors="coerce")
-    e_start = ev[ev["event"].eq("mechvent start")].groupby("stay_id")["hrs"].max().rename("e_start")
-    e_end = ev[ev["event"].eq("mechvent end")].groupby("stay_id")["hrs"].max().rename("e_end")
-    pat = pd.read_csv(RAW / "eICU" / "eICU" / "patient.csv",
-                      usecols=["patientunitstayid", "hospitaldischargeoffset", "unitdischargeoffset"],
-                      low_memory=False).rename(columns={"patientunitstayid": "stay_id"})
-    pb = (paired.merge(e_start.reset_index(), on="stay_id", how="left")
-                .merge(e_end.reset_index(), on="stay_id", how="left")
-                .merge(pat[["stay_id", "hospitaldischargeoffset", "unitdischargeoffset"]],
-                       on="stay_id", how="left"))
-    pb["t_mv_h"] = pb["hour"] + pd.to_numeric(pb["pair_lag_hours"], errors="coerce")
-    t_end = pd.DataFrame({"end": pb["hour"] + WINDOW_H})
-    for src in ["hospitaldischargeoffset", "unitdischargeoffset"]:
-        v = pd.to_numeric(pb[src], errors="coerce") / 60.0
-        t_end["end"] = t_end["end"].mask(v.notna() & (v < t_end["end"]), v)
-    ongoing = (pb["e_start"].notna()) & (pb["e_start"].fillna(-1e9) > pb["e_end"].fillna(-1e9))
-    vent_end_h = pb["e_end"]
-    t_end["end"] = t_end["end"].mask((~ongoing) & vent_end_h.notna() & (vent_end_h < t_end["end"]), vent_end_h)
-    _keep = (pd.to_numeric(pb["pair_lag_hours"], errors="coerce").notna()) & \
-            (pb["hour"] <= t_end["end"]) & (pb["t_mv_h"] <= t_end["end"])
-    paired = pb.loc[_keep, paired.columns].copy()
-    print(f"[truncation-eICU] pairs retained: {len(paired)} of {len(pb)}")
+    paired = apply_truncation_eicu(paired)
 
     denom = paired["pbw"] * 100 * 37.5 / 1000
     paired["vr"] = paired["minute_volume"] * pd.to_numeric(paired["paco2"], errors="coerce") / denom
@@ -291,6 +278,7 @@ def build_eicu_48h():
 
 
 def main():
+    OUT.mkdir(parents=True, exist_ok=True)
     m = build_mimic_48h()
     e = build_eicu_48h()
     m.to_csv(OUT / "trajectory_mimic_48h.csv", index=False)

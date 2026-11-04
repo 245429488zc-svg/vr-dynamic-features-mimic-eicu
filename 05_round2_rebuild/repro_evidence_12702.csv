@@ -1,0 +1,5 @@
+estimate,12702世界,论文(12694)
+Table2 M3 vr_initial OR (per 1-SD),1.289,
+Table2 M3 vr_delta OR (per 1-SD),1.345,
+S1 landmark ladder AUROC (Base/+P/F/+VR),0.830/0.830/0.834,0.830/0.830/0.834
+S2 harm ladder AUROC (own cohort),0.795/0.796/0.801,0.795/0.796/0.801

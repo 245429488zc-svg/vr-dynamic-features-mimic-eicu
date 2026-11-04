@@ -67,14 +67,28 @@ def main() -> None:
     for label, df, base in [
         ("S1 MIMIC landmark FULL-spec (VR step)", lm, BASE_FULL),
         ("S2 MIMIC landmark HARMONIZED (VR step)", harm, BASE_H),
-        ("S3 eICU landmark transported (VR step)", eic_lm, BASE_H),
     ]:
         po, _ = inc.fit_predict(df, base + PF)
         pn, _ = inc.fit_predict(df, base + PF + VR)
         y = df[OUTCOME].astype(int).values
         z, p, a0, a1 = inc.delong_test(y, po, pn)
-        rows.append({"setting": label, "delta": f"{a1 - a0:.4f}", "delong_p": f"{p:.3g}"})
-        stamp(f"[{label}] ΔAUROC {a1 - a0:.4f}, DeLong P = {p:.3g}")
+        rows.append({"setting": label, "delta": f"{a1 - a0:.4f}", "delong_p": f"{p:.3g}", "mean": "", "ci": ""})
+        stmt(f"[{label}] dAUROC {a1 - a0:.4f}, DeLong P = {p:.3g}") if False else stamp(f"[{label}] dAUROC {a1 - a0:.4f}, DeLong P = {p:.3g}")
+
+    # S3: TRUE transported step (harm-own fixed coefficients applied to eICU landmark)
+    from sklearn.linear_model import LogisticRegression as _LR
+    from sklearn.preprocessing import StandardScaler as _SS
+    _so = _SS().fit(harm[BASE_H + PF]); _mo = _LR(penalty=None, max_iter=3000, random_state=RNG).fit(
+        _so.transform(harm[BASE_H + PF]), harm[OUTCOME].astype(int))
+    _sn = _SS().fit(harm[BASE_H + PF + VR]); _mn = _LR(penalty=None, max_iter=3000, random_state=RNG).fit(
+        _sn.transform(harm[BASE_H + PF + VR]), harm[OUTCOME].astype(int))
+    y_e = eic_lm[OUTCOME].astype(int).values
+    _po = _mo.predict_proba(_so.transform(eic_lm[BASE_H + PF]))[:, 1]
+    _pn = _mn.predict_proba(_sn.transform(eic_lm[BASE_H + PF + VR]))[:, 1]
+    _z, _p, _a0, _a1 = inc.delong_test(y_e, _po, _pn)
+    rows.append({"setting": "S3 eICU landmark TRANSPORTED (fixed coeffs, VR step)",
+                 "delta": f"{_a1 - _a0:.4f}", "delong_p": f"{_p:.3g}", "mean": "", "ci": ""})
+    stamp(f"[S3 transported] dAUROC {_a1 - _a0:.4f}, DeLong P = {_p:.3g}")
 
     # 对照臂：重建关联队列 + 修正规格（BASE_FULL 18协变量）全队列 delta bootstrap
     cc = mim.dropna(subset=[OUTCOME] + BASE_FULL + PF + VR).copy()

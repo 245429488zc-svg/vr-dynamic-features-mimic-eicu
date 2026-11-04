@@ -5,5 +5,5 @@ MIMIC-IV,At least 3 valid paired P/F-VR measurements within truncated 48-h windo
 MIMIC-IV,Final analysis cohort with official vital status,12694,0,Vital status available for all stays from official admissions records
 eICU,Adult ICU stays,193153,,
 eICU,Early invasive mechanical ventilation within 24 h,4141,189012,No early invasive mechanical ventilation within 24 h
-eICU,At least 3 valid paired P/F-VR measurements within truncated 48-h window,1496,2645,Fewer than 3 valid pairs within the truncated window
-eICU,Final external validation cohort with official discharge status,1491,5,Discharge status not Alive/Expired (Other/unknown, n=5)
+eICU,At least 3 valid paired P/F-VR measurements within truncated 48-h window,1425,2716,Fewer than 3 valid pairs within the truncated window
+eICU,Final external validation cohort with official discharge status,1420,5,Discharge status not Alive/Expired (Other/unknown, n=5)

@@ -48,11 +48,11 @@ EICU_STEPS = [
         "exclude": "Excluded: no early invasive mechanical ventilation\nwithin 24 h after ICU admission\n(n=189,012)",
     },
     {
-        "main": "At least 3 valid paired P/F-VR measurements\nwithin the truncated 48-h window\n(n=1,496)",
-        "exclude": "Excluded: fewer than 3 valid pairs within\nthe truncated window\n(n=2,645)",
+        "main": "At least 3 valid paired P/F-VR measurements\nwithin the truncated 48-h window\n(n=1,425)",
+        "exclude": "Excluded: fewer than 3 valid pairs within\nthe truncated window\n(n=2,716)",
     },
     {
-        "main": "Final eICU external validation cohort\n(discharge status Alive/Expired required)\n(n=1,491; deaths=402)",
+        "main": "Final eICU external validation cohort\n(discharge status Alive/Expired required)\n(n=1,420; deaths=396)",
         "exclude": "Excluded: discharge status not Alive/Expired\n(n=5)",
     },
 ]
@@ -62,8 +62,8 @@ ANALYSIS_SETS = [
     "MIMIC-IV internal fully adjusted complete-case cohort: n=10,349; deaths=2,143; excluded=2,345 with missing internal model variables",
     "MIMIC-IV harmonized complete-case cohort (fit for eICU transport): n=11,143; deaths=2,270; excluded=1,551 with missing harmonized model variables",
     "MIMIC-IV 48-h landmark prediction cohort: n=9,882; deaths after 48 h=1,696",
-    "eICU association cohort: n=1,491; deaths=402",
-    "eICU harmonized complete-case / 48-h landmark cohort: n=1,397 / 1,270; deaths=382 / 274",
+    "eICU association cohort: n=1,420; deaths=396",
+    "eICU harmonized complete-case / 48-h landmark cohort: n=1,332 / 1,216; deaths=376 / 274",
 ]
 
 
@@ -159,8 +159,8 @@ def main() -> None:
         "MIMIC-IV,Final analysis cohort with official vital status,12694,0,Vital status available for all stays from official admissions records",
         "eICU,Adult ICU stays,193153,,",
         "eICU,Early invasive mechanical ventilation within 24 h,4141,189012,No early invasive mechanical ventilation within 24 h",
-        "eICU,At least 3 valid paired P/F-VR measurements within truncated 48-h window,1496,2645,Fewer than 3 valid pairs within the truncated window",
-        "eICU,Final external validation cohort with official discharge status,1491,5,Discharge status not Alive/Expired (Other/unknown, n=5)",
+        "eICU,At least 3 valid paired P/F-VR measurements within truncated 48-h window,1425,2716,Fewer than 3 valid pairs within the truncated window",
+        "eICU,Final external validation cohort with official discharge status,1420,5,Discharge status not Alive/Expired (Other/unknown, n=5)",
     ]
     (OUTDIR / "Figure1_cohort_flow_counts.csv").write_text("\n".join(counts_lines) + "\n", encoding="utf-8")
 
@@ -180,7 +180,7 @@ def main() -> None:
         "",
         "- The old cohort_flow_combined.csv was not used because it reflects an earlier analysis version.",
         "- The >=2 paired-measurement intermediate step is not displayed in the figure to keep the MIMIC-IV and eICU flows aligned.",
-        "- Final analysis cohorts are MIMIC-IV n=12,694 and eICU n=1,491 (round-2 rebuild).",
+        "- Final analysis cohorts are MIMIC-IV n=12,694 and eICU n=1,420 (round-2 rebuild).",
         "- Complete-case analysis sets are shown separately at the bottom of the figure.",
     ]
     (OUTDIR / "Figure1_generation_log.md").write_text("\n".join(log) + "\n", encoding="utf-8")

@@ -1,4 +1,4 @@
 setting,B,delta_auc,delta_auc_ci,nri,nri_ci,nri_events,nri_nonevents,idi,idi_ci
 S1 MIMIC landmark FULL-spec ladder (VR step),2000,0.0041,0.0022-0.0065,0.179,0.116-0.245,-0.028,0.207,0.007,0.004-0.012
 S2 MIMIC landmark HARMONIZED ladder (VR step),2000,0.0052,0.0029-0.0077,0.187,0.127-0.250,-0.031,0.218,0.008,0.004-0.012
-S3 eICU landmark transported (fixed coeffs),2000,0.0100,-0.0011-0.0223,0.256,0.119-0.393,0.006,0.251,0.010,0.004-0.016
+S3 eICU landmark transported (fixed coeffs),2000,0.0107,-0.0012-0.0229,0.240,0.101-0.378,0.010,0.229,0.009,0.004-0.015
