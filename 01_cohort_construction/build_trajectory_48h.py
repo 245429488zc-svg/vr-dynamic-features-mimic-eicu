@@ -251,7 +251,6 @@ def build_eicu_48h():
     e_start = ev[ev["event"].eq("mechvent start")].groupby("stay_id")["hrs"].max().rename("e_start")
     e_end = ev[ev["event"].eq("mechvent end")].groupby("stay_id")["hrs"].max().rename("e_end")
     pat = pd.read_csv(RAW / "eICU" / "eICU" / "patient.csv",
-                      usecols=["patientunitstayid", "hospitaldischargeoffset"],
                       usecols=["patientunitstayid", "hospitaldischargeoffset", "unitdischargeoffset"],
                       low_memory=False).rename(columns={"patientunitstayid": "stay_id"})
     pb = (paired.merge(e_start.reset_index(), on="stay_id", how="left")
