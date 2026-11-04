@@ -38,16 +38,17 @@ VR_LABELS = {
     "vr_max": "VR maximum", "vr_min": "VR minimum", "vr_auc": "VR AUC",
     "vr_delta": "VR delta (last - first)", "vr_slope": "VR slope",
 }
-PRIMARY_OR = {  # Round-2 rebuilt primary estimates (Table 2, fully adjusted single-feature models, per 1-SD)
-    "vr_initial": "1.290 (1.212-1.373)",
-    "vr_last": "1.376 (1.291-1.466)",
-    "vr_mean": "1.450 (1.353-1.555)",
-    "vr_max": "1.354 (1.268-1.446)",
-    "vr_min": "1.320 (1.237-1.408)",
-    "vr_auc": "1.435 (1.339-1.538)",
-    "vr_delta": "1.341 (1.243-1.446)",
-    "vr_slope": "0.992 (0.931-1.057)",
-}
+def load_primary_single():
+    """Round-2 Table 2 Model-3 single-feature estimates, read live from the rebuilt results."""
+    t2 = pd.read_csv(Path(__file__).resolve().parent / "table2_round2.csv")
+    m3 = t2[t2["Model"].astype(str).eq("3")] if "Model" in t2.columns else t2
+    out = {}
+    for _, r in m3.iterrows():
+        out[str(r["Feature"])] = f"{r['OR']:.3f} ({r['CI_lower']:.3f}-{r['CI_upper']:.3f})"
+    return out
+
+
+PRIMARY_OR = load_primary_single()
 def load_primary_joint():
     """Round-2 primary joint estimates (Table 4's primary complete-case row), read live."""
     t4 = pd.read_csv(Path(__file__).resolve().parent / "Table4_round2.csv")
