@@ -125,6 +125,11 @@ def main() -> None:
     rows = []
 
     # ---------- N2: harm own-cohort ladder without sepsis ----------
+    po, _ = inc.fit_predict(harm, BASE_H_NOSEP + PF)
+    pn, _ = inc.fit_predict(harm, BASE_H_NOSEP + PF + VR)
+    y2 = harm[OUTCOME].astype(int).values
+    z2, p2, a02, a12 = inc.delong_test(y2, po, pn)
+    stamp(f"[N2] dAUROC {a12 - a02:.4f}, DeLong P = {p2:.3g}")
     stamp(f"[N2] MIMIC harm landmark, NO-sepsis spec (sepsis48 in cohort: "
           f"{int(harm['sepsis48'].sum())}/{len(harm)} — removed from models)")
     ladder_names = [("Base", BASE_H_NOSEP), ("Base + P/F", BASE_H_NOSEP + PF),
@@ -197,12 +202,92 @@ def main() -> None:
          ("delta_auc", "delta_auc_ci", "nri", "nri_ci", "nri_events", "nri_nonevents", "idi", "idi_ci")}},
         {"setting": s_n3["setting"], **{k: s_n3[k] for k in
          ("delta_auc", "delta_auc_ci", "nri", "nri_ci", "nri_events", "nri_nonevents", "idi", "idi_ci")}},
+        {"setting": "N2 MIMIC harm NO-sepsis DeLong", "delta_auc": f"{a12 - a02:.4f}",
+         "delta_auc_ci": "", "nri": "", "nri_ci": "", "nri_events": "", "nri_nonevents": "",
+         "idi": "", "idi_ci": f"{p2:.3g}"},
         {"setting": "N3 transported VR-step DeLong", "delta_auc": f"{a1 - a0:.4f}",
          "delta_auc_ci": "", "nri": "", "nri_ci": "", "nri_events": "", "nri_nonevents": "",
          "idi": "", "idi_ci": f"{p:.3g}"},
     ])
     pd.concat([pd.DataFrame(rows), summary.rename(columns={"setting": "Row", "delta_auc": "bootstrap delta_auc"}).fillna("")],
               ignore_index=True).to_csv(OUTDIR / "nosepsis_transport_sensitivity.csv", index=False)
+
+    # ---------- ST6 docx (Supplementary Table 6) ----------
+    def build_st6_docx(df: pd.DataFrame, title_text: str, note_text: str, out_path: Path) -> None:
+        from docx import Document
+        from docx.enum.section import WD_ORIENT
+        from docx.enum.table import WD_TABLE_ALIGNMENT
+        from docx.enum.text import WD_ALIGN_PARAGRAPH
+        from docx.shared import Cm, Pt
+        doc = Document()
+        sec = doc.sections[0]
+        sec.orientation = WD_ORIENT.LANDSCAPE
+        sec.page_width, sec.page_height = sec.page_height, sec.page_width
+        sec.top_margin = Cm(1.5); sec.bottom_margin = Cm(1.5)
+        sec.left_margin = Cm(1.6); sec.right_margin = Cm(1.6)
+        title = doc.add_paragraph(); title.paragraph_format.space_after = Pt(8)
+        r0 = title.add_run(title_text); r0.font.name = "Times New Roman"; r0.font.size = Pt(9); r0.font.bold = True
+        headers = list(df.columns)
+        table = doc.add_table(rows=1 + len(df), cols=len(headers))
+        table.style = "Table Grid"; table.alignment = WD_TABLE_ALIGNMENT.CENTER
+        widths = [Cm(6.4), Cm(1.6), Cm(1.7), Cm(2.6), Cm(2.6), Cm(3.4), Cm(2.4), Cm(3.0), Cm(3.0), Cm(2.6)]
+        for j, w in enumerate(widths[:len(headers)]):
+            for row_cells in table.rows:
+                if j < len(row_cells.cells):
+                    row_cells.cells[j].width = w
+        for j, h in enumerate(headers):
+            c = table.rows[0].cells[j]; c.text = ""
+            rn = c.paragraphs[0].add_run(str(h)); rn.font.name = "Times New Roman"; rn.font.size = Pt(7); rn.font.bold = True
+        for i, (_, row) in enumerate(df.iterrows(), start=1):
+            for j, h in enumerate(headers):
+                c = table.rows[i].cells[j]; c.text = ""
+                rn = c.paragraphs[0].add_run("" if pd.isna(row[h]) else str(row[h]))
+                rn.font.name = "Times New Roman"; rn.font.size = Pt(7)
+                if j > 0:
+                    c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        note = doc.add_paragraph(); note.paragraph_format.space_before = Pt(6)
+        rn = note.add_run(note_text); rn.font.name = "Times New Roman"; rn.font.size = Pt(6.5)
+        doc.save(out_path)
+
+    def fmt_ci(ci: str) -> str:
+        lo, hi = ci.rsplit("-", 1)
+        return f"{float(lo):.3f}-{float(hi):.3f}"
+
+    st6 = pd.DataFrame([
+        {"Analysis": "MIMIC-IV harmonized landmark, NO-sepsis (own cohort)",
+         "N": int(rows[1]["N"]), "Deaths": int(rows[1]["Deaths"]),
+         "AUROC before": rows[1]["AUROC"], "AUROC after": rows[2]["AUROC"],
+         "Delta AUROC (95% CI)": f"{float(s_n2['delta_auc']):.3f} ({fmt_ci(s_n2['delta_auc_ci'])})",
+         "DeLong P value": f"{p2:.3g}",
+         "IDI (95% CI)": f"{s_n2['idi']} ({s_n2['idi_ci']})", "NRI (95% CI)": f"{s_n2['nri']} ({s_n2['nri_ci']})",
+         "NRI events/non-events": f"{s_n2['nri_events']}/{s_n2['nri_nonevents']}"},
+        {"Analysis": "eICU landmark NO-sepsis (transported, fixed MIMIC coefficients)",
+         "N": int(rows[4]["N"]), "Deaths": int(rows[4]["Deaths"]),
+         "AUROC before": rows[4]["AUROC"], "AUROC after": rows[5]["AUROC"],
+         "Delta AUROC (95% CI)": f"{float(s_n3['delta_auc']):.3f} ({fmt_ci(s_n3['delta_auc_ci'])})",
+         "DeLong P value": f"{p:.3g}",
+         "IDI (95% CI)": f"{s_n3['idi']} ({s_n3['idi_ci']})", "NRI (95% CI)": f"{s_n3['nri']} ({s_n3['nri_ci']})",
+         "NRI events/non-events": f"{s_n3['nri_events']}/{s_n3['nri_nonevents']}"},
+    ])
+    st6_note = (
+        "The harmonized sepsis covariate in Table 3 (sepsis48) is the 48-hour-determinable Sepsis-3 definition in "
+        "MIMIC-IV and the recorded admission diagnoses (admissionDx) in eICU: related constructions, not identical "
+        "definitions, with markedly different positivity prevalence in the two cohorts (7,697/10,770 [71.5%] in the "
+        "MIMIC-IV harmonized landmark fit cohort; 194/1,206 [16.1%] in the eICU landmark cohort). In this sensitivity "
+        "analysis the sepsis covariate was removed from both sides of the transported specification and the ladder was "
+        "re-run end-to-end. Before = Base + P/F model; After = additional inclusion of VR initial and VR delta "
+        "(per 1-SD increase, modeled conditional on VR initial). Row 1 is fitted on the MIMIC-IV harmonized landmark "
+        "cohort; Row 2 applies the fixed no-sepsis Row-1 coefficients with the MIMIC-IV-fitted scaler to the eICU "
+        "landmark cohort. Delta/IDI/NRI are paired-model statistics with bootstrap 95% confidence intervals "
+        "(2,000 draws; derivation settings refit per resample; the transported analysis evaluated with fixed "
+        "coefficients per resample). The sepsis48 specification (Table 3, Rows 2-3) remains primary: the VR step "
+        "preserves its direction and reporting-precision magnitude in both settings without sepsis, and the "
+        "transported step remains nominally non-significant under either specification (DeLong P = 0.073 with, "
+        "0.177 without).")
+    build_st6_docx(st6, "Supplementary Table 6. Sensitivity analysis: the harmonized/transported 48-hour landmark ladder without the sepsis covariate.",
+                   st6_note, OUTDIR / "TableS6_nosepsis_TNR_xiaoliu.docx")
+    stamp("ST6 docx 完成")
+
     (OUTDIR / "run_nosepsis_transport_log.md").write_text(
         "# NO-sepsis transported sensitivity (Reviewer 2-2)\n\n"
         "- Harmonized/transported 48-h landmark ladder WITHOUT the sepsis covariate in both databases.\n"

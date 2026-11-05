@@ -7,4 +7,5 @@ eICU landmark NO-sepsis (transported),Base + P/F,1206.0,269.0,0.732,,0.335,0.867
 eICU landmark NO-sepsis (transported),Base + P/F + VR,1206.0,269.0,0.741,,0.348,0.871,,,,,,,,
 N2 MIMIC harm NO-sepsis ladder (VR step),,,,,,,,0.0064,0.0037-0.0094,0.192,0.134-0.248,-0.027,0.219,0.009,0.005-0.014
 N3 eICU landmark NO-sepsis transported (fixed coeffs),,,,,,,,0.0080,-0.0040-0.0204,0.241,0.107-0.377,0.003,0.238,0.010,0.004-0.017
+N2 MIMIC harm NO-sepsis DeLong,,,,,,,,0.0064,,,,,,,5.28e-05
 N3 transported VR-step DeLong,,,,,,,,0.0081,,,,,,,0.177
