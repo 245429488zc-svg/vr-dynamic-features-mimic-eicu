@@ -261,7 +261,7 @@ def make_figure(cal: pd.DataFrame, dca: pd.DataFrame, summary: pd.DataFrame):
     for i, setting in enumerate(settings):
         draw_calibration(axes[i, 0], cal, summary, setting, letters[2 * i])
         draw_dca(axes[i, 1], dca, summary, setting, letters[2 * i + 1])
-    fig.suptitle("Supplementary Figure. Calibration and decision curve analyses for adding VR to P/F-based models",
+    fig.suptitle("Supplementary Figure 2. Calibration and decision curve analyses for adding VR to P/F-based models",
                  fontsize=11.2, fontweight="bold", y=0.985)
     fig.subplots_adjust(left=0.08, right=0.98, top=0.92, bottom=0.075, hspace=0.58, wspace=0.30)
     fig.text(

@@ -57,8 +57,11 @@ Xg[:, i_init] = z_init.ravel()
 Xg[:, i_delta] = z_delta.ravel()
 pred = m.predict_proba(Xg)[:, 1].reshape(GX.shape)
 
-fig, ax = plt.subplots(figsize=(6.6, 5.2))
-levels = np.linspace(0.10, 0.50, 9)
+fig, ax = plt.subplots(figsize=(6.8, 5.6))
+# 色标覆盖全部预测值：下界取数据最小（避免 <0.10 区域渲染成大片空白被误读为缺失）
+lo = max(0.0, np.floor(pred.min() * 100) / 100 - 0.001)
+hi = max(0.50, np.ceil(pred.max() * 10) / 10 + 0.001)
+levels = np.linspace(lo, hi, 12)
 cf = ax.contourf(GX, GY, pred, levels=levels, cmap="RdBu_r", alpha=0.85)
 cbar = fig.colorbar(cf, ax=ax, pad=0.02)
 cbar.set_label("Predicted hospital mortality", fontsize=10)
@@ -81,10 +84,14 @@ for flag, color, label in [(0, "#3B6FB6", "Survived"), (1, "#C0392B", "Deceased"
 ax.set_xlabel("VR initial", fontsize=11)
 ax.set_ylabel("VR delta (last − first)", fontsize=11)
 ax.tick_params(labelsize=9)
-ax.legend(frameon=False, fontsize=9, loc="upper right")
+# 图例移出绘图区（置于坐标轴下方，避免压住等高线）
+ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2)
 for s in ("top", "right"):
     ax.spines[s].set_visible(False)
-fig.tight_layout()
+fig.suptitle(
+    "Supplementary Figure 3. Joint relationship of VR initial, VR delta, and predicted hospital mortality",
+    x=0.5, y=0.98, fontsize=11, fontweight="bold")
+fig.subplots_adjust(left=0.11, right=0.90, top=0.87, bottom=0.19)
 fig.savefig(OUT / "Supplementary_Figure_3.png", dpi=300)
 fig.savefig(OUT / "Supplementary_Figure_3.pdf")
 fig.savefig(OUT / "Supplementary_Figure_3.svg")

@@ -135,7 +135,7 @@ def main() -> None:
     rd = pd.read_csv(OUTDIR / "mimic_analysis_ready_round2.csv")
     rows = []
 
-    row_a, or_a = fit_joint(rd.dropna(subset=[OUTCOME] + FULL), FULL, "primary_cc")
+    row_a, or_a = fit_joint(rd.dropna(subset=[OUTCOME] + FULL), FULL, "Primary complete-case model (joint VR)")
     rows.append(row_a)
     stamp(f"primary_cc: {row_a['N']}/{row_a['Deaths']} {row_a['VR initial OR (95% CI)']} / {row_a['VR delta OR (95% CI)']} AUROC {row_a['AUROC']}")
 
@@ -144,14 +144,14 @@ def main() -> None:
         mp = pd.read_csv(mice_path)
         mi = mp.loc[mp.variable.eq("vr_initial")].iloc[0]
         dl = mp.loc[mp.variable.eq("vr_delta")].iloc[0]
-        rows.append({"Analysis": "mice (m=10, outcome in model)", "N": len(rd),
+        rows.append({"Analysis": "Multiple imputation (m = 10, outcome in imputation model)", "N": len(rd),
                      "Deaths": int(rd[OUTCOME].sum()),
                      "VR initial OR (95% CI)": fmt_or(mi.OR, mi.CI_lower, mi.CI_upper),
                      "VR initial P value": "<0.001" if mi.p_value < 0.001 else f"{mi.p_value:.3f}",
                      "VR delta OR (95% CI)": fmt_or(dl.OR, dl.CI_lower, dl.CI_upper),
                      "VR delta P value": "<0.001" if dl.p_value < 0.001 else f"{dl.p_value:.3f}",
-                     "AUROC": str(round(float(mp.get("AUROC", [np.nan])[0]), 3)) if "AUROC" in mp.columns else "",
-                     "Brier": ""})
+                     "AUROC": str(round(float(mp.get("AUROC", [np.nan])[0]), 3)) if "AUROC" in mp.columns else "Not reported",
+                     "Brier": "Not reported"})
         stamp(f"mice行: {rows[-1]['VR initial OR (95% CI)']} / {rows[-1]['VR delta OR (95% CI)']}")
     else:
         stamp("!! mice输出尚未生成——待 run_mice_round2 完成后重跑此装配")
@@ -207,12 +207,12 @@ def main() -> None:
              .merge(f24, on="stay_id", how="left")
     h24 = h24.loc[h24["n_points_24h"] >= 2]
     vars24 = BASE_A + ["pf_initial_24h", "pf_min_24h", "vr_initial_24h", "vr_delta_24h"]
-    row_h, or_h = fit_joint(h24, vars24, "features restricted to the first 24 h", ("vr_initial_24h", "vr_delta_24h"))
+    row_h, or_h = fit_joint(h24, vars24, "Features restricted to the first 24 h", ("vr_initial_24h", "vr_delta_24h"))
     rows.append(row_h)
     stamp(f"24h行: {row_h['N']}/{row_h['Deaths']} {row_h['VR initial OR (95% CI)']} / {row_h['VR delta OR (95% CI)']} AUROC {row_h['AUROC']}")
 
     # measurement-adjusted
-    row_m, or_m = fit_joint(rd.dropna(subset=[OUTCOME] + FULL + MEAS), FULL + MEAS, "adjusted for measurement count and observation span")
+    row_m, or_m = fit_joint(rd.dropna(subset=[OUTCOME] + FULL + MEAS), FULL + MEAS, "Adjusted for measurement count and observation span")
     rows.append(row_m)
     stamp(f"measurement行: {row_m['N']}/{row_m['Deaths']} {row_m['VR initial OR (95% CI)']} / {row_m['VR delta OR (95% CI)']} AUROC {row_m['AUROC']}")
 
@@ -251,7 +251,9 @@ def main() -> None:
         "48-hour-determinable Sepsis-3 definition (suspected-infection onset and qualifying SOFA assessment both "
         "within the first 48 h), consistent with Table 3 Row 1, which is fitted on the same landmark cohort; the "
         "association-framework rows retain the any-time Sepsis-3 flag and the covariate-adjustment interpretation "
-        "stated in the Methods. Brier score is shown as a secondary overall prediction error metric.")
+        "stated in the Methods. Brier score is shown as a secondary overall prediction error metric. For the "
+        "multiple-imputation row, the odds ratios are pooled by Rubin's rules across the m=10 imputations; pooled "
+        "discrimination and Brier metrics are not reported.")
     strata_note = (
         "Patients were stratified according to the number of paired P/F-VR measurements obtained within the first "
         "48 h after ICU admission (rebuilt cohort). Each stratum used the same fully adjusted complete-case model "

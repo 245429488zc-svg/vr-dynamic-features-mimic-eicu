@@ -91,7 +91,7 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.set_title(
-        "Supplementary Figure. Correlations among early VR features",
+        "Supplementary Figure 1. Correlations among early VR features",
         loc="left", fontsize=10.2, fontweight="bold", pad=14,
     )
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.035)

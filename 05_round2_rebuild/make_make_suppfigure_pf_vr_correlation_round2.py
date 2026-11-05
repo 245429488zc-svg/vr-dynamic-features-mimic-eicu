@@ -199,6 +199,10 @@ def main():
         fontsize=7,
         ha="left",
     )
+    fig.suptitle(
+        "Supplementary Figure 4. Correlations between P/F and VR features",
+        x=0.01, y=0.995, ha="left", fontsize=11.5, fontweight="bold",
+    )
 
     base = OUT / "Supplementary_Figure_PF_VR_correlation"
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
