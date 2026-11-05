@@ -46,7 +46,7 @@ The earlier repository run (`outputs/round2_repro`) produced the following cohor
 | eICU: early invasive ventilation | 4,141 | 4,141 (exact) |
 | eICU: >=3 paired P/F-VR points in the truncated window | 1,425 | 1,425 (exact) |
 
-The earlier comparison is recorded in `05_round2_rebuild/repro_comparison_log.md`. Its Table 3 row reports a missing reproduction file, so that log is not complete end-to-end verification. Compare the revised landmark outputs separately before updating manuscript values.
+The comparison is recorded in `05_round2_rebuild/repro_comparison_log.md`. After the sepsis temporal-validity fix the reproduction chain was re-run inside the repository: all seven comparison files — including `Table3_round2.csv`, which had been missing in the earlier run — are now present, and every compared quantity matches the canonical result files (zero cells beyond tolerance).
 
 Two boundary-level implementation defects were found and fixed while establishing this: the
 window truncation now links each stay's hospital death/discharge through the official core
