@@ -1,0 +1,10 @@
+Row,Model,N,Deaths,AUROC,Brier,Calibration intercept,Calibration slope,bootstrap delta_auc,delta_auc_ci,nri,nri_ci,nri_events,nri_nonevents,idi,idi_ci
+MIMIC harm landmark NO-sepsis (own cohort),Base,10770.0,1856.0,0.768,0.123,,,,,,,,,,
+MIMIC harm landmark NO-sepsis (own cohort),Base + P/F,10770.0,1856.0,0.769,0.122,,,,,,,,,,
+MIMIC harm landmark NO-sepsis (own cohort),Base + P/F + VR,10770.0,1856.0,0.776,0.121,,,,,,,,,,
+eICU landmark NO-sepsis (transported),Base,1206.0,269.0,0.726,,0.281,0.831,,,,,,,,
+eICU landmark NO-sepsis (transported),Base + P/F,1206.0,269.0,0.732,,0.335,0.867,,,,,,,,
+eICU landmark NO-sepsis (transported),Base + P/F + VR,1206.0,269.0,0.741,,0.348,0.871,,,,,,,,
+N2 MIMIC harm NO-sepsis ladder (VR step),,,,,,,,0.0064,0.0037-0.0094,0.192,0.134-0.248,-0.027,0.219,0.009,0.005-0.014
+N3 eICU landmark NO-sepsis transported (fixed coeffs),,,,,,,,0.0080,-0.0040-0.0204,0.241,0.107-0.377,0.003,0.238,0.010,0.004-0.017
+N3 transported VR-step DeLong,,,,,,,,0.0081,,,,,,,0.177
