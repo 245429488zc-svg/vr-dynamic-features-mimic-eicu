@@ -6,6 +6,7 @@ mortality across the initial x delta plane from the fully adjusted joint model
 survivors and non-survivors."""
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib
@@ -18,7 +19,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUT = Path(__file__).resolve().parent
+OUT = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUT.mkdir(exist_ok=True)
 OUTCOME = "hospital_expire_flag"
 BASE_A = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
@@ -31,7 +32,7 @@ VARS = BASE_A + PF + VR
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "DejaVu Serif"]
 
-df = pd.read_csv(Path(__file__).resolve().parent / "landmark_cohort_round2.csv")
+df = pd.read_csv(Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv")
 cc = df.dropna(subset=[OUTCOME] + VARS).copy()
 y = cc[OUTCOME].astype(int).values
 

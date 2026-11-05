@@ -1,13 +1,13 @@
 Row,Model,N,Deaths,AUROC before,AUROC after,AUROC,Brier,Calibration intercept,Calibration slope
-MIMIC landmark FULL SPEC (internal),Base,9960,1730,,,0.830,0.104,,
-MIMIC landmark FULL SPEC (internal),Base + P/F,9960,1730,,,0.830,0.104,,
-MIMIC landmark FULL SPEC (internal),Base + P/F + VR,9960,1730,,,0.834,0.103,,
-MIMIC landmark HARMONIZED spec (fit for transport),Base,9960,1730,,,0.799,0.118,,
-MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F,9960,1730,,,0.800,0.117,,
-MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F + VR,9960,1730,,,0.805,0.116,,
-eICU landmark (transported),Base,1216,274,,,0.691,,-0.144,0.618
-eICU landmark (transported),Base + P/F,1216,274,,,0.699,,-0.095,0.644
-eICU landmark (transported),Base + P/F + VR,1216,274,,,0.706,,-0.034,0.676
+MIMIC landmark FULL SPEC (internal),Base,9960,1730,,,0.822,0.105,,
+MIMIC landmark FULL SPEC (internal),Base + P/F,9960,1730,,,0.822,0.105,,
+MIMIC landmark FULL SPEC (internal),Base + P/F + VR,9960,1730,,,0.827,0.104,,
+MIMIC landmark HARMONIZED spec (fit for transport),Base,9960,1730,,,0.783,0.121,,
+MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F,9960,1730,,,0.785,0.121,,
+MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F + VR,9960,1730,,,0.791,0.119,,
+eICU landmark (transported),Base,1216,274,,,0.700,,-0.085,0.671
+eICU landmark (transported),Base + P/F,1216,274,,,0.708,,-0.022,0.707
+eICU landmark (transported),Base + P/F + VR,1216,274,,,0.716,,0.039,0.741
 eICU landmark refit (replication),Base,1216,274,,,0.719,0.155,,
 eICU landmark refit (replication),Base + P/F,1216,274,,,0.730,0.152,,
 eICU landmark refit (replication),Base + P/F + VR,1216,274,,,0.738,0.151,,

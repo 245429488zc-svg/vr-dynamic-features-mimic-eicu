@@ -102,6 +102,53 @@ def fmt(o, lo, hi):
     return f"{o:.3f} ({lo:.3f}-{hi:.3f})"
 
 
+
+
+def build_docx(df, title_text, note_text, out_path):
+    """Self-contained landscape TNR docx writer (replaces the legacy external helper)."""
+    import pandas as pd
+    from docx import Document
+    from docx.enum.section import WD_ORIENT
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.shared import Cm, Pt
+
+    doc = Document()
+    sec = doc.sections[0]
+    sec.orientation = WD_ORIENT.LANDSCAPE
+    sec.page_width, sec.page_height = sec.page_height, sec.page_width
+    sec.top_margin = Cm(1.5); sec.bottom_margin = Cm(1.5)
+    sec.left_margin = Cm(1.6); sec.right_margin = Cm(1.6)
+
+    title = doc.add_paragraph(); title.paragraph_format.space_after = Pt(8)
+    r0 = title.add_run(title_text); r0.font.name = "Times New Roman"; r0.font.size = Pt(9); r0.font.bold = True
+
+    headers = list(df.columns)
+    table = doc.add_table(rows=1 + len(df), cols=len(headers))
+    table.style = "Table Grid"; table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    widths = [Cm(6.4), Cm(1.6), Cm(1.7), Cm(2.6), Cm(2.6), Cm(3.4), Cm(2.4), Cm(3.0), Cm(3.0)]
+    for j, w in enumerate(widths[:len(headers)]):
+        for row_cells in table.rows:
+            if j < len(row_cells.cells):
+                row_cells.cells[j].width = w
+    for j, h in enumerate(headers):
+        c = table.rows[0].cells[j]; c.text = ""
+        rn = c.paragraphs[0].add_run(str(h)); rn.font.name = "Times New Roman"; rn.font.size = Pt(7); rn.font.bold = True
+    for i, (_, row) in enumerate(df.iterrows(), start=1):
+        for j, h in enumerate(headers):
+            c = table.rows[i].cells[j]; c.text = ""
+            tval = row[h]
+            if pd.isna(tval):
+                tval = "—"
+            rn = c.paragraphs[0].add_run(str(tval))
+            rn.font.name = "Times New Roman"; rn.font.size = Pt(7)
+            if j > 0:
+                c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    note = doc.add_paragraph(); note.paragraph_format.space_before = Pt(6)
+    rn = note.add_run(note_text); rn.font.name = "Times New Roman"; rn.font.size = Pt(6.5)
+    doc.save(out_path)
+
+
 def main() -> None:
     df = pd.read_csv(DATA)
     df[OUTCOME] = df[OUTCOME].astype(int)

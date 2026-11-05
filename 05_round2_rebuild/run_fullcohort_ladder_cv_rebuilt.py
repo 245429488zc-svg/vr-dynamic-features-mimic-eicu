@@ -11,6 +11,7 @@ Output: fullcohort_corrected_spec_cv_round2.csv + log.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -21,8 +22,7 @@ from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = ROOT / "43_第二轮重分析"
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 READY = OUTDIR / "mimic_analysis_ready_round2.csv"
 RNG = 20260721
 OUTCOME = "hospital_expire_flag"

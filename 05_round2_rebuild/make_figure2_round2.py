@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -15,11 +16,11 @@ from scipy.stats import mannwhitneyu
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 
-MAIN_PATH = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
-TRAJ_PATH = Path(__file__).resolve().parent / "trajectory_mimic_48h_round2.csv"
+MAIN_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
+TRAJ_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "trajectory_mimic_48h_round2.csv"
 
 GROUP_ORDER = ["Survived", "Died"]
 GROUP_COLORS = {"Survived": "#4C78A8", "Died": "#E45756"}

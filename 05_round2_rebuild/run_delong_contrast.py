@@ -10,6 +10,7 @@ use the same algorithm as the original submission.
 """
 from __future__ import annotations
 
+import argparse
 import importlib.util
 import os
 from pathlib import Path
@@ -27,7 +28,10 @@ B = 2000
 BASE_FULL = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
              "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
              "bun", "creatinine", "wbc", "bicarbonate"]
-BASE_H = ["age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+BASE_PRED = ["sepsis3_48h" if col == "sepsis3" else col for col in BASE_FULL]
+# harmonized slot: sepsis48 = 48-h-determinable sepsis (48-h Sepsis-3 on the MIMIC
+# fit side; admissionDx-recorded sepsis on the eICU side in the S3 transport/resample)
+BASE_H = ["age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
           "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate"]
 PF = ["pf_initial", "pf_min"]
 VR = ["vr_initial", "vr_delta"]
@@ -40,6 +44,10 @@ def stamp(msg: str) -> None:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--skip-association-bootstrap", action="store_true",
+                        help="Recompute the three landmark DeLong comparisons only; the association model is unchanged.")
+    args = parser.parse_args()
     spec = importlib.util.spec_from_file_location(
         "incmod", ROOT / "03_main_analyses" /
         "run_revised_incremental_pf_vr_pf_initial_min.py")
@@ -66,7 +74,7 @@ def main() -> None:
 
     rows = []
     for label, df, base in [
-        ("S1 MIMIC landmark FULL-spec (VR step)", lm, BASE_FULL),
+        ("S1 MIMIC landmark FULL-spec (VR step)", lm, BASE_PRED),
         ("S2 MIMIC landmark HARMONIZED (VR step)", harm, BASE_H),
     ]:
         po, _ = inc.fit_predict(df, base + PF)
@@ -91,24 +99,27 @@ def main() -> None:
                  "delta": f"{_a1 - _a0:.4f}", "delong_p": f"{_p:.3g}", "mean": "", "ci": ""})
     stamp(f"[S3 transported] dAUROC {_a1 - _a0:.4f}, DeLong P = {_p:.3g}")
 
-    # 对照臂：重建关联队列 + 修正规格（BASE_FULL 18协变量）全队列 delta bootstrap
-    cc = mim.dropna(subset=[OUTCOME] + BASE_FULL + PF + VR).copy()
-    y = cc[OUTCOME].astype(int).values
-    i1, i0 = np.where(y == 1)[0], np.where(y == 0)[0]
-    rng = np.random.default_rng(RNG)
-    ds = []
-    for _ in range(B):
-        sel = np.concatenate([rng.choice(i1, len(i1), True), rng.choice(i0, len(i0), True)])
-        sub = cc.iloc[sel]
-        po, _ = inc.fit_predict(sub, BASE_FULL + PF)
-        pn, _ = inc.fit_predict(sub, BASE_FULL + PF + VR)
-        ysub = sub[OUTCOME].astype(int).values
-        ds.append(roc_auc_score(ysub, pn) - roc_auc_score(ysub, po))
-    a = np.array(ds)
-    rows.append({"setting": "对照·重建关联队列全队列 FULL-spec ladder (VR step, corrected spec)",
-                 "mean": f"{np.mean(a):.4f}",
-                 "ci": f"{np.percentile(a, 2.5):.4f}-{np.percentile(a, 97.5):.4f}"})
-    stamp(f"[对照臂] Δ{np.mean(a):.4f} ({np.percentile(a, 2.5):.4f}-{np.percentile(a, 97.5):.4f})")
+    if not args.skip_association_bootstrap:
+        # Unchanged association model: run only when its independent bootstrap is needed.
+        cc = mim.dropna(subset=[OUTCOME] + BASE_FULL + PF + VR).copy()
+        y = cc[OUTCOME].astype(int).values
+        i1, i0 = np.where(y == 1)[0], np.where(y == 0)[0]
+        rng = np.random.default_rng(RNG)
+        ds = []
+        for _ in range(B):
+            sel = np.concatenate([rng.choice(i1, len(i1), True), rng.choice(i0, len(i0), True)])
+            sub = cc.iloc[sel]
+            po, _ = inc.fit_predict(sub, BASE_FULL + PF)
+            pn, _ = inc.fit_predict(sub, BASE_FULL + PF + VR)
+            ysub = sub[OUTCOME].astype(int).values
+            ds.append(roc_auc_score(ysub, pn) - roc_auc_score(ysub, po))
+        a = np.array(ds)
+        rows.append({"setting": "对照·重建关联队列全队列 FULL-spec ladder (VR step, corrected spec)",
+                     "mean": f"{np.mean(a):.4f}",
+                     "ci": f"{np.percentile(a, 2.5):.4f}-{np.percentile(a, 97.5):.4f}"})
+        stamp(f"[对照臂] Δ{np.mean(a):.4f} ({np.percentile(a, 2.5):.4f}-{np.percentile(a, 97.5):.4f})")
+    else:
+        stamp("[对照臂] skipped: association model and covariates unchanged")
 
     pd.DataFrame(rows).to_csv(OUTDIR / "delong_and_contrast.csv", index=False)
     (OUTDIR / "delong_and_contrast_log.md").write_text(

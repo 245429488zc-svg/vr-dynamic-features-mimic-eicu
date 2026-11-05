@@ -6,8 +6,8 @@ Mirrors the ORIGINAL Table-3 design faithfully (harmonized row on its own comple
 subset, transported coefficients fitted THERE, eICU row = fixed-coefficient application),
 but everything now lives in the Round-2 rebuilt world:
   * MIMIC association/complete-case/landmark cohorts = Rule-B truncation rebuild;
-  * harmonized spec includes COPD/CHF (14+1 covariates) with sepsis_h (admission-
-    diagnosis-based in both DBs: ICD in MIMIC-IV / admitDx text in eICU);
+  * harmonized spec includes COPD/CHF (14+1 covariates) with sepsis48 (sepsis
+    determinable by the 48-h landmark: 48-h Sepsis-3 in MIMIC-IV, admitDx text in eICU);
   * eICU vitals = native first-day means (R2-2 fix).
 
 Outputs: harm ladder (MIMIC), transported (eICU landmark), refit ladder (supp),
@@ -35,7 +35,7 @@ ADM = ROOT / "原始数据" / "core" / "admissions.csv.gz"
 BASE_FULL = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
              "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
              "bun", "creatinine", "wbc", "bicarbonate"]
-BASE_H = ["age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+BASE_H = ["age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
           "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate"]
 PF_48H = ["pf_initial", "pf_min"]
 VR_48H = ["vr_initial", "vr_delta"]
@@ -78,6 +78,10 @@ def main() -> None:
     stamp(f"读入: MIMIC {len(mim)}, eICU {len(eic)}")
 
     # ---------- Part 1: harmonized OWN cohort (MIMIC) + ladder ----------
+    # Harmonized sepsis slot: the 48-h-determinable Sepsis-3 flag derived by the rebuild
+    # (present when master_part1 has run; fall back to the rebuild column otherwise).
+    if "sepsis48" not in mim.columns:
+        mim["sepsis48"] = mim["sepsis3_48h"].astype(int)
     mim2 = mim.merge(pd.read_csv(ICU, usecols=["stay_id", "intime", "outtime"]), on="stay_id", how="left")
     mim2 = mim2.merge(pd.read_csv(ADM, usecols=["hadm_id", "dischtime", "deathtime"]), on="hadm_id", how="left")
     for col in ["intime", "outtime", "dischtime", "deathtime"]:
@@ -107,6 +111,9 @@ def main() -> None:
 
     # ---------- Part 2: transported to eICU landmark (coeffs from harm-own fit) ----------
     eic["sepsis_h"] = eic["sepsis3"].astype(int)
+    # harmonized/transport slot: admissionDx-recorded sepsis (recorded at ICU admission,
+    # hence determinable before the 48-h landmark by construction)
+    eic["sepsis48"] = eic["sepsis3"].astype(int)
     eic_lm = pd.read_csv(OUTDIR / "eicu_landmark_round2.csv")
     eic_lm = eic_lm[eic_lm["hospitaldischargestatus"].isin(["Alive", "Expired"])].copy() if \
         "hospitaldischargestatus" in eic_lm.columns else eic_lm

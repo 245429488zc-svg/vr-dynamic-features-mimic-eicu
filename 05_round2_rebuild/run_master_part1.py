@@ -4,9 +4,13 @@ harmonized-model ladder (fit MIMIC / transport eICU) + eICU refit replication.
 
 Harmonized spec (as ruled with the authors, mirroring the reviewer's premise that the
 reported fully adjusted specification includes COPD/CHF):
-  Base_h = age, sex, charlson, sepsis_h (admission-diagnosis-based in BOTH databases:
-           ICD-coded sepsis in MIMIC-IV, admissionDx text in eICU), copd, chf, peep,
+  Base_h = age, sex, charlson, sepsis48 (sepsis determinable by the 48-h landmark:
+           MIMIC-IV = 48-h Sepsis-3, i.e. sepsis3_48h as derived by the rebuild
+           [suspected-infection onset AND qualifying SOFA assessment both <=48 h];
+           eICU = sepsis among the recorded admission diagnoses), copd, chf, peep,
            vt_pbw, hr, map, temp, bun, creatinine, wbc, bicarbonate          [15 cov]
+  ICD-coded sepsis (sepsis_h) is retained on file but is hospitalization-level and is
+  NOT used in any model fitted or applied at the 48-h landmark.
   + PF_48H [2] -> 17; + VR_48H [2] -> 19.
 SOFA / driving pressure / lactate remain excluded (not available in eICU).
 All vitals use first-day MEANS on both sides (eICU recomputed natively).
@@ -33,10 +37,10 @@ EICU_READY = OUTDIR / "eicu_analysis_ready_round2.csv"
 DX = ROOT / "原始数据" / "core" / "diagnoses_icd.csv.gz"
 
 OUTCOME = "hospital_expire_flag"
-BASE_FULL = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+BASE_FULL = ["age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
              "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
              "bun", "creatinine", "wbc", "bicarbonate"]
-BASE_H = ["age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+BASE_H = ["age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
           "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate"]
 PF_48H = ["pf_initial", "pf_min"]
 VR_48H = ["vr_initial", "vr_delta"]
@@ -97,6 +101,11 @@ def main() -> None:
     mim["sepsis_h"] = mim["hadm_id"].isin(sep_hadm).astype(int)
     stamp(f"MIMIC sepsis_h(ICD): {int(mim['sepsis_h'].sum())}/{len(mim)} ({mim['sepsis_h'].mean():.1%}); "
           f"对比 Sepsis-3 {int(mim['sepsis3'].sum())} ({mim['sepsis3'].mean():.1%})")
+    # ICD-coded sepsis is hospitalization-level (no usable timestamps) — kept on file for
+    # association-side bookkeeping only. The harmonized/transport slot uses the 48-h-
+    # determinable Sepsis-3 flag derived by the rebuild.
+    mim["sepsis48"] = mim["sepsis3_48h"].astype(int)
+    stamp(f"MIMIC sepsis48 (48-h Sepsis-3): {int(mim['sepsis48'].sum())}/{len(mim)} ({mim['sepsis48'].mean():.1%})")
     mim.to_csv(OUTDIR / "mimic_analysis_ready_round2.csv", index=False)
 
     # ---------- eICU: official flag check + sepsis_h naming ----------
@@ -130,6 +139,9 @@ def main() -> None:
         eic["hospital_expire_flag"] = eic["hospital_expire_flag"].astype(int)
         stamp(f"eICU 官方状态双检后: {len(eic)}, 死亡={int(eic['hospital_expire_flag'].sum())}")
     eic["sepsis_h"] = eic["sepsis3"].astype(int)  # eICU's own sepsis3 column IS the admitDx text def
+    # harmonized/transport slot: admissionDx-recorded sepsis (recorded at ICU admission,
+    # hence determinable before the 48-h landmark by construction)
+    eic["sepsis48"] = eic["sepsis3"].astype(int)
     stamp(f"eICU sepsis_h(admitDx): {int(eic['sepsis_h'].sum())}/{len(eic)} ({eic['sepsis_h'].mean():.1%})")
     # 重挂 discharge offset（特征重建的落盘文件不携带它们）
     pat2 = pd.read_csv(ROOT / "原始数据" / "eICU" / "eICU" / "patient.csv",
@@ -156,7 +168,7 @@ def main() -> None:
     lm = mim[mim["stay_id"].isin(lm_ids["stay_id"])].copy()
     stamp(f"MIMIC landmark(带sepsis_h重取): n={len(lm)}, 死亡={int(lm['hospital_expire_flag'].sum())}")
     lm_rows, lm_ors = fit_ladder(lm, BASE_FULL, "MIMIC landmark FULL SPEC (internal)")
-    # harmonized spec on MIMIC: sepsis_h + first-day-mean vitals (cols already exist)
+    # harmonized spec on MIMIC: sepsis48 + first-day-mean vitals (cols already exist)
     h_rows, h_ors = None, None
     try:
         h_rows, h_ors = fit_ladder(lm, BASE_H, "MIMIC landmark HARMONIZED spec (fit for transport)")

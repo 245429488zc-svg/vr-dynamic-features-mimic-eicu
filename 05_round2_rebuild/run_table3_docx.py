@@ -3,16 +3,15 @@
 framework) and write its TNR docx.
 
 Rows (before = Base + P/F; after = + VR initial & VR delta; per-1-SD):
-  1. MIMIC-IV landmark, fully adjusted spec   (n=9,882)
-  2. MIMIC-IV landmark, harmonized reduced    (n=10,663)
-  3. eICU landmark, transported fixed coeffs  (n=1,270)
+  1. MIMIC-IV landmark, fully adjusted spec — with the 48-h-determinable sepsis flag
+  2. MIMIC-IV landmark, harmonized reduced — sepsis48 slot (48-h Sepsis-3 fit side)
+  3. eICU landmark, transported fixed coeffs — admissionDx-recorded sepsis
 Delta/IDI/NRI with B=2000 bootstrap CIs (round2_bootstrap.csv) and DeLong P
 (delong_and_contrast.csv). The association-framework continuity value is stated
 in the table footnote, not as a row.
 """
 from __future__ import annotations
 
-import importlib.util
 import os
 from pathlib import Path
 
@@ -29,19 +28,57 @@ def stamp(msg: str) -> None:
     print(msg)
 
 
-def main() -> None:
-    inc_spec = importlib.util.spec_from_file_location(
-        "m4", ROOT / "13_Table4正式版" / "make_table4_sensitivity.py")
-    m4 = importlib.util.module_from_spec(inc_spec)
-    inc_spec.loader.exec_module(m4)
 
-    inc_spec2 = importlib.util.spec_from_file_location(
-        "harmod", OUTDIR / ".." / "43_第二轮重分析" / "run_master_part2.py")
+
+def build_docx(df: pd.DataFrame, title_text: str, note_text: str, out_path: Path) -> None:
+    """Self-contained landscape TNR docx writer (replaces the legacy external helper)."""
+    from docx import Document
+    from docx.enum.section import WD_ORIENT
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.shared import Cm, Pt
+
+    doc = Document()
+    sec = doc.sections[0]
+    sec.orientation = WD_ORIENT.LANDSCAPE
+    sec.page_width, sec.page_height = sec.page_height, sec.page_width
+    sec.top_margin = Cm(1.5); sec.bottom_margin = Cm(1.5)
+    sec.left_margin = Cm(1.6); sec.right_margin = Cm(1.6)
+
+    title = doc.add_paragraph(); title.paragraph_format.space_after = Pt(8)
+    r0 = title.add_run(title_text); r0.font.name = "Times New Roman"; r0.font.size = Pt(9); r0.font.bold = True
+
+    headers = list(df.columns)
+    table = doc.add_table(rows=1 + len(df), cols=len(headers))
+    table.style = "Table Grid"; table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    widths = [Cm(6.4), Cm(1.6), Cm(1.7), Cm(2.6), Cm(2.6), Cm(3.4), Cm(2.4), Cm(3.0), Cm(3.0)]
+    for j, w in enumerate(widths[:len(headers)]):
+        for row_cells in table.rows:
+            if j < len(row_cells.cells):
+                row_cells.cells[j].width = w
+    for j, h in enumerate(headers):
+        c = table.rows[0].cells[j]; c.text = ""
+        rn = c.paragraphs[0].add_run(str(h)); rn.font.name = "Times New Roman"; rn.font.size = Pt(7); rn.font.bold = True
+    for i, (_, row) in enumerate(df.iterrows(), start=1):
+        for j, h in enumerate(headers):
+            c = table.rows[i].cells[j]; c.text = ""
+            rn = c.paragraphs[0].add_run("" if pd.isna(row[h]) else str(row[h]))
+            rn.font.name = "Times New Roman"; rn.font.size = Pt(7)
+            if j > 0:
+                c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    note = doc.add_paragraph(); note.paragraph_format.space_before = Pt(6)
+    rn = note.add_run(note_text); rn.font.name = "Times New Roman"; rn.font.size = Pt(6.5)
+    doc.save(out_path)
+
+
+def main() -> None:
+
     # ladders
     lad = pd.read_csv(OUTDIR / "round2_ladders.csv")           # M1 (full-spec & harm-nested & eICU/refit)
     lad2 = pd.read_csv(OUTDIR / "round2_harm_ladders.csv")     # part-2 (harm own-cohort + transported)
     bt = pd.read_csv(OUTDIR / "round2_bootstrap.csv")
     dl = pd.read_csv(OUTDIR / "delong_and_contrast.csv")
+    lm_cv = pd.read_csv(OUTDIR / "landmark_incremental_mimic.csv")
     bmap = dict(zip(bt["setting"], zip(bt["delta_auc"], bt["delta_auc_ci"], bt["nri"], bt["nri_ci"],
                                        bt["nri_events"], bt["nri_nonevents"], bt["idi"], bt["idi_ci"])))
     dmap = dict(zip(dl["setting"], dl["delong_p"]))
@@ -121,10 +158,14 @@ def main() -> None:
         "eligible stay — the legacy outcome files lacked it for 110 MIMIC-IV and 167 eICU stays). "
         "Before = Base + P/F model; After = additional inclusion of VR initial and VR delta (per 1-SD increase, "
         "modeled conditional on VR initial). Row 1 uses the fully adjusted specification (age, sex, Charlson index, "
-        "sepsis (Sepsis-3), COPD, CHF, SOFA, PEEP, driving pressure, Vt/PBW, heart rate, MAP, temperature, lactate, "
-        "BUN, creatinine, WBC, bicarbonate, initial and minimum P/F). Rows 2-3 use the harmonized reduced "
-        "specification (Row 1 minus SOFA, driving pressure, and lactate, with sepsis defined by recorded admission "
-        "diagnosis [ICD-coded in MIMIC-IV, admissionDx text in eICU]); Row 2 is fitted in MIMIC-IV and transported "
+        "sepsis (Sepsis-3, 48-hour-determinable: suspected-infection onset and qualifying SOFA assessment both "
+        "within the first 48 hours), COPD, CHF, SOFA, PEEP, driving pressure, Vt/PBW, heart rate, MAP, temperature, "
+        "lactate, BUN, creatinine, WBC, bicarbonate, initial and minimum P/F); all covariates are determinable by "
+        "the landmark time. Rows 2-3 use the harmonized reduced "
+        "specification (Row 1 minus SOFA, driving pressure, and lactate), with sepsis determinable by the 48-hour "
+        "landmark time in both databases: the Row-1 48-hour Sepsis-3 definition in MIMIC-IV, and sepsis among the "
+        "recorded admission diagnoses (admissionDx) in eICU. "
+        "Row 2 is fitted in MIMIC-IV and transported "
         "unchanged (fixed coefficients and the MIMIC-fitted scaler) to the eICU landmark cohort in Row 3. "
         "Delta/IDI/NRI are paired-model statistics with bootstrap 95% confidence intervals (2,000 draws; derivation "
         "settings refit per resample; eICU transported evaluated with fixed coefficients per resample). "
@@ -132,11 +173,13 @@ def main() -> None:
         "covariates including COPD and CHF) on the rebuilt complete-case cohort (n=10,428) gives apparent AUROC "
         "0.842 to 0.847 (VR-step Delta 0.0050, 95% CI 0.0031-0.0073; 5-fold cross-validated AUROC 0.840 to "
         "0.844, optimism <=0.003, out-of-sample calibration -0.018/0.983). Within the landmark framework, the "
-        "fully adjusted models showed 5-fold cross-validated AUROCs of 0.828 (Base), 0.827 (Base + P/F), and "
-        "0.831 (Base + P/F + VR), optimism <=0.004, with out-of-sample calibration -0.024/0.978."
+        "fully adjusted models showed 5-fold cross-validated AUROCs of "
+        f"{lm_cv.loc[lm_cv.Model.eq('Base'), 'AUROC (CV)'].iloc[0]:.3f} (Base), "
+        f"{lm_cv.loc[lm_cv.Model.eq('Base + P/F'), 'AUROC (CV)'].iloc[0]:.3f} (Base + P/F), and "
+        f"{lm_cv.loc[lm_cv.Model.eq('Base + P/F + VR'), 'AUROC (CV)'].iloc[0]:.3f} "
+        "(Base + P/F + VR); calibration and optimism estimates are reported in the analysis log."
     )
-    m4.OUTDIR = OUTDIR
-    m4.build_docx(t3, "Table 3. Incremental predictive value of early VR features beyond P/F ratio (48-hour landmark framework).",
+    build_docx(t3, "Table 3. Incremental predictive value of early VR features beyond P/F ratio (48-hour landmark framework).",
                   note, OUTDIR / "Table3_round2_TNR_xiaoliu.docx")
     (OUTDIR / "master_part5_log.md").write_text("# Table 3 assembly\n\n" + "\n".join(LOG), encoding="utf-8")
     stamp("Table 3 docx 完成")

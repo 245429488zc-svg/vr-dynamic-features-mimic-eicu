@@ -28,7 +28,7 @@ OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]

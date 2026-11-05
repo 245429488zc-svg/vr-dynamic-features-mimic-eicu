@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """Build the primary outcome: prolonged invasive mechanical ventilation >=7 days.
 
-Adds vent_7d (0/1) to the existing analysis-ready datasets.
+Builds per-stay vent_7d (0/1) before trajectory construction.
 Rules:
   - MIMIC-IV: sum durations of all InvasiveVent segments per stay (from
     ventilation.csv). vent_7d = total_invasive_vent_hours >= 168.
   - eICU: use apachepatientresult.actualventdays >= 7.
   - Does NOT modify phase 1 P/F+VR features.
-  - vent_7d is an outcome occurring after the 0-24h predictor window, so no
-    information leakage: predictors (P/F, VR at 0-24h) precede the outcome
-    (cumulative vent duration over the whole ICU stay).
+  - This secondary outcome is not used to select predictors in the 48-h
+    hospital-mortality landmark model.
   - The inclusion criterion "invasive vent started within 0-24h" is NOT used
     as a predictor.
 
@@ -79,32 +78,21 @@ def build_eicu_outcome() -> pd.DataFrame:
 
 def main() -> None:
     log = [f"[{now()}] Build vent_7d outcome."]
+    OUT.mkdir(parents=True, exist_ok=True)
 
     m_out = build_mimic_outcome()
     e_out = build_eicu_outcome()
     log.append(f"[{now()}] MIMIC outcome rows: {len(m_out)} | vent_7d events: {int(m_out['vent_7d'].sum())} ({m_out['vent_7d'].mean()*100:.1f}%)")
     log.append(f"[{now()}] eICU outcome rows: {len(e_out)} | vent_7d events: {int(e_out['vent_7d'].sum())} ({e_out['vent_7d'].mean()*100:.1f}%)")
 
-    # Restrict to the phase-1 main analysis cohort (>=1 P/F+VR)
-    feat_m = pd.read_csv(OUT / "mimic_analysis_ready.csv")[["stay_id"]]
-    feat_e = pd.read_csv(OUT / "eicu_analysis_ready.csv")[["stay_id"]]
-    m_coh = m_out[m_out["stay_id"].isin(feat_m["stay_id"])].copy()
-    e_coh = e_out[e_out["stay_id"].isin(feat_e["stay_id"])].copy()
-    log.append(f"[{now()}] MIMIC cohort with outcome: {len(m_coh)} | vent_7d events: {int(m_coh['vent_7d'].sum())} ({m_coh['vent_7d'].mean()*100:.1f}%)")
-    log.append(f"[{now()}] eICU cohort with outcome: {len(e_coh)} | vent_7d events: {int(e_coh['vent_7d'].sum())} ({e_coh['vent_7d'].mean()*100:.1f}%)")
-
-    m_coh.to_csv(OUT / "mimic_outcome_vent7d.csv", index=False)
-    e_coh.to_csv(OUT / "eicu_outcome_vent7d.csv", index=False)
+    m_out.to_csv(OUT / "mimic_outcome_vent7d.csv", index=False)
+    e_out.to_csv(OUT / "eicu_outcome_vent7d.csv", index=False)
 
     summary = pd.DataFrame([
         {"database": "MIMIC-IV", "cohort": "all_with_outcome", "n": len(m_out),
          "events": int(m_out["vent_7d"].sum()), "event_rate_percent": round(m_out["vent_7d"].mean()*100, 1)},
-        {"database": "MIMIC-IV", "cohort": "pf_vr_cohort", "n": len(m_coh),
-         "events": int(m_coh["vent_7d"].sum()), "event_rate_percent": round(m_coh["vent_7d"].mean()*100, 1)},
         {"database": "eICU", "cohort": "all_with_outcome", "n": len(e_out),
          "events": int(e_out["vent_7d"].sum()), "event_rate_percent": round(e_out["vent_7d"].mean()*100, 1)},
-        {"database": "eICU", "cohort": "pf_vr_cohort", "n": len(e_coh),
-         "events": int(e_coh["vent_7d"].sum()), "event_rate_percent": round(e_coh["vent_7d"].mean()*100, 1)},
     ])
     summary.to_csv(OUT / "outcome_summary.csv", index=False)
     log.append(f"[{now()}] Outcome summary:\n{summary.to_string(index=False)}")

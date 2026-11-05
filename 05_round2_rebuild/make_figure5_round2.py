@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import math
 
@@ -16,9 +17,9 @@ from scipy import stats
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
-DATA = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
 OUTCOME = "hospital_expire_flag"
 
 BASE_A = [

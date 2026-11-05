@@ -8,6 +8,7 @@ validation complete-case cohort.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -24,7 +25,7 @@ from docx.shared import Cm, Pt
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 MIMIC_PATH = OUTDIR / "mimic_analysis_ready_round2.csv"
 EICU_PATH = OUTDIR / "eicu_analysis_ready_round2.csv"

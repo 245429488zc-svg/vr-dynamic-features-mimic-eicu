@@ -64,6 +64,7 @@ ANALYSIS_SETS = [
     "MIMIC-IV 48-h landmark prediction cohort: n=9,960; deaths after 48 h=1,730",
     "eICU association cohort: n=1,420; deaths=396",
     "eICU harmonized complete-case / 48-h landmark cohort: n=1,332 / 1,216; deaths=376 / 274",
+    "eICU landmark model complete-case (transported evaluation): n=1,206; deaths=269",
 ]
 
 

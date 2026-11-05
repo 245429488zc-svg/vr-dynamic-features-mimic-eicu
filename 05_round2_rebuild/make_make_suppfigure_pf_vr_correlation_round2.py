@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,7 @@ from scipy.stats import spearmanr
 from statsmodels.nonparametric.smoothers_lowess import lowess
 
 
-OUT = Path(__file__).resolve().parent
+OUT = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 DATA = OUT / "mimic_analysis_ready_round2.csv"
 
 

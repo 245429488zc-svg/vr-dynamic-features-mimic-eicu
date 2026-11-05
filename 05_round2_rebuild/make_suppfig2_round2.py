@@ -22,7 +22,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 MIMIC_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv"
 HARM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "harm_landmark_mimic.csv"
 EICU_LM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_landmark_round2.csv"
@@ -32,12 +32,12 @@ OUTCOME = "hospital_expire_flag"
 RNG = 20260722
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -74,6 +74,8 @@ def prepare_predictions() -> pd.DataFrame:
     for a_, b_ in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
         if a_ in eicu_b.columns:
             eicu_b = eicu_b.rename(columns={a_: b_})
+    # harmonized sepsis slot: admissionDx-recorded sepsis (recorded at ICU admission)
+    eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()
 
     rows = []
@@ -232,16 +234,6 @@ def draw_dca(ax, dca: pd.DataFrame, summary: pd.DataFrame, setting: str, panel: 
     ]:
         g = sub[sub["model"].eq(model)]
         ax.plot(g["threshold"], g["net_benefit"], color=COLORS[model], lw=lw, linestyle=ls, label=model)
-    old_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F"))]["Mean net benefit 0.10-0.30"].iloc[0]
-    new_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F + VR"))]["Mean net benefit 0.10-0.30"].iloc[0]
-    ax.text(
-        0.98, 1.08,
-        f"Mean NB 0.10-0.30\nBase+P/F {old_nb:.3f}\n+VR {new_nb:.3f}\nΔ {new_nb-old_nb:.3f}",
-        transform=ax.transAxes,
-        ha="right", va="top", fontsize=6.8,
-        bbox={"facecolor": "white", "edgecolor": "#D0D0D0", "boxstyle": "round,pad=0.25", "alpha": 0.92},
-        clip_on=False,
-    )
     ax.set_xlim(0.05, 0.50)
     ymin = min(-0.02, sub["net_benefit"].quantile(0.01) - 0.01)
     ymax = sub[sub["model"].isin(["Base + P/F", "Base + P/F + VR", "Treat all"])]["net_benefit"].quantile(0.99) + 0.02

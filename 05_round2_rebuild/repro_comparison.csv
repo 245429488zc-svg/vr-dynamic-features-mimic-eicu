@@ -1,0 +1,8 @@
+file,note
+round2_ladders.csv,N:0处>0.0006; Deaths:0处>0.0006; AUROC:0处>0.0006
+round2_harm_ladders.csv,N:0处>0.0006; Deaths:0处>0.0006; AUROC:0处>0.0006
+round2_bootstrap.csv,delta_auc:0处>0.0006
+delong_and_contrast.csv,delta:0处>0.0006
+landmark_incremental_mimic.csv,N:0处>0.0006; Deaths:0处>0.0006; AUROC:0处>0.0006; AUROC (CV):0处>0.0006
+Table3_round2.csv,N:0处>0.0006; Deaths:0处>0.0006
+table2_round2.csv,N:0处>0.0006; OR:0处>0.0006; CI_lower:0处>0.0006; CI_upper:0处>0.0006

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import re
 
@@ -14,10 +15,10 @@ from matplotlib.transforms import blended_transform_factory
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 
-TABLE2_PATH = Path(__file__).resolve().parent / "Table2_early_VR_mortality.csv"
+TABLE2_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "Table2_early_VR_mortality.csv"
 
 FEATURE_LABELS = {
     "VR initial, per 1-SD increase": "VR initial",

@@ -19,7 +19,8 @@ definitions are independent of pairing/truncation). Outcomes are re-jointed from
 OFFICIAL MIMIC-IV tables (admissions.hospital_expire_flag) with a consistency check
 against the legacy flag.
 
-Output: mimic_analysis_ready_round2.csv (+ truncation log, cohort summary log).
+Output: mimic_analysis_ready_round2.csv (+ truncation log, cohort summary log; includes
+sepsis3_48h — the 48-h-determinable Sepsis-3 flag used by every prediction-framework model).
 """
 from __future__ import annotations
 
@@ -35,6 +36,7 @@ READY = ROOT / "outputs" / "pf_vr_dynamic_analysis" / "enhanced" / "mimic_enhanc
 VENT = ROOT / "原始数据" / "mimiciv_derived" / "mimiciv_derived" / "ventilation.csv"
 ICU = ROOT / "原始数据" / "core" / "icustays.csv.gz"
 ADM = ROOT / "原始数据" / "core" / "admissions.csv.gz"
+SEPSIS = ROOT / "原始数据" / "mimiciv_derived" / "mimiciv_derived" / "sepsis3.csv"
 OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 LOG: list[str] = []
@@ -154,6 +156,24 @@ def main() -> None:
                      "hospital_expire_flag", "hadm_id", "subject_id"]
     old_rest = ready.drop(columns=[c for c in drop_from_old if c in ready.columns])
     new_ready = new_feat.merge(old_rest, on="stay_id", how="left")
+    # Keep the original any-time Sepsis-3 flag for association analyses, but use
+    # only information available by the 48-hour landmark for prediction.
+    sep = pd.read_csv(SEPSIS, usecols=["stay_id", "suspected_infection_time", "sofa_time", "sepsis3"])
+    sep = sep.merge(icu[["stay_id", "intime"]], on="stay_id", how="left")
+    for col in ["suspected_infection_time", "sofa_time"]:
+        sep[col] = pd.to_datetime(sep[col], dayfirst=True, errors="coerce")
+    cutoff = sep["intime"] + pd.Timedelta(hours=48)
+    sep["positive_by_48h"] = (
+        sep["sepsis3"].astype(str).str.lower().isin(["t", "true", "1"])
+        & sep["suspected_infection_time"].notna()
+        & sep["sofa_time"].notna()
+        & sep["suspected_infection_time"].le(cutoff)
+        & sep["sofa_time"].le(cutoff)
+    )
+    sepsis_48h = sep.groupby("stay_id")["positive_by_48h"].max()
+    new_ready["sepsis3_48h"] = new_ready["stay_id"].map(sepsis_48h).eq(True).astype(int)
+    stamp(f"Sepsis-3 any-time={int(new_ready['sepsis3'].sum())}, by-48h={int(new_ready['sepsis3_48h'].sum())}; "
+          f"reclassified={int(((new_ready['sepsis3'] == 1) & (new_ready['sepsis3_48h'] == 0)).sum())}")
     new_ready.to_csv(OUTDIR / "mimic_analysis_ready_round2.csv", index=False)
     stamp(f"已保存: mimic_analysis_ready_round2.csv ({len(new_ready)}行×{new_ready.shape[1]}列)")
 
@@ -162,7 +182,7 @@ def main() -> None:
                  "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
                  "bun", "creatinine", "wbc", "bicarbonate"]
     pf_cols, vr_cols = ["pf_initial", "pf_min"], ["vr_initial", "vr_delta"]
-    full_vars = base_cols + pf_cols + vr_cols
+    full_vars = base_cols + ["sepsis3_48h"] + pf_cols + vr_cols
     nr = new_ready.copy()
     nr["hospital_expire_flag"] = nr["hospital_expire_flag"].astype(int)
     cc = nr.dropna(subset=["hospital_expire_flag"] + full_vars).copy()

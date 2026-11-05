@@ -14,7 +14,6 @@ Reuses make_table4's docx builders via module import (paths overridden).
 """
 from __future__ import annotations
 
-import importlib.util
 import math
 import os
 from pathlib import Path
@@ -36,6 +35,10 @@ BASE_A = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
 PF = ["pf_initial", "pf_min"]
 VR = ["vr_initial", "vr_delta"]
 FULL = BASE_A + PF + VR
+# Landmark row must be covariate-time-consistent with Table 3 Row 1: sepsis is the
+# 48-h-determinable Sepsis-3 flag derived by the rebuild (replaces the any-time flag).
+BASE_LM = ["sepsis3_48h" if v == "sepsis3" else v for v in BASE_A]
+FULL_LM = BASE_LM + PF + VR
 MEAS = ["n_points", "vr_time_span_h"]
 LOG: list[str] = []
 
@@ -80,6 +83,53 @@ def fit_joint(cc: pd.DataFrame, variables: list[str], label: str,
     return out, or_df
 
 
+
+
+def build_docx(df, title_text, note_text, out_path):
+    """Self-contained landscape TNR docx writer (replaces the legacy external helper)."""
+    import pandas as pd
+    from docx import Document
+    from docx.enum.section import WD_ORIENT
+    from docx.enum.table import WD_TABLE_ALIGNMENT
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.shared import Cm, Pt
+
+    doc = Document()
+    sec = doc.sections[0]
+    sec.orientation = WD_ORIENT.LANDSCAPE
+    sec.page_width, sec.page_height = sec.page_height, sec.page_width
+    sec.top_margin = Cm(1.5); sec.bottom_margin = Cm(1.5)
+    sec.left_margin = Cm(1.6); sec.right_margin = Cm(1.6)
+
+    title = doc.add_paragraph(); title.paragraph_format.space_after = Pt(8)
+    r0 = title.add_run(title_text); r0.font.name = "Times New Roman"; r0.font.size = Pt(9); r0.font.bold = True
+
+    headers = list(df.columns)
+    table = doc.add_table(rows=1 + len(df), cols=len(headers))
+    table.style = "Table Grid"; table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    widths = [Cm(6.4), Cm(1.6), Cm(1.7), Cm(2.6), Cm(2.6), Cm(3.4), Cm(2.4), Cm(3.0), Cm(3.0)]
+    for j, w in enumerate(widths[:len(headers)]):
+        for row_cells in table.rows:
+            if j < len(row_cells.cells):
+                row_cells.cells[j].width = w
+    for j, h in enumerate(headers):
+        c = table.rows[0].cells[j]; c.text = ""
+        rn = c.paragraphs[0].add_run(str(h)); rn.font.name = "Times New Roman"; rn.font.size = Pt(7); rn.font.bold = True
+    for i, (_, row) in enumerate(df.iterrows(), start=1):
+        for j, h in enumerate(headers):
+            c = table.rows[i].cells[j]; c.text = ""
+            tval = row[h]
+            if pd.isna(tval):
+                tval = "—"
+            rn = c.paragraphs[0].add_run(str(tval))
+            rn.font.name = "Times New Roman"; rn.font.size = Pt(7)
+            if j > 0:
+                c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    note = doc.add_paragraph(); note.paragraph_format.space_before = Pt(6)
+    rn = note.add_run(note_text); rn.font.name = "Times New Roman"; rn.font.size = Pt(6.5)
+    doc.save(out_path)
+
+
 def main() -> None:
     # 装配输入
     rd = pd.read_csv(OUTDIR / "mimic_analysis_ready_round2.csv")
@@ -122,7 +172,7 @@ def main() -> None:
                  (cc0["deathtime"].isna() & cc0["dischtime"].notna() & (cc0["dischtime"] <= hour48)))
     ed = (~died) & cc0["dischtime"].notna() & (cc0["dischtime"] <= hour48)
     cc_lm = cc0.loc[~wd & ~ed]
-    row_l, or_l = fit_joint(cc_lm, FULL, "48-h landmark (alive and hospitalized at 48 h)")
+    row_l, or_l = fit_joint(cc_lm, FULL_LM, "48-h landmark (alive and hospitalized at 48 h)")
     rows.append(row_l)
     stamp(f"landmark行: {row_l['N']}/{row_l['Deaths']} {row_l['VR initial OR (95% CI)']} / {row_l['VR delta OR (95% CI)']} AUROC {row_l['AUROC']}")
 
@@ -134,9 +184,11 @@ def main() -> None:
         d_r = nw.loc[nw.variable.eq("vr_delta"), "OR_CI"].iloc[0] if "variable" in nw.columns else ""
         o_p = nw.loc[nw.variable.eq("vr_initial"), "p"].iloc[0]
         d_p = nw.loc[nw.variable.eq("vr_delta"), "p"].iloc[0]
+        narrow = nw.loc[nw.variable.eq("vr_initial")].iloc[0]
         rows.append({"Analysis": "ABG–ventilator pairs matched within ±1 h", "N": int(nw.get("N", [None])[0] if "N" in nw.columns else None),
-                     "Deaths": None, "VR initial OR (95% CI)": o_r, "VR initial P value": o_p,
-                     "VR delta OR (95% CI)": d_r, "VR delta P value": d_p, "AUROC": "", "Brier": ""})
+                     "Deaths": int(narrow["Deaths"]), "VR initial OR (95% CI)": o_r, "VR initial P value": o_p,
+                     "VR delta OR (95% CI)": d_r, "VR delta P value": d_p,
+                     "AUROC": f"{narrow['AUROC']:.3f}", "Brier": f"{narrow['Brier']:.3f}"})
         stamp(f"±1h行: {o_r} / {d_r}")
 
     # first-24h features (rule-B-trimmed points in [0,24])
@@ -180,10 +232,6 @@ def main() -> None:
     pd.DataFrame(srows).to_csv(OUTDIR / "TableS_strata_round2.csv", index=False)
 
     # docx (reuse make_table4 style builders)
-    spec = importlib.util.spec_from_file_location("m4", ROOT / "13_Table4正式版" / "make_table4_sensitivity.py")
-    m4 = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m4)
-    m4.OUTDIR = OUTDIR
     table4_note = (
         "Sensitivity analyses used the MIMIC-IV internal fully adjusted model on the Round-2 rebuilt cohort "
         "(features re-derived with explicit truncation of the observation window at the earliest of death, "
@@ -197,17 +245,20 @@ def main() -> None:
         "pooled by Rubin's rules. The first 24 h analysis recalculated VR initial, VR delta, initial P/F ratio, "
         "and minimum P/F ratio using paired observations within 0-24 h after ICU admission and required at least "
         "two paired measurements in that window. The measurement-adjusted model additionally included the number "
-        "of paired measurements and the VR observation time span. Brier score is shown as a secondary overall "
-        "prediction error metric.")
+        "of paired measurements and the VR observation time span. In the 48-h landmark row, sepsis denotes the "
+        "48-hour-determinable Sepsis-3 definition (suspected-infection onset and qualifying SOFA assessment both "
+        "within the first 48 h), consistent with Table 3 Row 1, which is fitted on the same landmark cohort; the "
+        "association-framework rows retain the any-time Sepsis-3 flag and the covariate-adjustment interpretation "
+        "stated in the Methods. Brier score is shown as a secondary overall prediction error metric.")
     strata_note = (
         "Patients were stratified according to the number of paired P/F-VR measurements obtained within the first "
         "48 h after ICU admission (rebuilt cohort). Each stratum used the same fully adjusted complete-case model "
         "as the primary analysis, including COPD, congestive heart failure, initial and minimum P/F ratio, VR "
         "initial, and VR delta. Odds ratios are reported per 1-SD increase within each stratum. This analysis "
         "evaluates whether the VR-mortality association is consistent across different measurement frequencies.")
-    m4.build_docx(t4, "Table 4. Sensitivity analyses for the association between early VR features and hospital mortality.",
+    build_docx(t4, "Table 4. Sensitivity analyses for the association between early VR features and hospital mortality.",
                   table4_note, OUTDIR / "Table4_round2_TNR_xiaoliu.docx")
-    m4.build_docx(pd.DataFrame(srows)[["Stratum", "N", "Deaths", "VR initial OR (95% CI)", "VR initial P value",
+    build_docx(pd.DataFrame(srows)[["Stratum", "N", "Deaths", "VR initial OR (95% CI)", "VR initial P value",
                                        "VR delta OR (95% CI)", "VR delta P value", "AUROC", "Brier"]],
                   "Supplementary Table 4. Stratified analyses by the number of paired P/F-VR measurements.",
                   strata_note, OUTDIR / "TableS4_round2_TNR_xiaoliu.docx")

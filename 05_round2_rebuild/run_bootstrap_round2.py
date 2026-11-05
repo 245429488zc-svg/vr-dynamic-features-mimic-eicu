@@ -28,10 +28,10 @@ OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 B = 2000
-BASE_FULL = ["age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+BASE_FULL = ["age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
              "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
              "bun", "creatinine", "wbc", "bicarbonate"]
-BASE_H = ["age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+BASE_H = ["age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
           "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate"]
 PF = ["pf_initial", "pf_min"]
 VR = ["vr_initial", "vr_delta"]
@@ -151,7 +151,8 @@ def main() -> None:
             eic_lm = eic_lm.rename(columns={a: b})
     eic_lm = eic_lm.dropna(subset=[OUTCOME] + BASE_H + PF + VR).copy()
     stamp(f"bootstrap eICU-lm: n={len(eic_lm)}")
-    harm["sepsis_h"] = harm["sepsis_h"].astype(int)
+    # harm frame written by master_part2 with the sepsis48 slot (48-h Sepsis-3 on MIMIC side)
+    harm["sepsis48"] = harm["sepsis48"].astype(int)
 
     # fixed-coeff transport bootstrap (mirror: resample eICU rows, no refit)
     def fit_scaled(df, vars_):

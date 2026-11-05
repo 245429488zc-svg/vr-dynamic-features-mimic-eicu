@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -15,25 +16,26 @@ from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 
-MIMIC_PATH = Path(__file__).resolve().parent / "landmark_cohort_round2.csv"
-HARM_PATH = Path(__file__).resolve().parent / "harm_landmark_mimic.csv"
-EICU_LM_PATH = Path(__file__).resolve().parent / "eicu_landmark_round2.csv"
+MIMIC_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv"
+BT_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "round2_bootstrap.csv"
+HARM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "harm_landmark_mimic.csv"
+EICU_LM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_landmark_round2.csv"
 
-TABLE3_PATH = Path(__file__).resolve().parent / "Table3_round2.csv"
+TABLE3_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "Table3_round2.csv"
 
 OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -138,6 +140,8 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
     for a_, b_ in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
         if a_ in eicu_b.columns:
             eicu_b = eicu_b.rename(columns={a_: b_})
+    # Harmonized sepsis slot: admissionDx-recorded sepsis in the eICU cohort.
+    eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()
 
     settings = []
@@ -168,7 +172,7 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
                     }
                 )
         _, p_value = delong_test(y, pred_old, pred_new)
-        idi, nri = idi_nri(y, pred_old, pred_new)
+        bt_row = globals()["_BT"].iloc[len(summary_rows)]
         auc_old = roc_auc_score(y, pred_old)
         auc_new = roc_auc_score(y, pred_new)
         summary_rows.append(
@@ -178,10 +182,10 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
                 "Deaths": int(y.sum()),
                 "AUROC before": auc_old,
                 "AUROC after": auc_new,
-                "Delta AUROC": auc_new - auc_old,
+                "Delta AUROC (bootstrap)": float(bt_row["delta_auc"]),
                 "DeLong P value": p_value,
-                "IDI": idi,
-                "NRI": nri,
+                "IDI": float(bt_row["idi"]),
+                "NRI": float(bt_row["nri"]),
                 "Brier before": brier_score_loss(y, pred_old),
                 "Brier after": brier_score_loss(y, pred_new),
             }
@@ -217,7 +221,7 @@ def draw_roc_panel(ax, roc_df: pd.DataFrame, summary_df: pd.DataFrame, setting: 
     ax.text(
         0.04,
         0.19,
-        f"ΔAUROC={summ['Delta AUROC']:.3f}\nDeLong {fmt_p(summ['DeLong P value'])}",
+        f"ΔAUROC={summ['Delta AUROC (bootstrap)']:.3f}\nDeLong {fmt_p(summ['DeLong P value'])}",
         transform=ax.transAxes,
         ha="left",
         va="bottom",
@@ -236,7 +240,7 @@ def draw_increment_panel(ax, summary_df: pd.DataFrame):
     )
     plot_df = plot_df.sort_values("setting_label")
     metrics = [
-        ("Delta AUROC", "ΔAUROC", "#4C78A8"),
+        ("Delta AUROC (bootstrap)", "ΔAUROC", "#4C78A8"),
         ("IDI", "IDI", "#72B7B2"),
         ("NRI", "NRI", "#E45756"),
     ]
@@ -249,7 +253,7 @@ def draw_increment_panel(ax, summary_df: pd.DataFrame):
             ax.text(val + 0.006, y, f"{val:.3f}", va="center", ha="left", fontsize=7.2, color=color)
     ax.axvline(0, color="#808080", linestyle=(0, (4, 3)), linewidth=0.9)
     ax.set_yticks(y_base)
-    ax.set_yticklabels(plot_df["setting"])
+    ax.set_yticklabels(["MIMIC internal", "MIMIC harmonized", "eICU transported"])
     ax.invert_yaxis()
     ax.set_xlim(-0.01, 0.30)
     ax.set_xlabel("Incremental metric value")
@@ -276,7 +280,7 @@ def make_figure(roc_df: pd.DataFrame, summary_df: pd.DataFrame) -> plt.Figure:
     draw_roc_panel(axes[1, 0], roc_df, summary_df, "eICU (48-h landmark, transported)", "C. eICU external validation (transported, 48-h landmark)")
     draw_increment_panel(axes[1, 1], summary_df)
     fig.suptitle("Figure 4. Incremental predictive value of VR beyond P/F", fontsize=12.2, fontweight="bold", y=0.98)
-    fig.subplots_adjust(left=0.08, right=0.98, top=0.91, bottom=0.11, hspace=0.42, wspace=0.32)
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.91, bottom=0.11, hspace=0.42, wspace=0.42)
     fig.text(
         0.08,
         0.035,
@@ -319,7 +323,7 @@ def write_log(summary_df: pd.DataFrame, validation_notes: list[str]) -> None:
         log.append(
             f"- {row['setting']}: n={int(row['N'])}, deaths={int(row['Deaths'])}, "
             f"AUROC {row['AUROC before']:.3f}->{row['AUROC after']:.3f}, "
-            f"Delta={row['Delta AUROC']:.3f}, IDI={row['IDI']:.3f}, NRI={row['NRI']:.3f}."
+            f"Delta={row['Delta AUROC (bootstrap)']:.3f}, IDI={row['IDI']:.3f}, NRI={row['NRI']:.3f}."
         )
     log += [
         "",
@@ -344,6 +348,8 @@ def write_log(summary_df: pd.DataFrame, validation_notes: list[str]) -> None:
 
 
 def main() -> None:
+    bt_df = pd.read_csv(BT_PATH)  # bootstrap Δ (unified display口径 with Table 3)
+    globals()['_BT'] = bt_df
     roc_df, summary_df = prepare_predictions()
     validation_notes = validate_against_table3(summary_df)
     fig = make_figure(roc_df, summary_df)

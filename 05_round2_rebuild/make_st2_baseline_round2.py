@@ -10,6 +10,7 @@ measurements or missing hospital mortality.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import numpy as np
@@ -27,12 +28,12 @@ from docx.shared import Cm, Pt
 
 ROOT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目4")
 REVIEW = Path("/Volumes/tongtong/论文/icuVR与死亡的关联")
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 RAW = ROOT / "原始数据"
 MIMIC = RAW / "mimiciv_derived" / "mimiciv_derived"
 EICU = RAW / "eICU" / "eICU"
-FINAL_MIMIC = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
-FINAL_EICU = Path(__file__).resolve().parent / "eicu_analysis_ready_round2.csv"
+FINAL_MIMIC = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
+FINAL_EICU = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_analysis_ready_round2.csv"
 
 WINDOW_H = 48
 PAIR_WINDOW_H = 2.0

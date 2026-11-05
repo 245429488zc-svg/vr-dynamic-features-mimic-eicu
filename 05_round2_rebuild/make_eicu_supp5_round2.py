@@ -21,7 +21,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_analysis_ready_round2.csv"
 OUTCOME = "hospital_expire_flag"
