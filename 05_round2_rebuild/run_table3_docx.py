@@ -92,100 +92,78 @@ def main() -> None:
         lo, hi = ci.rsplit("-", 1)
         return f"{float(lo):.3f}-{float(hi):.3f}"
 
-    def harm_row(row_label: str, boot_key: str, delong_key: str,
-                 before: str = "Base + P/F", after: str = "Base + P/F + VR") -> dict:
-        b, a = ladder_pick(lad, row_label, before, after)
+    def fmt_p(p: str) -> str:
+        try:
+            v = float(p)
+        except (TypeError, ValueError):
+            return str(p)
+        return "<0.001" if v < 0.001 else f"{v:.3f}"
+
+    def row_dict(label: str, b: str, a: str, boot_key: str, delong_key: str) -> dict:
         d, dci, nri, nri_ci, nre, nrn, idi, idi_ci = bmap[boot_key]
-        p = dmap.get(delong_key, "")
-        return {"Analysis": row_label, "AUROC before": b, "AUROC after": a,
-                "Delta AUROC (95% CI)": f"{float(d):.3f} ({rng_fmt_boot(dci)})",
-                "DeLong P value": p,
-                "IDI (95% CI)": f"{idi} ({idi_ci})", "NRI (95% CI)": f"{nri} ({nri_ci})",
-                "NRI events/non-events": f"{nre}/{nrn}"}
+        return {"Cohort / setting": label, "AUROC before": b, "AUROC after": a,
+                "Delta AUROC": f"{float(d):.3f} ({rng_fmt_boot(dci)})",
+                "DeLong P value": fmt_p(dmap.get(delong_key, "")),
+                "IDI": idi, "NRI": f"{nri} ({nri_ci})",
+                "_evne": f"{nre}/{nrn}"}
 
     rows = [
-        harm_row("MIMIC landmark FULL SPEC (internal)",
+        row_dict("MIMIC-IV internal model",
+                 *ladder_pick(lad, "MIMIC landmark FULL SPEC (internal)", "Base + P/F", "Base + P/F + VR"),
                  "S1 MIMIC landmark FULL-spec ladder (VR step)", "S1 MIMIC landmark FULL-spec (VR step)"),
     ]
-    # harm row from part-2's own-cohort ladder
+    # harmonized row from part-2's own-cohort ladder
     b = lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F"), "AUROC"].iloc[0]
     a = lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F + VR"), "AUROC"].iloc[0]
-    d, dci, nri, nri_ci, nre, nrn, idi, idi_ci = bmap["S2 MIMIC landmark HARMONIZED ladder (VR step)"]
-    p = dmap["S2 MIMIC landmark HARMONIZED (VR step)"]
-    n_h = int(lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F + VR"), "N"].iloc[0])
-    d_h = int(lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
-    rows.append({"Analysis": "MIMIC-IV landmark HARMONIZED", "AUROC before": b, "AUROC after": a,
-                 "Delta AUROC (95% CI)": f"{float(d):.3f} ({rng_fmt_boot(dci)})",
-                 "DeLong P value": p,
-                 "IDI (95% CI)": f"{idi} ({idi_ci})", "NRI (95% CI)": f"{nri} ({nri_ci})",
-                 "NRI events/non-events": f"{nre}/{nrn}"})
+    rows.append(row_dict("MIMIC-IV harmonized reduced model", b, a,
+                         "S2 MIMIC landmark HARMONIZED ladder (VR step)", "S2 MIMIC landmark HARMONIZED (VR step)"))
 
     # eICU transported from part-2's transported (own-cohort coeffs)
     b_e = lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F"), "AUROC"].iloc[0]
     a_e = lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "AUROC"].iloc[0]
-    d, dci, nri, nri_ci, nre, nrn, idi, idi_ci = bmap["S3 eICU landmark transported (fixed coeffs)"]
-    p = dmap["S3 eICU landmark TRANSPORTED (fixed coeffs, VR step)"]
-    n_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "N"].iloc[0])
-    d_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
-    def rng_fmt(ci: str) -> str:
-        lo, hi = ci.rsplit("-", 1)
-        return f"{float(lo):.3f}-{float(hi):.3f}"
-    rows.append({"Analysis": "eICU landmark (transported, fixed MIMIC coefficients)",
-                 "AUROC before": b_e, "AUROC after": a_e,
-                 "Delta AUROC (95% CI)": f"{float(d):.3f} ({rng_fmt(dci)})",
-                 "DeLong P value": p,
-                 "IDI (95% CI)": f"{idi} ({idi_ci})", "NRI (95% CI)": f"{nri} ({nri_ci})",
-                 "NRI events/non-events": f"{nre}/{nrn}"})
+    rows.append(row_dict("eICU external validation (transported)", b_e, a_e,
+                         "S3 eICU landmark transported (fixed coeffs)",
+                         "S3 eICU landmark TRANSPORTED (fixed coeffs, VR step)"))
 
     t3 = pd.DataFrame(rows)
+    evne = t3.pop("_evne")
     n_f = int(lad.loc[(lad["Row"] == "MIMIC landmark FULL SPEC (internal)") &
                       (lad["Model"] == "Base + P/F + VR"), "N"].iloc[0])
     d_f = int(lad.loc[(lad["Row"] == "MIMIC landmark FULL SPEC (internal)") &
                       (lad["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
+    n_h = int(lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F + VR"), "N"].iloc[0])
+    d_h = int(lad2.loc[(lad2["Row"] == "MIMIC harm (own cohort)") & (lad2["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
+    n_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "N"].iloc[0])
+    d_e = int(lad2.loc[(lad2["Row"] == "eICU landmark (transported)") & (lad2["Model"] == "Base + P/F + VR"), "Deaths"].iloc[0])
     t3.insert(1, "N", [n_f, n_h, n_e])
     t3.insert(2, "Deaths", [d_f, d_h, d_e])
     t3.to_csv(OUTDIR / "Table3_round2.csv", index=False)
     stamp("Table3 rows assembled:")
-    print(t3.to_string(index=False))
+    print(t3.assign(evne=evne.values).to_string(index=False))
 
+    ev1, ev2, ev3 = evne.values
     note = (
-        "Table 3 reports the prediction analyses within the 48-hour landmark framework: patients alive and "
-        "hospitalized at 48 hours after ICU admission, with hospital death after the landmark time as the outcome, "
-        "following the Round-2 rebuild (observation window truncated at the earliest of death, terminal extubation, "
-        "ICU discharge, or hospital discharge; vital status ascertained from the official admissions tables; "
-        "569 MIMIC-IV stays no longer met the three-pair requirement after window-boundary truncation and were "
-        "excluded, and hospital mortality was re-ascertained from the official admissions tables for every "
-        "eligible stay — the legacy outcome files lacked it for 110 MIMIC-IV and 167 eICU stays). "
-        "Before = Base + P/F model; After = additional inclusion of VR initial and VR delta (per 1-SD increase, "
-        "modeled conditional on VR initial). Row 1 uses the fully adjusted specification (age, sex, Charlson index, "
-        "sepsis (Sepsis-3, 48-hour-determinable: suspected-infection onset and qualifying SOFA assessment both "
-        "within the first 48 hours), COPD, CHF, SOFA, PEEP, driving pressure, Vt/PBW, heart rate, MAP, temperature, "
-        "lactate, BUN, creatinine, WBC, bicarbonate, initial and minimum P/F); demographics and comorbidity "
-        "variables (age, sex, Charlson index, COPD, CHF) are fixed admission-level (history) characteristics, "
-        "and every time-varying covariate, including the 48-hour-determinable sepsis flag, is determined within "
-        "the first 48 hours. Rows 2-3 use the harmonized reduced "
-        "specification (Row 1 minus SOFA, driving pressure, and lactate), with sepsis determinable by the 48-hour "
-        "landmark time in both databases: the Row-1 48-hour Sepsis-3 definition in MIMIC-IV, and sepsis among the "
-        "recorded admission diagnoses (admissionDx) in eICU. "
-        "Row 2 is fitted in MIMIC-IV and transported "
-        "unchanged (fixed coefficients and the MIMIC-fitted scaler) to the eICU landmark cohort in Row 3. "
-        "Delta/IDI/NRI are paired-model statistics with bootstrap 95% confidence intervals (2,000 draws; derivation "
-        "settings refit per resample; eICU transported evaluated with fixed coefficients per resample). As a "
-        "single-variable sensitivity to cross-database definitional asymmetry, removing the sepsis covariate from "
-        "both sides of the harmonized specification yielded directionally and quantitatively consistent results "
-        "(VR-step Delta AUROC 0.006, 95% CI 0.004-0.009 in the harmonized fit and 0.008, 95% CI -0.004-0.020 in the "
-        "transported application; DeLong P = 0.177 for the transported step; Supplementary Table 6). "
-        "For continuity, the association-framework ladder (corrected specification: the fully adjusted 18 "
-        "covariates including COPD and CHF) on the rebuilt complete-case cohort (n=10,428) gives apparent AUROC "
-        "0.842 to 0.847 (VR-step Delta 0.0050, 95% CI 0.0031-0.0073; 5-fold cross-validated AUROC 0.840 to "
-        "0.844, optimism <=0.003, out-of-sample calibration -0.018/0.983). Within the landmark framework, the "
-        "fully adjusted models showed 5-fold cross-validated AUROCs of "
-        f"{lm_cv.loc[lm_cv.Model.eq('Base'), 'AUROC (CV)'].iloc[0]:.3f} (Base), "
-        f"{lm_cv.loc[lm_cv.Model.eq('Base + P/F'), 'AUROC (CV)'].iloc[0]:.3f} (Base + P/F), and "
-        f"{lm_cv.loc[lm_cv.Model.eq('Base + P/F + VR'), 'AUROC (CV)'].iloc[0]:.3f} "
-        "(Base + P/F + VR); calibration and optimism estimates are reported in the analysis log."
+        "The comparison evaluates the incremental value of adding VR initial and VR delta to the Base + P/F model "
+        "among patients alive and hospitalized at 48 hours after ICU admission, with in-hospital death after 48 "
+        "hours as the outcome (the 48-hour landmark framework; cohort flow and the explicit window truncation are "
+        "shown in Figure 1). In rows 1–2 the Base model comprised the fully adjusted covariates stated in the "
+        "Methods, with sepsis as the 48-hour-determinable Sepsis-3 flag (suspected-infection onset and qualifying "
+        "SOFA assessment within the first 48 hours); the harmonized reduced row omitted SOFA, driving pressure, "
+        "and lactate, used the same MIMIC-IV sepsis definition in the fitting cohort and recorded admission "
+        "diagnoses in eICU, and was transported with fixed coefficients and the MIMIC-IV-fitted scaler. P/F "
+        "variables were the initial and minimum values; VR variables were VR initial and VR delta (per 1-SD "
+        "increase, delta modeled conditional on initial; see the Methods). ΔAUROC was calculated as the AUROC "
+        "after adding VR minus the AUROC before; 95% confidence intervals were estimated by bootstrap resampling "
+        "(2,000 draws; derivation settings refit per resample, the transported setting evaluated with fixed "
+        "coefficients per resample). IDI, integrated discrimination improvement; NRI denotes the category-free net "
+        "reclassification improvement, with event and non-event components of "
+        f"{ev1}, {ev2}, and {ev3}. "
+        "For continuity with the association framework, the same VR step on the rebuilt complete-case cohort "
+        "(n = 10,428) increased apparent AUROC from 0.842 to 0.847 (Δ 0.005, 95% CI 0.003–0.007; cross-validated "
+        "0.840 to 0.844); removing sepsis from both sides of the harmonized specification yielded directionally "
+        "consistent results (Δ 0.006 and 0.008; Supplementary Table 6)."
     )
-    build_docx(t3, "Table 3. Incremental predictive value of early VR features beyond P/F ratio (48-hour landmark framework).",
+    build_docx(t3, "Table 3. Incremental value of early ventilatory ratio features beyond P/F ratio in the 48-hour landmark framework.",
                   note, OUTDIR / "Table3_round2_TNR_xiaoliu.docx")
     (OUTDIR / "master_part5_log.md").write_text("# Table 3 assembly\n\n" + "\n".join(LOG), encoding="utf-8")
     stamp("Table 3 docx 完成")
