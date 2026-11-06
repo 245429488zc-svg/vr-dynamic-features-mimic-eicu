@@ -144,14 +144,16 @@ def main() -> None:
         mp = pd.read_csv(mice_path)
         mi = mp.loc[mp.variable.eq("vr_initial")].iloc[0]
         dl = mp.loc[mp.variable.eq("vr_delta")].iloc[0]
+        auroc_row = mp.loc[mp.variable.eq("AUROC"), "OR"].iloc[0] if (mp.variable == "AUROC").any() else ""
+        brier_row = mp.loc[mp.variable.eq("Brier"), "OR"].iloc[0] if (mp.variable == "Brier").any() else ""
         rows.append({"Analysis": "Multiple imputation (m = 10, outcome in imputation model)", "N": len(rd),
                      "Deaths": int(rd[OUTCOME].sum()),
                      "VR initial OR (95% CI)": fmt_or(mi.OR, mi.CI_lower, mi.CI_upper),
                      "VR initial P value": "<0.001" if mi.p_value < 0.001 else f"{mi.p_value:.3f}",
                      "VR delta OR (95% CI)": fmt_or(dl.OR, dl.CI_lower, dl.CI_upper),
                      "VR delta P value": "<0.001" if dl.p_value < 0.001 else f"{dl.p_value:.3f}",
-                     "AUROC": str(round(float(mp.get("AUROC", [np.nan])[0]), 3)) if "AUROC" in mp.columns else "Not reported",
-                     "Brier": "Not reported"})
+                     "AUROC": f"{float(auroc_row):.3f}" if auroc_row != "" else "",
+                     "Brier": f"{float(brier_row):.3f}" if brier_row != "" else ""})
         stamp(f"mice行: {rows[-1]['VR initial OR (95% CI)']} / {rows[-1]['VR delta OR (95% CI)']}")
     else:
         stamp("!! mice输出尚未生成——待 run_mice_round2 完成后重跑此装配")
@@ -252,8 +254,8 @@ def main() -> None:
         "within the first 48 h), consistent with Table 3 Row 1, which is fitted on the same landmark cohort; the "
         "association-framework rows retain the any-time Sepsis-3 flag and the covariate-adjustment interpretation "
         "stated in the Methods. Brier score is shown as a secondary overall prediction error metric. For the "
-        "multiple-imputation row, the odds ratios are pooled by Rubin's rules across the m=10 imputations; pooled "
-        "discrimination and Brier metrics are not reported.")
+        "multiple-imputation row, the odds ratios are pooled by Rubin's rules across the m=10 imputations, and "
+        "discrimination and Brier metrics are averaged across the m=10 imputed models.")
     strata_note = (
         "Patients were stratified according to the number of paired P/F-VR measurements obtained within the first "
         "48 h after ICU admission (rebuilt cohort). Each stratum used the same fully adjusted complete-case model "

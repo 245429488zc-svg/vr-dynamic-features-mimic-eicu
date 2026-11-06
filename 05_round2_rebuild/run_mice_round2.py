@@ -161,7 +161,12 @@ def main() -> None:
     stamp(f"[含结局MICE] VR delta:   {fmt(delta['OR'], delta['CI_lower'], delta['CI_upper'])}, P={delta['p_value']:.3g}")
 
     perf.to_csv(OUT / "mice_outcome_iteration_performance.csv", index=False)
-    pooled.to_csv(OUT / "mice_outcome_pooled_OR.csv", index=False)
+    pooled_out = pooled.copy()
+    pooled_out.loc[len(pooled_out)] = {"variable": "AUROC", "OR": float(perf.AUROC.mean()),
+                                       "CI_lower": "", "CI_upper": "", "p_value": "", "between_var": ""}
+    pooled_out.loc[len(pooled_out)] = {"variable": "Brier", "OR": float(perf.Brier.mean()),
+                                       "CI_lower": "", "CI_upper": "", "p_value": "", "between_var": ""}
+    pooled_out.to_csv(OUT / "mice_outcome_pooled_OR.csv", index=False)
     (OUT / "mice_outcome_log.md").write_text(
         "# 含结局MICE日志（R1.11/R2.8）\n\n"
         "- 与已发表Table 4 MICE管道完全一致（数据/22变量分析集/m=10/burn-in=5/Rubin合并/seed=20260721），唯一改动：结局变量纳入插补模型。\n"
