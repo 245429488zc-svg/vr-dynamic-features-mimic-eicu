@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="907.2pt" height="507.816pt" viewBox="0 0 907.2 507.816" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-11-06T22:34:18.140880</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.8.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 507.816 
+L 907.2 507.816 
+L 907.2 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 47.655 98.911017 
+L 240.165 98.911017 
+L 240.165 60.295852 
+L 47.655 60.295852 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 240.165 79.603435 
+Q 246.4425 79.603435 251.322458 79.603435 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 244.922458 76.403435 
+L 251.322458 79.603435 
+L 244.922458 82.803435 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 252.72 100.519983 
+L 425.7 100.519983 
+L 425.7 58.686887 
+L 252.72 58.686887 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 47.655 169.705487 
+L 240.165 169.705487 
+L 240.165 131.090322 
+L 47.655 131.090322 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 143.91 98.911017 
+Q 143.91 115.00067 143.91 129.692779 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 147.31 122.892779 
+L 143.91 129.692779 
+L 140.51 122.892779 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 240.165 150.397904 
+Q 246.4425 150.397904 251.322458 150.397904 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 244.922458 147.197904 
+L 251.322458 150.397904 
+L 244.922458 153.597904 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 252.72 171.314452 
+L 425.7 171.314452 
+L 425.7 129.481357 
+L 252.72 129.481357 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 47.655 240.499957 
+L 240.165 240.499957 
+L 240.165 201.884791 
+L 47.655 201.884791 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 143.91 169.705487 
+Q 143.91 185.795139 143.91 200.487249 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 147.31 193.687249 
+L 143.91 200.487249 
+L 140.51 193.687249 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 240.165 221.192374 
+Q 246.4425 221.192374 251.322458 221.192374 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 244.922458 217.992374 
+L 251.322458 221.192374 
+L 244.922458 224.392374 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 252.72 242.108922 
+L 425.7 242.108922 
+L 425.7 200.275826 
+L 252.72 200.275826 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 47.655 311.294426 
+L 240.165 311.294426 
+L 240.165 272.679261 
+L 47.655 272.679261 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 143.91 240.499957 
+Q 143.91 256.589609 143.91 271.281718 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 147.31 264.481718 
+L 143.91 271.281718 
+L 140.51 264.481718 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 443.835 98.911017 
+L 636.345 98.911017 
+L 636.345 60.295852 
+L 443.835 60.295852 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 443.835 169.705487 
+L 636.345 169.705487 
+L 636.345 131.090322 
+L 443.835 131.090322 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 540.09 98.911017 
+Q 540.09 115.00067 540.09 129.692779 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 543.49 122.892779 
+L 540.09 129.692779 
+L 536.69 122.892779 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 636.345 150.397904 
+Q 644.0175 150.397904 650.292458 150.397904 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 643.892458 147.197904 
+L 650.292458 150.397904 
+L 643.892458 153.597904 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 651.69 171.314452 
+L 824.67 171.314452 
+L 824.67 129.481357 
+L 651.69 129.481357 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 443.835 240.499957 
+L 636.345 240.499957 
+L 636.345 201.884791 
+L 443.835 201.884791 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 540.09 169.705487 
+Q 540.09 185.795139 540.09 200.487249 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 543.49 193.687249 
+L 540.09 200.487249 
+L 536.69 193.687249 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 636.345 221.192374 
+Q 644.0175 221.192374 650.292458 221.192374 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 643.892458 217.992374 
+L 650.292458 221.192374 
+L 643.892458 224.392374 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 651.69 242.108922 
+L 824.67 242.108922 
+L 824.67 200.275826 
+L 651.69 200.275826 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 443.835 311.294426 
+L 636.345 311.294426 
+L 636.345 272.679261 
+L 443.835 272.679261 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 540.09 240.499957 
+Q 540.09 256.589609 540.09 271.281718 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 543.49 264.481718 
+L 540.09 271.281718 
+L 536.69 264.481718 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 636.345 291.986843 
+Q 644.0175 291.986843 650.292458 291.986843 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 643.892458 288.786843 
+L 650.292458 291.986843 
+L 643.892458 295.186843 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 651.69 312.903391 
+L 824.67 312.903391 
+L 824.67 271.070296 
+L 651.69 271.070296 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.25; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 40.68 490.694048 
+L 866.52 490.694048 
+L 866.52 418.290613 
+L 40.68 418.290613 
+z
+" clip-path="url(#pfc0e628565)" style="fill: #ffffff; stroke: #000000; stroke-width: 1.4; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 143.91 311.294426 
+Q 143.91 364.79252 143.91 416.893071 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 147.51 409.693071 
+L 143.91 416.893071 
+L 140.31 409.693071 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 540.09 311.294426 
+Q 540.09 364.79252 540.09 416.893071 
+" clip-path="url(#pfc0e628565)" style="fill: none; stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+    <path d="M 543.69 409.693071 
+L 540.09 416.893071 
+L 536.49 409.693071 
+z
+" clip-path="url(#pfc0e628565)" style="stroke: #000000; stroke-width: 1.25; stroke-linecap: round"/>
+   </g>
+   <g id="text_1">
+    <text style="font: 700 14px 'Times New Roman'; text-anchor: middle" x="453.6" y="29.20548" transform="rotate(-0 453.6 29.20548)">Figure 1. Study flow diagram.</text>
+   </g>
+   <g id="text_2">
+    <text style="font: 700 12px 'Times New Roman'; text-anchor: middle" x="143.91" y="42.068992" transform="rotate(-0 143.91 42.068992)">MIMIC-IV</text>
+   </g>
+   <g id="text_3">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(76.571438 77.254522)">Adult first ICU stays from MIMIC-IV</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(124.198688 86.180472)">(n=85,242)</text>
+   </g>
+   <g id="text_4">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(272.02275 73.565625)">Excluded from total ICU stays (n=94,458):</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(289.166906 81.477263)">non-adult or non-first ICU stays</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(323.688609 89.3889)">(n=9,216)</text>
+   </g>
+   <g id="text_5">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(77.566938 143.594267)">Early invasive mechanical ventilation</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(87.083313 152.520217)">within 24 h after ICU admission</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(124.198688 161.429667)">(n=28,387)</text>
+   </g>
+   <g id="text_6">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(277.050094 140.418901)">Excluded: no early invasive mechanical</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(322.530188 148.330539)">ventilation</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(288.840891 156.227551)">within 24 h after ICU admission</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(321.738609 164.124564)">(n=56,855)</text>
+   </g>
+   <g id="text_7">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(63.990875 214.396986)">At least 3 valid paired P/F-VR measurements</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(84.277625 223.306436)">within the truncated 48-h window</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(124.198688 232.215886)">(n=12,694)</text>
+   </g>
+   <g id="text_8">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(274.661344 207.257552)">Excluded: fewer than 3 valid pairs within</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(334.445297 215.154565)">the</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(279.090891 223.051577)">window; 569 stays lost eligibility after</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(293.828625 230.963215)">window-boundary truncation</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(321.738609 238.874852)">(n=15,693)</text>
+   </g>
+   <g id="text_9">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(86.427438 285.183206)">Final MIMIC-IV analysis cohort</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(63.950313 294.109156)">(vital status from official admissions records)</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(98.253813 303.018606)">(n=12,694; deaths=2,514)</text>
+   </g>
+   <g id="text_10">
+    <text style="font: 700 12px 'Times New Roman'; text-anchor: middle" x="540.09" y="42.068992" transform="rotate(-0 540.09 42.068992)">eICU</text>
+   </g>
+   <g id="text_11">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(511.489313 77.254522)">Adult ICU stays</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(518.178688 86.180472)">(n=193,153)</text>
+   </g>
+   <g id="text_12">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(473.746938 143.594267)">Early invasive mechanical ventilation</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(483.263313 152.520217)">within 24 h after ICU admission</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(522.578688 161.429667)">(n=4,141)</text>
+   </g>
+   <g id="text_13">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(676.020094 140.418901)">Excluded: no early invasive mechanical</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(721.500187 148.330539)">ventilation</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(687.810891 156.227551)">within 24 h after ICU admission</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(718.758609 164.124564)">(n=189,012)</text>
+   </g>
+   <g id="text_14">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(460.170875 214.396986)">At least 3 valid paired P/F-VR measurements</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(480.457625 223.306436)">within the truncated 48-h window</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(522.578688 232.215886)">(n=1,425)</text>
+   </g>
+   <g id="text_15">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(673.631344 215.16919)">Excluded: fewer than 3 valid pairs within</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(704.389547 223.066202)">the truncated window</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(722.658609 230.963215)">(n=2,716)</text>
+   </g>
+   <g id="text_16">
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(474.108563 285.183206)">Final eICU external validation cohort</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(467.711375 294.092656)">(discharge status Alive/Expired required)</text>
+    <text style="font: 8.8px 'Times New Roman'" transform="translate(499.933813 303.018606)">(n=1,420; deaths=396)</text>
+   </g>
+   <g id="text_17">
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(690.700547 285.956347)">Excluded: discharge status not</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(716.0865 293.867984)">Alive/Expired</text>
+    <text style="font: 7.8px 'Times New Roman'" transform="translate(729.483609 301.764997)">(n=5)</text>
+   </g>
+   <g id="text_18">
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 424.820311)">Analysis sets</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 433.879098)"> MIMIC-IV:  full analysis / MICE cohort                    n=12,694; deaths=2,514</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 442.937885)">            fully adjusted complete case                  n=10,428; deaths=2,178  (excluded 2,266, internal-model variables)</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 451.996671)">            harmonized complete case (fit for transport)  n=11,251; deaths=2,315  (excluded 1,443, harmonized-model variables)</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 461.055458)">            48-h landmark prediction cohort               n=9,960; deaths after 48 h = 1,730</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 470.114245)"> eICU:      association cohort (full)                     n=1,420; deaths=396</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 479.173032)">            harmonized complete case / 48-h landmark      n=1,332 / 1,216; deaths=376 / 274</text>
+    <text style="font: 7.3px 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace" transform="translate(52.956 488.231818)">            landmark complete case (transported)          n=1,206; deaths=269</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfc0e628565">
+   <rect x="7.2" y="7.2" width="892.8" height="493.416"/>
+  </clipPath>
+ </defs>
+</svg>

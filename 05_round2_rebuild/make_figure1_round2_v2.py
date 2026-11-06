@@ -58,22 +58,29 @@ EICU_STEPS = [
 ]
 
 ANALYSIS_SETS = [
-    "MIMIC-IV full analysis / MICE cohort: n=12,694; deaths=2,514",
-    "MIMIC-IV internal fully adjusted complete-case cohort: n=10,428; deaths=2,178; excluded=2,266 with missing internal model variables",
-    "MIMIC-IV harmonized complete-case cohort (fit for eICU transport): n=11,251; deaths=2,315; excluded=1,443 with missing harmonized model variables",
-    "MIMIC-IV 48-h landmark prediction cohort: n=9,960; deaths after 48 h=1,730",
-    "eICU association cohort: n=1,420; deaths=396",
-    "eICU harmonized complete-case / 48-h landmark cohort: n=1,332 / 1,216; deaths=376 / 274",
-    "eICU landmark model complete-case (transported evaluation): n=1,206; deaths=269",
+    "Analysis sets",
+    " MIMIC-IV:  full analysis / MICE cohort                    n=12,694; deaths=2,514",
+    "            fully adjusted complete case                  n=10,428; deaths=2,178  (excluded 2,266, internal-model variables)",
+    "            harmonized complete case (fit for transport)  n=11,251; deaths=2,315  (excluded 1,443, harmonized-model variables)",
+    "            48-h landmark prediction cohort               n=9,960; deaths after 48 h = 1,730",
+    " eICU:      association cohort (full)                     n=1,420; deaths=396",
+    "            harmonized complete case / 48-h landmark      n=1,332 / 1,216; deaths=376 / 274",
+    "            landmark complete case (transported)          n=1,206; deaths=269",
 ]
 
 
-def add_box(ax, center_x: float, center_y: float, width: float, height: float, text: str, fontsize=9.5, lw=1.4):
+def add_box(ax, center_x: float, center_y: float, width: float, height: float, text: str,
+            fontsize=9.5, lw=1.4, align="center", family=None, linespacing=1.15):
     x = center_x - width / 2
     y = center_y - height / 2
     rect = Rectangle((x, y), width, height, facecolor="white", edgecolor="black", linewidth=lw)
     ax.add_patch(rect)
-    ax.text(center_x, center_y, text, ha="center", va="center", fontsize=fontsize, linespacing=1.15)
+    if align == "left":
+        ax.text(x + 0.22, center_y, text, ha="left", va="center", fontsize=fontsize,
+                linespacing=linespacing, family=family)
+    else:
+        ax.text(center_x, center_y, text, ha="center", va="center", fontsize=fontsize,
+                linespacing=linespacing)
     return rect
 
 
@@ -141,8 +148,9 @@ def main() -> None:
     bottom_y = 0.86
     bottom_h = 1.35
     bottom_w = 14.8
-    analysis_text = "Analysis sets:\n" + "\n".join(f"- {item}" for item in ANALYSIS_SETS)
-    add_box(ax, 8.0, bottom_y, bottom_w, bottom_h, analysis_text, fontsize=8.25, lw=1.4)
+    analysis_text = "\n".join(ANALYSIS_SETS)
+    add_box(ax, 8.0, bottom_y, bottom_w, bottom_h, analysis_text, fontsize=7.3, lw=1.4,
+            align="left", family="monospace", linespacing=1.35)
 
     add_arrow(ax, (2.45, mimic_last_y - 0.36), (2.45, bottom_y + bottom_h / 2), mutation_scale=18)
     add_arrow(ax, (9.55, eicu_last_y - 0.36), (9.55, bottom_y + bottom_h / 2), mutation_scale=18)
