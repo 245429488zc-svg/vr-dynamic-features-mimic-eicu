@@ -59,13 +59,12 @@ EICU_STEPS = [
 
 ANALYSIS_SETS = [
     "Analysis sets",
-    " MIMIC-IV:  full analysis / MICE cohort                    n=12,694; deaths=2,514",
-    "            fully adjusted complete case                  n=10,428; deaths=2,178  (excluded 2,266, internal-model variables)",
-    "            harmonized complete case (fit for transport)  n=11,251; deaths=2,315  (excluded 1,443, harmonized-model variables)",
-    "            48-h landmark prediction cohort               n=9,960; deaths after 48 h = 1,730",
-    " eICU:      association cohort (full)                     n=1,420; deaths=396",
-    "            harmonized complete case / 48-h landmark      n=1,332 / 1,216; deaths=376 / 274",
-    "            landmark complete case (transported)          n=1,206; deaths=269",
+    "  MIMIC-IV  primary association cohort                n=12,694; deaths=2,514",
+    "            complete cases, fully adjusted             n=10,428; deaths=2,178  (excluded 2,266 for missing covariates)",
+    "            complete cases, harmonized                n=11,251; deaths=2,315  (excluded 1,443; fitted here, transported to eICU)",
+    "            48-h landmark prediction cohort            n=9,960; deaths after 48 h = 1,730",
+    "  eICU       primary association cohort (replication)  n=1,420; deaths=396",
+    "            transported-model evaluation set           n=1,206; deaths=269  (complete cases of the eICU landmark cohort)",
 ]
 
 
