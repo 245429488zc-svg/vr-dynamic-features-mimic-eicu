@@ -36,6 +36,7 @@ def build_docx(df: pd.DataFrame, title_text: str, note_text: str, out_path: Path
     from docx.enum.section import WD_ORIENT
     from docx.enum.table import WD_TABLE_ALIGNMENT
     from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
     from docx.shared import Cm, Pt
 
     doc = Document()
@@ -51,11 +52,28 @@ def build_docx(df: pd.DataFrame, title_text: str, note_text: str, out_path: Path
     headers = list(df.columns)
     table = doc.add_table(rows=1 + len(df), cols=len(headers))
     table.style = "Table Grid"; table.alignment = WD_TABLE_ALIGNMENT.CENTER
-    widths = [Cm(6.4), Cm(1.6), Cm(1.7), Cm(2.6), Cm(2.6), Cm(3.4), Cm(2.4), Cm(3.0), Cm(3.0)]
-    for j, w in enumerate(widths[:len(headers)]):
+    # 列宽以 twips 计, 合计 24.74 cm = Letter 横版可用宽; 显式写入 tblGrid 渲染器才认
+    widths_cm = [5.9, 1.5, 1.6, 2.4, 2.4, 3.6, 2.2, 1.6, 3.5]
+    w_twips = [int(round(w * 567)) for w in widths_cm[:len(headers)]]
+    grid = table._element.find(qn("w:tblGrid"))
+    for g, w in zip(grid.findall(qn("w:gridCol")), w_twips):
+        g.set(qn("w:w"), str(w))
+    tblPr = table._element.find(qn("w:tblPr"))
+    tblW = tblPr.find(qn("w:tblW"))
+    if tblW is None:
+        from docx.oxml import OxmlElement
+        tblW = OxmlElement("w:tblW"); tblPr.append(tblW)
+    tblW.set(qn("w:w"), str(sum(w_twips))); tblW.set(qn("w:type"), "dxa")
+    tblLayout = tblPr.find(qn("w:tblLayout"))
+    if tblLayout is None:
+        from docx.oxml import OxmlElement
+        tblLayout = OxmlElement("w:tblLayout"); tblPr.append(tblLayout)
+    tblLayout.set(qn("w:type"), "fixed")
+    table.autofit = False
+    for j, w in enumerate(w_twips):
         for row_cells in table.rows:
             if j < len(row_cells.cells):
-                row_cells.cells[j].width = w
+                row_cells.cells[j].width = Cm(w_twips[j] / 567.0)
     for j, h in enumerate(headers):
         c = table.rows[0].cells[j]; c.text = ""
         rn = c.paragraphs[0].add_run(str(h)); rn.font.name = "Times New Roman"; rn.font.size = Pt(7); rn.font.bold = True
@@ -101,10 +119,11 @@ def main() -> None:
 
     def row_dict(label: str, b: str, a: str, boot_key: str, delong_key: str) -> dict:
         d, dci, nri, nri_ci, nre, nrn, idi, idi_ci = bmap[boot_key]
+        lo, hi = nri_ci.rsplit("-", 1)
         return {"Cohort / setting": label, "AUROC before": b, "AUROC after": a,
                 "Delta AUROC": f"{float(d):.3f} ({rng_fmt_boot(dci)})",
                 "DeLong P value": fmt_p(dmap.get(delong_key, "")),
-                "IDI": idi, "NRI": f"{nri} ({nri_ci})",
+                "IDI": f"{float(idi):.3f}", "NRI": f"{float(nri):.3f} ({float(lo):.3f}-{float(hi):.3f})",
                 "_evne": f"{nre}/{nrn}"}
 
     rows = [

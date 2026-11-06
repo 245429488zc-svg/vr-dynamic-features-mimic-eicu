@@ -1,4 +1,4 @@
 Cohort / setting,N,Deaths,AUROC before,AUROC after,Delta AUROC,DeLong P value,IDI,NRI
-MIMIC-IV internal model,9960,1730,0.822,0.827,0.004 (0.002-0.007),<0.001,0.007,0.17 (0.104-0.234)
+MIMIC-IV internal model,9960,1730,0.822,0.827,0.004 (0.002-0.007),<0.001,0.007,0.170 (0.104-0.234)
 MIMIC-IV harmonized reduced model,10770,1856,0.778,0.784,0.006 (0.004-0.009),<0.001,0.008,0.177 (0.118-0.232)
 eICU external validation (transported),1206,269,0.727,0.737,0.010 (-0.001-0.022),0.073,0.009,0.229 (0.092-0.365)
