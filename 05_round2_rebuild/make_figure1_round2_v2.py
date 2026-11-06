@@ -57,14 +57,20 @@ EICU_STEPS = [
     },
 ]
 
+_ANALYSIS_ROWS = [
+    ("Analysis sets", None),
+    ("  MIMIC-IV", None),
+    ("    primary association cohort", "n=12,694; deaths=2,514"),
+    ("    complete cases, fully adjusted", "n=10,428; deaths=2,178  (excluded 2,266 for missing covariates)"),
+    ("    complete cases, harmonized", "n=11,251; deaths=2,315  (excluded 1,443; fitted here, transported to eICU)"),
+    ("    48-h landmark prediction cohort", "n=9,960; deaths after 48 h = 1,730"),
+    ("  eICU", None),
+    ("    primary association cohort (replication)", "n=1,420; deaths=396"),
+    ("    transported-model evaluation set", "n=1,206; deaths=269  (complete cases of the eICU landmark cohort)"),
+]
+_ANALYSIS_COL = max(len(lab) for lab, _ in _ANALYSIS_ROWS) + 2
 ANALYSIS_SETS = [
-    "Analysis sets",
-    "  MIMIC-IV  primary association cohort                n=12,694; deaths=2,514",
-    "            complete cases, fully adjusted             n=10,428; deaths=2,178  (excluded 2,266 for missing covariates)",
-    "            complete cases, harmonized                n=11,251; deaths=2,315  (excluded 1,443; fitted here, transported to eICU)",
-    "            48-h landmark prediction cohort            n=9,960; deaths after 48 h = 1,730",
-    "  eICU       primary association cohort (replication)  n=1,420; deaths=396",
-    "            transported-model evaluation set           n=1,206; deaths=269  (complete cases of the eICU landmark cohort)",
+    lab if counts is None else f"{lab:<{_ANALYSIS_COL}}{counts}" for lab, counts in _ANALYSIS_ROWS
 ]
 
 
@@ -148,8 +154,8 @@ def main() -> None:
     bottom_h = 1.35
     bottom_w = 14.8
     analysis_text = "\n".join(ANALYSIS_SETS)
-    add_box(ax, 8.0, bottom_y, bottom_w, bottom_h, analysis_text, fontsize=7.3, lw=1.4,
-            align="left", family="monospace", linespacing=1.35)
+    add_box(ax, 8.0, bottom_y, bottom_w, bottom_h, analysis_text, fontsize=7.0, lw=1.4,
+            align="left", family="monospace", linespacing=1.14)
 
     add_arrow(ax, (2.45, mimic_last_y - 0.36), (2.45, bottom_y + bottom_h / 2), mutation_scale=18)
     add_arrow(ax, (9.55, eicu_last_y - 0.36), (9.55, bottom_y + bottom_h / 2), mutation_scale=18)
