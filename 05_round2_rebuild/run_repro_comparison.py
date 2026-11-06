@@ -51,7 +51,7 @@ def main():
     cmp_frame("round2_bootstrap.csv", ["setting"], ["delta_auc"])
     cmp_frame("delong_and_contrast.csv", ["setting"], ["delta"])
     cmp_frame("landmark_incremental_mimic.csv", ["Model"], ["N", "Deaths", "AUROC", "AUROC (CV)"])
-    cmp_frame("Table3_round2.csv", ["Analysis"], ["N", "Deaths"])
+    cmp_frame("Table3_round2.csv", ["Cohort / setting"], ["N", "Deaths"])
     cmp_frame("table2_round2.csv", ["Feature", "Model"], ["N", "OR", "CI_lower", "CI_upper"])
     df = pd.DataFrame(ROWS)
     print(df.to_string(index=False))
