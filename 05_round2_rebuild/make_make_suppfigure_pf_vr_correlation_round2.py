@@ -205,8 +205,8 @@ def main():
     )
 
     base = OUT / "Supplementary_Figure_PF_VR_correlation"
-    fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
-    fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
+    fig.savefig(base.with_suffix(".pdf"), dpi=600, bbox_inches="tight")
+    fig.savefig(base.with_suffix(".svg"), dpi=600, bbox_inches="tight")
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight")
     plt.close(fig)
 

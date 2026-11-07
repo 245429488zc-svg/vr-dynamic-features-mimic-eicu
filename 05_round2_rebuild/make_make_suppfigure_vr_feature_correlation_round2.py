@@ -124,8 +124,8 @@ def main() -> None:
 
     fig = make_figure(rho_mat)
     base = OUTDIR / "Supplementary_Figure_VR_feature_correlation"
-    fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
-    fig.savefig(base.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".pdf"), dpi=600, bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".svg"), dpi=600, bbox_inches="tight", facecolor="white")
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 

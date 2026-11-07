@@ -489,8 +489,13 @@ def write_docx(panel_a: list[dict[str, str]], panel_b: list[dict[str, str]]) -> 
     note = doc.add_paragraph()
     note_text = (
         "Data are expressed as the mean ± SD, median (interquartile range), or n (%). "
-        "Included patients were those in the final analysis cohorts with at least three valid paired P/F-VR measurements within 48 h after ICU admission and hospital mortality available. "
-        "Excluded patients were early invasive mechanical ventilation patients not included in the final cohorts, mainly because of insufficient paired P/F-VR measurements or missing hospital mortality. "
+        "Included patients were those in the final analysis cohorts with at least three valid paired P/F-VR "
+        "measurements inside the explicitly truncated 48-h observation window. "
+        "Excluded patients were early invasive mechanical ventilation patients not included in the final cohorts, "
+        "because they had fewer than three valid paired P/F-VR measurements inside the truncated window "
+        "(including 569 MIMIC-IV stays that lost eligibility after window-boundary truncation and are counted "
+        "among the excluded). Vital status was ascertained from the official admissions (or eICU patient) tables "
+        "for every eligible stay, so no stay was excluded for missing vital status. "
         "P values compare included and excluded patients within each database. "
         "APACHE-IV, Acute Physiology and Chronic Health Evaluation IV; BMI, body mass index; CHF, congestive heart failure; COPD, chronic obstructive pulmonary disease; ICU, intensive care unit; P/F, PaO2/FiO2; RRT, renal replacement therapy; SOFA, Sequential Organ Failure Assessment; VR, ventilatory ratio."
     )

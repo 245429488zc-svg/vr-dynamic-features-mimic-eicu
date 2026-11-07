@@ -176,7 +176,7 @@ def main() -> None:
         "(2,000 draws; derivation settings refit per resample, the transported setting evaluated with fixed "
         "coefficients per resample). IDI, integrated discrimination improvement; NRI denotes the category-free net "
         "reclassification improvement, with event and non-event components of "
-        f"{ev1}, {ev2}, and {ev3}. "
+        f"{ev1.replace(chr(45), chr(8722))}, {ev2.replace(chr(45), chr(8722))}, and {ev3.replace(chr(45), chr(8722))}. "
         "For continuity with the association framework, the same VR step on the rebuilt complete-case cohort "
         "(n = 10,428) increased apparent AUROC from 0.842 to 0.847 (Δ 0.005, 95% CI 0.003–0.007; cross-validated "
         "0.840 to 0.844); removing sepsis from both sides of the harmonized specification yielded directionally "
