@@ -111,8 +111,8 @@ def main() -> None:
 
     # ---------- Part 2: transported to eICU landmark (coeffs from harm-own fit) ----------
     eic["sepsis_h"] = eic["sepsis3"].astype(int)
-    # harmonized/transport slot: admissionDx-recorded sepsis (recorded at ICU admission,
-    # hence determinable before the 48-h landmark by construction)
+    # harmonized/transport slot: admissionDx-recorded sepsis (admission-form entries; in the current eICU landmark cohort every sepsis-positive entry carries an offset <=48 h,
+    # hence determinable before the landmark time)
     eic["sepsis48"] = eic["sepsis3"].astype(int)
     eic_lm = pd.read_csv(OUTDIR / "eicu_landmark_round2.csv")
     eic_lm = eic_lm[eic_lm["hospitaldischargestatus"].isin(["Alive", "Expired"])].copy() if \

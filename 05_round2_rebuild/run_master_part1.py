@@ -139,8 +139,8 @@ def main() -> None:
         eic["hospital_expire_flag"] = eic["hospital_expire_flag"].astype(int)
         stamp(f"eICU 官方状态双检后: {len(eic)}, 死亡={int(eic['hospital_expire_flag'].sum())}")
     eic["sepsis_h"] = eic["sepsis3"].astype(int)  # eICU's own sepsis3 column IS the admitDx text def
-    # harmonized/transport slot: admissionDx-recorded sepsis (recorded at ICU admission,
-    # hence determinable before the 48-h landmark by construction)
+    # harmonized/transport slot: admissionDx-recorded sepsis (admission-form entries; in the current eICU landmark cohort every sepsis-positive entry carries an offset <=48 h,
+    # hence determinable before the landmark time)
     eic["sepsis48"] = eic["sepsis3"].astype(int)
     stamp(f"eICU sepsis_h(admitDx): {int(eic['sepsis_h'].sum())}/{len(eic)} ({eic['sepsis_h'].mean():.1%})")
     # 重挂 discharge offset（特征重建的落盘文件不携带它们）
