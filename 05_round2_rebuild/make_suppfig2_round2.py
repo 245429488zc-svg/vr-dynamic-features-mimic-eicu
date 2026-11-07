@@ -74,7 +74,7 @@ def prepare_predictions() -> pd.DataFrame:
     for a_, b_ in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
         if a_ in eicu_b.columns:
             eicu_b = eicu_b.rename(columns={a_: b_})
-    # harmonized sepsis slot: admissionDx-recorded sepsis (recorded at ICU admission)
+    # harmonized sepsis slot: admissionDx-recorded sepsis (admission-form entries; every sepsis-positive entry in the current eICU landmark cohort carries an offset <=48 h)
     eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()
 
