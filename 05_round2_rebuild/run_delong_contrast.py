@@ -63,12 +63,7 @@ def main() -> None:
     eic = pd.read_csv(OUTDIR / "eicu_analysis_ready_round2.csv")
     eic_lm = pd.read_csv(OUTDIR / "eicu_landmark_round2.csv")
     eic_lm = eic_lm[eic_lm["hospitaldischargestatus"].isin(["Alive", "Expired"])].copy()
-    for col in ["hr", "map", "temp", "rr_vitalsign", "spo2"]:
-        if col in eic_lm.columns:
-            eic_lm = eic_lm.drop(columns=[col])
-    for a, b in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
-        if a in eic_lm.columns:
-            eic_lm = eic_lm.rename(columns={a: b})
+    # landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
     eic_lm = eic_lm.dropna(subset=[OUTCOME] + BASE_H + PF + VR).copy()
     stamp(f"对比臂: MIMIC-lm {len(lm)}, harm-lm {len(harm)}, eICU-lm {len(eic_lm)}")
 

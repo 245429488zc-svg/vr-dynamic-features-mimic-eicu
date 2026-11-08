@@ -6,15 +6,15 @@
 [MIMIC harm·own] Base: N=10770, AUROC=0.7767, Brier=0.122
 [MIMIC harm·own] Base + P/F: N=10770, AUROC=0.7779, Brier=0.121
 [MIMIC harm·own] Base + P/F + VR: N=10770, AUROC=0.7838, Brier=0.120
-[诊断] eICU-lm 协变量均值: hr=90.69, map=77.93, temp=36.84, bun=33.13, creatinine=1.89, wbc=16.80, bicarbonate=21.00
+[诊断] eICU-lm 协变量均值: hr=90.90, map=77.97, temp=36.85, bun=33.29, creatinine=1.91, wbc=16.76, bicarbonate=21.01
 [诊断] MIMIC-harm-lm 协变量均值: hr=85.99, map=76.05, temp=36.87, bun=29.53, creatinine=1.70, wbc=17.22, bicarbonate=20.60
-[eICU landmark] n=1206, 48h后死亡=269
-[transported·own-cohort-coeffs] Base: AUROC=0.7217, 校准 0.511/0.765
-[transported·own-cohort-coeffs] Base + P/F: AUROC=0.7266, 校准 0.556/0.795
-[transported·own-cohort-coeffs] Base + P/F + VR: AUROC=0.7367, 校准 0.601/0.818
-[eICU refit] Base: AUROC=0.7392, —
-[eICU refit] Base + P/F: AUROC=0.7467, —
-[eICU refit] Base + P/F + VR: AUROC=0.7556, VR initial 1.575 (1.229-2.018) P=0.000331; VR delta 1.384 (1.106-1.732) P=0.00449
+[eICU landmark] n=1256, 48h后死亡=279
+[transported·own-cohort-coeffs] Base: AUROC=0.7193, 校准 0.493/0.761
+[transported·own-cohort-coeffs] Base + P/F: AUROC=0.7240, 校准 0.536/0.789
+[transported·own-cohort-coeffs] Base + P/F + VR: AUROC=0.7346, 校准 0.586/0.814
+[eICU refit] Base: AUROC=0.7346, —
+[eICU refit] Base + P/F: AUROC=0.7416, —
+[eICU refit] Base + P/F + VR: AUROC=0.7510, VR initial 1.564 (1.231-1.989) P=0.000255; VR delta 1.389 (1.118-1.725) P=0.00298
 [Table2 cc] n=10428, 死亡=2178
 [Table2] vr_initial M1: OR 1.411 (1.350-1.474) P=0
 [Table2] vr_initial M2: OR 1.416 (1.350-1.485) P=0

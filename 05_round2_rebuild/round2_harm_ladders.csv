@@ -2,9 +2,9 @@ Row,Model,N,Deaths,AUROC,Brier,Calibration intercept,Calibration slope,vr_initia
 MIMIC harm (own cohort),Base,10770,1856,0.777,0.122,,,,
 MIMIC harm (own cohort),Base + P/F,10770,1856,0.778,0.121,,,,
 MIMIC harm (own cohort),Base + P/F + VR,10770,1856,0.784,0.120,,,,
-eICU landmark (transported),Base,1206,269,0.722,,0.511,0.765,,
-eICU landmark (transported),Base + P/F,1206,269,0.727,,0.556,0.795,,
-eICU landmark (transported),Base + P/F + VR,1206,269,0.737,,0.601,0.818,,
-eICU refit (replication),Base,1206,269,0.739,,,,,
-eICU refit (replication),Base + P/F,1206,269,0.747,,,,,
-eICU refit (replication),Base + P/F + VR,1206,269,0.756,,,,1.575 (1.229-2.018),1.384 (1.106-1.732)
+eICU landmark (transported),Base,1256,279,0.719,,0.493,0.761,,
+eICU landmark (transported),Base + P/F,1256,279,0.724,,0.536,0.789,,
+eICU landmark (transported),Base + P/F + VR,1256,279,0.735,,0.586,0.814,,
+eICU refit (replication),Base,1256,279,0.735,,,,,
+eICU refit (replication),Base + P/F,1256,279,0.742,,,,,
+eICU refit (replication),Base + P/F + VR,1256,279,0.751,,,,1.564 (1.231-1.989),1.389 (1.118-1.725)

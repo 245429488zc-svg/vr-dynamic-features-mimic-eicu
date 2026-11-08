@@ -5,9 +5,9 @@ MIMIC landmark FULL SPEC (internal),Base + P/F + VR,9960,1730,,,0.827,0.104,,
 MIMIC landmark HARMONIZED spec (fit for transport),Base,9960,1730,,,0.783,0.121,,
 MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F,9960,1730,,,0.785,0.121,,
 MIMIC landmark HARMONIZED spec (fit for transport),Base + P/F + VR,9960,1730,,,0.791,0.119,,
-eICU landmark (transported),Base,1216,274,,,0.700,,-0.085,0.671
-eICU landmark (transported),Base + P/F,1216,274,,,0.708,,-0.022,0.707
-eICU landmark (transported),Base + P/F + VR,1216,274,,,0.716,,0.039,0.741
-eICU landmark refit (replication),Base,1216,274,,,0.719,0.155,,
-eICU landmark refit (replication),Base + P/F,1216,274,,,0.730,0.152,,
-eICU landmark refit (replication),Base + P/F + VR,1216,274,,,0.738,0.151,,
+eICU landmark (transported),Base,1256,279,,,0.714,,-0.017,0.726
+eICU landmark (transported),Base + P/F,1256,279,,,0.719,,0.041,0.759
+eICU landmark (transported),Base + P/F + VR,1256,279,,,0.729,,0.115,0.802
+eICU landmark refit (replication),Base,1256,279,,,0.735,0.150,,
+eICU landmark refit (replication),Base + P/F,1256,279,,,0.742,0.148,,
+eICU landmark refit (replication),Base + P/F + VR,1256,279,,,0.751,0.146,,

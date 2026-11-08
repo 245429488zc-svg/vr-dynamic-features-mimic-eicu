@@ -148,6 +148,17 @@ def main() -> None:
                        usecols=["patientunitstayid", "hospitaldischargeoffset", "unitdischargeoffset"],
                        low_memory=False).rename(columns={"patientunitstayid": "stay_id"})
     eic = eic.merge(pat2, on="stay_id", how="left", suffixes=("", "_pat"))
+    # R2-2 harmonization: the harmonized-model vitals are the NATIVE first-day means on the
+    # eICU side (nurse charting, temperature °F→°C), not the legacy APS/extreme-value columns.
+    # Normalize ONCE here so every downstream consumer (cc/landmark frames, Table 1 panel B,
+    # Supp Table 5, the transported ladder) sees the same variables under the standard names.
+    poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in eic.columns]
+    if poll:
+        eic = eic.drop(columns=poll)
+    for a, b in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
+        if a in eic.columns:
+            eic = eic.rename(columns={a: b})
+    stamp(f"eICU 生理变量已归一为原生首日均值列(hr/map/temp); 移除旧回填列: {poll}")
     eic.to_csv(OUTDIR / "eicu_analysis_ready_round2.csv", index=False)
 
     # ---------- eICU association cohort / cc / landmark ----------

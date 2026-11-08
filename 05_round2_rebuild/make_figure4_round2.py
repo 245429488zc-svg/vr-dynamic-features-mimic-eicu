@@ -133,13 +133,7 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
     mimic_a = pd.read_csv(MIMIC_PATH)
     mimic_b = pd.read_csv(HARM_PATH)
     eicu_b = pd.read_csv(EICU_LM_PATH)
-    # eICU 臂：以原生首日均值列为准（R2-2），清理旧回填并以完整口径收口
-    poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in eicu_b.columns]
-    if poll:
-        eicu_b = eicu_b.drop(columns=poll)
-    for a_, b_ in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
-        if a_ in eicu_b.columns:
-            eicu_b = eicu_b.rename(columns={a_: b_})
+    # eICU landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
     # Harmonized sepsis slot: admissionDx-recorded sepsis in the eICU cohort.
     eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()

@@ -15,7 +15,8 @@ from matplotlib.patches import FancyArrowPatch, Rectangle
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(__file__).resolve().parent
+import os as _os
+OUTDIR = Path(_os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
 OUTDIR.mkdir(exist_ok=True)
 
 
@@ -66,7 +67,7 @@ _ANALYSIS_ROWS = [
     ("    48-h landmark prediction cohort", "n=9,960; deaths after 48 h = 1,730"),
     ("  eICU", None),
     ("    primary association cohort (replication)", "n=1,420; deaths=396"),
-    ("    transported-model evaluation set", "n=1,206; deaths=269  (complete cases of the eICU landmark cohort)"),
+    ("    transported-model evaluation set", "n=1,256; deaths=279  (complete cases of the eICU landmark cohort)"),
 ]
 _ANALYSIS_COL = max(len(lab) for lab, _ in _ANALYSIS_ROWS) + 2
 ANALYSIS_SETS = [

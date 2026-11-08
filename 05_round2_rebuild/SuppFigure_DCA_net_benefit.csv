@@ -1,0 +1,553 @@
+setting,model,threshold,net_benefit
+MIMIC-IV internal (48-h landmark),Treat none,0.05,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.05,0.13020503064891142
+MIMIC-IV internal (48-h landmark),Treat none,0.060000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.060000000000000005,0.12095189267709133
+MIMIC-IV internal (48-h landmark),Treat none,0.07,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.07,0.1114997624908235
+MIMIC-IV internal (48-h landmark),Treat none,0.08000000000000002,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.08000000000000002,0.10184215121354982
+MIMIC-IV internal (48-h landmark),Treat none,0.09000000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.09000000000000001,0.09197228474336906
+MIMIC-IV internal (48-h landmark),Treat none,0.1,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.1,0.08188308790718428
+MIMIC-IV internal (48-h landmark),Treat none,0.11000000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.11000000000000001,0.07156716754659083
+MIMIC-IV internal (48-h landmark),Treat none,0.12000000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.12000000000000001,0.06101679445052938
+MIMIC-IV internal (48-h landmark),Treat none,0.13,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.13,0.05022388404191476
+MIMIC-IV internal (48-h landmark),Treat none,0.14,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.14,0.03917997571682075
+MIMIC-IV internal (48-h landmark),Treat none,0.15000000000000002,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.15000000000000002,0.027876210725253925
+MIMIC-IV internal (48-h landmark),Treat none,0.16000000000000003,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.16000000000000003,0.016303308471983136
+MIMIC-IV internal (48-h landmark),Treat none,0.17000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.17000000000000004,0.004451541104175671
+MIMIC-IV internal (48-h landmark),Treat none,0.18000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.18000000000000005,-0.007689293760407584
+MIMIC-IV internal (48-h landmark),Treat none,0.19,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.19,-0.020129902325350807
+MIMIC-IV internal (48-h landmark),Treat none,0.2,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.2,-0.03288152610441769
+MIMIC-IV internal (48-h landmark),Treat none,0.21000000000000002,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.21000000000000002,-0.04595597580194197
+MIMIC-IV internal (48-h landmark),Treat none,0.22000000000000003,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.22000000000000003,-0.059365667799402805
+MIMIC-IV internal (48-h landmark),Treat none,0.23000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.23000000000000004,-0.07312366348510932
+MIMIC-IV internal (48-h landmark),Treat none,0.24000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.24000000000000005,-0.0872437116888608
+MIMIC-IV internal (48-h landmark),Treat none,0.25000000000000006,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.25000000000000006,-0.10174029451137895
+MIMIC-IV internal (48-h landmark),Treat none,0.26000000000000006,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.26000000000000006,-0.11662867686964079
+MIMIC-IV internal (48-h landmark),Treat none,0.27,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.27,-0.1319249601144304
+MIMIC-IV internal (48-h landmark),Treat none,0.28,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.28,-0.14764614011601973
+MIMIC-IV internal (48-h landmark),Treat none,0.29000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.29000000000000004,-0.16381017025849887
+MIMIC-IV internal (48-h landmark),Treat none,0.30000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.30000000000000004,-0.18043602983362028
+MIMIC-IV internal (48-h landmark),Treat none,0.31000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.31000000000000005,-0.19754379838193364
+MIMIC-IV internal (48-h landmark),Treat none,0.32000000000000006,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.32000000000000006,-0.21515473659343265
+MIMIC-IV internal (48-h landmark),Treat none,0.33,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.33,-0.23329137445303616
+MIMIC-IV internal (48-h landmark),Treat none,0.34,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.34,-0.25197760739929426
+MIMIC-IV internal (48-h landmark),Treat none,0.35000000000000003,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.35000000000000003,-0.2712388013592834
+MIMIC-IV internal (48-h landmark),Treat none,0.36000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.36000000000000004,-0.2911019076305223
+MIMIC-IV internal (48-h landmark),Treat none,0.37000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.37000000000000005,-0.3115955887040226
+MIMIC-IV internal (48-h landmark),Treat none,0.38000000000000006,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.38000000000000006,-0.33275035626376487
+MIMIC-IV internal (48-h landmark),Treat none,0.39000000000000007,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.39000000000000007,-0.3545987227598923
+MIMIC-IV internal (48-h landmark),Treat none,0.4000000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.4000000000000001,-0.37717536813922387
+MIMIC-IV internal (48-h landmark),Treat none,0.4100000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.4100000000000001,-0.40051732353141406
+MIMIC-IV internal (48-h landmark),Treat none,0.42000000000000004,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.42000000000000004,-0.424664173937128
+MIMIC-IV internal (48-h landmark),Treat none,0.43000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.43000000000000005,-0.4496582822518144
+MIMIC-IV internal (48-h landmark),Treat none,0.44000000000000006,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.44000000000000006,-0.4755450372920255
+MIMIC-IV internal (48-h landmark),Treat none,0.45000000000000007,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.45000000000000007,-0.5023731288791533
+MIMIC-IV internal (48-h landmark),Treat none,0.4600000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.4600000000000001,-0.5301948534880263
+MIMIC-IV internal (48-h landmark),Treat none,0.4700000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.4700000000000001,-0.5590664544972346
+MIMIC-IV internal (48-h landmark),Treat none,0.4800000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.4800000000000001,-0.5890485016991045
+MIMIC-IV internal (48-h landmark),Treat none,0.49000000000000005,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.49000000000000005,-0.62020631545791
+MIMIC-IV internal (48-h landmark),Treat none,0.5000000000000001,0.0
+MIMIC-IV internal (48-h landmark),Treat all,0.5000000000000001,-0.6526104417670688
+MIMIC-IV internal (48-h landmark),Base + P/F,0.05,0.13433734939759037
+MIMIC-IV internal (48-h landmark),Base + P/F,0.060000000000000005,0.12933649491583354
+MIMIC-IV internal (48-h landmark),Base + P/F,0.07,0.12335039081055403
+MIMIC-IV internal (48-h landmark),Base + P/F,0.08000000000000002,0.11900646062510914
+MIMIC-IV internal (48-h landmark),Base + P/F,0.09000000000000001,0.1144280418376804
+MIMIC-IV internal (48-h landmark),Base + P/F,0.1,0.11036367692994199
+MIMIC-IV internal (48-h landmark),Base + P/F,0.11000000000000001,0.10527277649925543
+MIMIC-IV internal (48-h landmark),Base + P/F,0.12000000000000001,0.10167488134355603
+MIMIC-IV internal (48-h landmark),Base + P/F,0.13,0.0986936250750127
+MIMIC-IV internal (48-h landmark),Base + P/F,0.14,0.09424208461753993
+MIMIC-IV internal (48-h landmark),Base + P/F,0.15000000000000002,0.09170210252775808
+MIMIC-IV internal (48-h landmark),Base + P/F,0.16000000000000003,0.08912315930388219
+MIMIC-IV internal (48-h landmark),Base + P/F,0.17000000000000004,0.08680384187351817
+MIMIC-IV internal (48-h landmark),Base + P/F,0.18000000000000005,0.08361004995592122
+MIMIC-IV internal (48-h landmark),Base + P/F,0.19,0.0816711289602856
+MIMIC-IV internal (48-h landmark),Base + P/F,0.2,0.07861445783132531
+MIMIC-IV internal (48-h landmark),Base + P/F,0.21000000000000002,0.0775697727619338
+MIMIC-IV internal (48-h landmark),Base + P/F,0.22000000000000003,0.0755560704355885
+MIMIC-IV internal (48-h landmark),Base + P/F,0.23000000000000004,0.07399598393574297
+MIMIC-IV internal (48-h landmark),Base + P/F,0.24000000000000005,0.07130627774254913
+MIMIC-IV internal (48-h landmark),Base + P/F,0.25000000000000006,0.06921017402945112
+MIMIC-IV internal (48-h landmark),Base + P/F,0.26000000000000006,0.06757299468142841
+MIMIC-IV internal (48-h landmark),Base + P/F,0.27,0.06583732189030093
+MIMIC-IV internal (48-h landmark),Base + P/F,0.28,0.06506581883087906
+MIMIC-IV internal (48-h landmark),Base + P/F,0.29000000000000004,0.06343826008258385
+MIMIC-IV internal (48-h landmark),Base + P/F,0.30000000000000004,0.06138841078600114
+MIMIC-IV internal (48-h landmark),Base + P/F,0.31000000000000005,0.06022204761073278
+MIMIC-IV internal (48-h landmark),Base + P/F,0.32000000000000006,0.05751830852823056
+MIMIC-IV internal (48-h landmark),Base + P/F,0.33,0.056749385602109924
+MIMIC-IV internal (48-h landmark),Base + P/F,0.34,0.054761470122915906
+MIMIC-IV internal (48-h landmark),Base + P/F,0.35000000000000003,0.05395427865307383
+MIMIC-IV internal (48-h landmark),Base + P/F,0.36000000000000004,0.05252886546184739
+MIMIC-IV internal (48-h landmark),Base + P/F,0.37000000000000005,0.051415184547714654
+MIMIC-IV internal (48-h landmark),Base + P/F,0.38000000000000006,0.05034978624174115
+MIMIC-IV internal (48-h landmark),Base + P/F,0.39000000000000007,0.04821252222002764
+MIMIC-IV internal (48-h landmark),Base + P/F,0.4000000000000001,0.047021419009370805
+MIMIC-IV internal (48-h landmark),Base + P/F,0.4100000000000001,0.04591076169083111
+MIMIC-IV internal (48-h landmark),Base + P/F,0.42000000000000004,0.04404860822600748
+MIMIC-IV internal (48-h landmark),Base + P/F,0.43000000000000005,0.0424011836820968
+MIMIC-IV internal (48-h landmark),Base + P/F,0.44000000000000006,0.041422834193918526
+MIMIC-IV internal (48-h landmark),Base + P/F,0.45000000000000007,0.03987769258853595
+MIMIC-IV internal (48-h landmark),Base + P/F,0.4600000000000001,0.03874014576825821
+MIMIC-IV internal (48-h landmark),Base + P/F,0.4700000000000001,0.03798211714783662
+MIMIC-IV internal (48-h landmark),Base + P/F,0.4800000000000001,0.03654618473895581
+MIMIC-IV internal (48-h landmark),Base + P/F,0.49000000000000005,0.0355008268367588
+MIMIC-IV internal (48-h landmark),Base + P/F,0.5000000000000001,0.03433734939759035
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.05,0.1352568167406468
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.060000000000000005,0.12970819448004786
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.07,0.12458004059247742
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.08000000000000002,0.12011960887026366
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.09000000000000001,0.11572112626329495
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.1,0.11136769299419902
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.11000000000000001,0.10637832227787555
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.12000000000000001,0.10345472800292076
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.13,0.0996168582375479
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.14,0.09641823106379002
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.15000000000000002,0.09280652019844082
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.16000000000000003,0.09001721170395868
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.17000000000000004,0.08762882856728117
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.18000000000000005,0.08509158585561757
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.19,0.0827482770588527
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.2,0.08067269076305221
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.21000000000000002,0.0778976666158304
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.22000000000000003,0.07497683039851713
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.23000000000000004,0.07300500704115162
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.24000000000000005,0.07141724793912492
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.25000000000000006,0.06997991967871485
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.26000000000000006,0.06927982199066535
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.27,0.0678714859437751
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.28,0.06664435519857206
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.29000000000000004,0.06542790881837207
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.30000000000000004,0.06375502008032127
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.31000000000000005,0.062241720505209236
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.32000000000000006,0.05962083628632175
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.33,0.05776389138644128
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.34,0.05601192649385419
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.35000000000000003,0.05413191226444238
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.36000000000000004,0.05295557228915662
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.37000000000000005,0.05201918786256135
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.38000000000000006,0.05021699702033941
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.39000000000000007,0.049349858450194205
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.4000000000000001,0.0470548862115127
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.4100000000000001,0.046230685453679116
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.42000000000000004,0.044218252319623313
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.43000000000000005,0.04299478616219263
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.44000000000000006,0.041516064257028105
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.45000000000000007,0.040224534501642935
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.4600000000000001,0.03899300907333035
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.4700000000000001,0.037650602409638544
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.4800000000000001,0.03694779116465863
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.49000000000000005,0.03544373572722262
+MIMIC-IV internal (48-h landmark),Base + P/F + VR,0.5000000000000001,0.034738955823293165
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.05,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.05,0.12876899770317157
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.060000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.060000000000000005,0.11950058278512021
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.07,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.07,0.110032847116143
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.08000000000000002,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.08000000000000002,0.10035929110653584
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.09000000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.09000000000000001,0.09047312947034394
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.1,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.1,0.08036727535334777
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.11000000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.11000000000000001,0.07003432339102582
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.12000000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.12000000000000001,0.05946653161137841
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.13,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.13,0.04865580208967012
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.14,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.14,0.03759366025350347
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.15000000000000002,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.15000000000000002,0.0262712327270741
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.16000000000000003,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.16000000000000003,0.014679223592872576
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.17000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.17000000000000004,0.0028078889373650273
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.18000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.18000000000000005,-0.009352990465837874
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.19,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.19,-0.021814138496280222
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.2,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.2,-0.03458681522748375
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.21000000000000002,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.21000000000000002,-0.0476828508632747
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.22000000000000003,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.22000000000000003,-0.061114682284598765
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.23000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.23000000000000004,-0.07489539244413901
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.24000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.24000000000000005,-0.08903875287103558
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.25000000000000006,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.25000000000000006,-0.10355926957598272
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.26000000000000006,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.26000000000000006,-0.11847223267836088
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.27,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.27,-0.13379377011231097
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.28,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.28,-0.1495409058083153
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.29000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.29000000000000004,-0.16573162279153103
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.30000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.30000000000000004,-0.1823849316885529
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.31000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.31000000000000005,-0.19952094519128555
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.32000000000000006,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.32000000000000006,-0.21716095909115746
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.33,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.33,-0.23532754057012994
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.34,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.34,-0.2540446245181622
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.35000000000000003,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.35000000000000003,-0.2733376187415185
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.36000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.36000000000000004,-0.2932335190343548
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.37000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.37000000000000005,-0.31376103520950327
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.38000000000000006,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.38000000000000006,-0.33495072932578557
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.39000000000000007,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.39000000000000007,-0.35683516751145433
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.4000000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.4000000000000001,-0.37944908696997853
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.4100000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.4100000000000001,-0.4028295799694697
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.42000000000000004,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.42000000000000004,-0.42701629686549486
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.43000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.43000000000000005,-0.4520516704947141
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.44000000000000006,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.44000000000000006,-0.47798116461069123
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.45000000000000007,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.45000000000000007,-0.5048535494217947
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.4600000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.4600000000000001,-0.5327212077444206
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.4700000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.4700000000000001,-0.5616404758150702
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.4800000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.4800000000000001,-0.5916720234268984
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.49000000000000005,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.49000000000000005,-0.6228812787882099
+MIMIC-IV harmonized reduced (48-h landmark),Treat none,0.5000000000000001,0.0
+MIMIC-IV harmonized reduced (48-h landmark),Treat all,0.5000000000000001,-0.6553389043639744
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.05,0.13215559790842007
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.060000000000000005,0.1252889231316304
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.07,0.1193398628208584
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.08000000000000002,0.11332202979290298
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.09000000000000001,0.10845347781280928
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.1,0.10408542246982358
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.11000000000000001,0.09995931269756814
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.12000000000000001,0.09577108128640163
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.13,0.09176085123640594
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.14,0.08797261989592105
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.15000000000000002,0.083428914741384
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.16000000000000003,0.07845868152274837
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.17000000000000004,0.07498070275531094
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.18000000000000005,0.06961523654233755
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.19,0.06657725506379174
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.2,0.0643686165273909
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.21000000000000002,0.06153168082930784
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.22000000000000003,0.05786729519320048
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.23000000000000004,0.05450686732023778
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.24000000000000005,0.051072667741777836
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.25000000000000006,0.048096564531104904
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.26000000000000006,0.044693718788426304
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.27,0.04244285877818902
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.28,0.03987929433611884
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.29000000000000004,0.03763976617364353
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.30000000000000004,0.033333333333333326
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.31000000000000005,0.031044366396189085
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.32000000000000006,0.028445027035883967
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.33,0.02579026871214956
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.34,0.02392166793280999
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.35000000000000003,0.021448467966573813
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.36000000000000004,0.020055710306406675
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.37000000000000005,0.01864674065231168
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.38000000000000006,0.016479468056429136
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.39000000000000007,0.015387308400687992
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.4000000000000001,0.013989476942123172
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.4100000000000001,0.01327762302692663
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.42000000000000004,0.012653283386162062
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.43000000000000005,0.011440160289302635
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.44000000000000006,0.009510545165141257
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.45000000000000007,0.00921752342365155
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.4600000000000001,0.008473468826300762
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.4700000000000001,0.007950105989733877
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.4800000000000001,0.007992286265266761
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.49000000000000005,0.0070639212045078
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F,0.5000000000000001,0.006035283194057557
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.05,0.13195523628011532
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.060000000000000005,0.12560500997649104
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.07,0.11942472619083275
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.08000000000000002,0.11460175204876671
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.09000000000000001,0.10986970318446643
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.1,0.10469410915093366
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.11000000000000001,0.10158367500234734
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.12000000000000001,0.09742972904532791
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.13,0.09289320056777553
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.14,0.08881691174882857
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.15000000000000002,0.08553716751324483
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.16000000000000003,0.0808772162532608
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.17000000000000004,0.07683323824546096
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.18000000000000005,0.07212672962384217
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.19,0.06908536515469353
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.2,0.06638811513463325
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.21000000000000002,0.06365666466861769
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.22000000000000003,0.06040282836940219
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.23000000000000004,0.05571271810826128
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.24000000000000005,0.05253872843669061
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.25000000000000006,0.049551222531723914
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.26000000000000006,0.04687445105272402
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.27,0.043990791264420445
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.28,0.040322913442690594
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.29000000000000004,0.038450573449984954
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.30000000000000004,0.036171906088340616
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.31000000000000005,0.03339388801421016
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.32000000000000006,0.031771260036047834
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.33,0.02826397261602849
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.34,0.0265946371795954
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.35000000000000003,0.023934004713949
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.36000000000000004,0.022214484679665726
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.37000000000000005,0.0197417871512579
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.38000000000000006,0.018054931560188087
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.39000000000000007,0.017713137586191134
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.4000000000000001,0.016032188177034966
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.4100000000000001,0.014393402892529453
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.42000000000000004,0.012400345788108724
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.43000000000000005,0.01173174347195751
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.44000000000000006,0.010803820135296457
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.45000000000000007,0.009723980754621414
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.4600000000000001,0.008425324117060411
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.4700000000000001,0.007832728929065707
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.4800000000000001,0.007156631669166479
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.49000000000000005,0.006761701895242778
+MIMIC-IV harmonized reduced (48-h landmark),Base + P/F + VR,0.5000000000000001,0.006128133704735365
+"eICU (48-h landmark, transported)",Treat none,0.05,0.0
+"eICU (48-h landmark, transported)",Treat all,0.05,0.18119342943345626
+"eICU (48-h landmark, transported)",Treat none,0.060000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.060000000000000005,0.17248272123593983
+"eICU (48-h landmark, transported)",Treat none,0.07,0.0
+"eICU (48-h landmark, transported)",Treat all,0.07,0.16358468598041231
+"eICU (48-h landmark, transported)",Treat none,0.08000000000000002,0.0
+"eICU (48-h landmark, transported)",Treat all,0.08000000000000002,0.15449321517585157
+"eICU (48-h landmark, transported)",Treat none,0.09000000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.09000000000000001,0.14520193182613564
+"eICU (48-h landmark, transported)",Treat none,0.1,0.0
+"eICU (48-h landmark, transported)",Treat all,0.1,0.13570417551309272
+"eICU (48-h landmark, transported)",Treat none,0.11000000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.11000000000000001,0.125992986473914
+"eICU (48-h landmark, transported)",Treat none,0.12000000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.12000000000000001,0.11606108859293572
+"eICU (48-h landmark, transported)",Treat none,0.13,0.0
+"eICU (48-h landmark, transported)",Treat all,0.13,0.10590087122044074
+"eICU (48-h landmark, transported)",Treat none,0.14,0.0
+"eICU (48-h landmark, transported)",Treat all,0.14,0.095504369723004
+"eICU (48-h landmark, transported)",Treat none,0.15000000000000002,0.0
+"eICU (48-h landmark, transported)",Treat all,0.15000000000000002,0.08486324466092168
+"eICU (48-h landmark, transported)",Treat none,0.16000000000000003,0.0
+"eICU (48-h landmark, transported)",Treat all,0.16000000000000003,0.0739687594783136
+"eICU (48-h landmark, transported)",Treat none,0.17000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.17000000000000004,0.06281175658046195
+"eICU (48-h landmark, transported)",Treat none,0.18000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.18000000000000005,0.05138263166071147
+"eICU (48-h landmark, transported)",Treat none,0.19,0.0
+"eICU (48-h landmark, transported)",Treat all,0.19,0.039671306125658584
+"eICU (48-h landmark, transported)",Treat none,0.2,0.0
+"eICU (48-h landmark, transported)",Treat all,0.2,0.027667197452229314
+"eICU (48-h landmark, transported)",Treat none,0.21000000000000002,0.0
+"eICU (48-h landmark, transported)",Treat all,0.21000000000000002,0.015359187293396748
+"eICU (48-h landmark, transported)",Treat none,0.22000000000000003,0.0
+"eICU (48-h landmark, transported)",Treat all,0.22000000000000003,0.0027355871304915735
+"eICU (48-h landmark, transported)",Treat none,0.23000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.23000000000000004,-0.010215898750930624
+"eICU (48-h landmark, transported)",Treat none,0.24000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.24000000000000005,-0.023508213208179696
+"eICU (48-h landmark, transported)",Treat none,0.25000000000000006,0.0
+"eICU (48-h landmark, transported)",Treat all,0.25000000000000006,-0.03715498938428882
+"eICU (48-h landmark, transported)",Treat none,0.26000000000000006,0.0
+"eICU (48-h landmark, transported)",Treat all,0.26000000000000006,-0.05117059734894133
+"eICU (48-h landmark, transported)",Treat none,0.27,0.0
+"eICU (48-h landmark, transported)",Treat all,0.27,-0.06557019457289939
+"eICU (48-h landmark, transported)",Treat none,0.28,0.0
+"eICU (48-h landmark, transported)",Treat all,0.28,-0.08036978060863412
+"eICU (48-h landmark, transported)",Treat none,0.29000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.29000000000000004,-0.09558625639185434
+"eICU (48-h landmark, transported)",Treat none,0.30000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.30000000000000004,-0.1112374886260237
+"eICU (48-h landmark, transported)",Treat none,0.31000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.31000000000000005,-0.12734237976553128
+"eICU (48-h landmark, transported)",Treat none,0.32000000000000006,0.0
+"eICU (48-h landmark, transported)",Treat all,0.32000000000000006,-0.14392094417384796
+"eICU (48-h landmark, transported)",Treat none,0.33,0.0
+"eICU (48-h landmark, transported)",Treat all,0.33,-0.16099439110181576
+"eICU (48-h landmark, transported)",Treat none,0.34,0.0
+"eICU (48-h landmark, transported)",Treat all,0.34,-0.17858521520941903
+"eICU (48-h landmark, transported)",Treat none,0.35000000000000003,0.0
+"eICU (48-h landmark, transported)",Treat all,0.35000000000000003,-0.19671729544341013
+"eICU (48-h landmark, transported)",Treat none,0.36000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.36000000000000004,-0.21541600318471352
+"eICU (48-h landmark, transported)",Treat none,0.37000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.37000000000000005,-0.23470832069558198
+"eICU (48-h landmark, transported)",Treat none,0.38000000000000006,0.0
+"eICU (48-h landmark, transported)",Treat all,0.38000000000000006,-0.2546229710293817
+"eICU (48-h landmark, transported)",Treat none,0.39000000000000007,0.0
+"eICU (48-h landmark, transported)",Treat all,0.39000000000000007,-0.275190560718388
+"eICU (48-h landmark, transported)",Treat none,0.4000000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.4000000000000001,-0.29644373673036106
+"eICU (48-h landmark, transported)",Treat none,0.4100000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.4100000000000001,-0.31841735938680793
+"eICU (48-h landmark, transported)",Treat none,0.42000000000000004,0.0
+"eICU (48-h landmark, transported)",Treat all,0.42000000000000004,-0.34114869316933893
+"eICU (48-h landmark, transported)",Treat none,0.43000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.43000000000000005,-0.36467761761090633
+"eICU (48-h landmark, transported)",Treat none,0.44000000000000006,0.0
+"eICU (48-h landmark, transported)",Treat all,0.44000000000000006,-0.3890468607825297
+"eICU (48-h landmark, transported)",Treat none,0.45000000000000007,0.0
+"eICU (48-h landmark, transported)",Treat all,0.45000000000000007,-0.41430225825130296
+"eICU (48-h landmark, transported)",Treat none,0.4600000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.4600000000000001,-0.4404930408115123
+"eICU (48-h landmark, transported)",Treat none,0.4700000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.4700000000000001,-0.46767215478908797
+"eICU (48-h landmark, transported)",Treat none,0.4800000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.4800000000000001,-0.49589661930426276
+"eICU (48-h landmark, transported)",Treat none,0.49000000000000005,0.0
+"eICU (48-h landmark, transported)",Treat all,0.49000000000000005,-0.5252279255651305
+"eICU (48-h landmark, transported)",Treat none,0.5000000000000001,0.0
+"eICU (48-h landmark, transported)",Treat all,0.5000000000000001,-0.5557324840764335
+"eICU (48-h landmark, transported)",Base + P/F,0.05,0.16698793161247066
+"eICU (48-h landmark, transported)",Base + P/F,0.060000000000000005,0.1564405746036048
+"eICU (48-h landmark, transported)",Base + P/F,0.07,0.14533251147181697
+"eICU (48-h landmark, transported)",Base + P/F,0.08000000000000002,0.12977707006369427
+"eICU (48-h landmark, transported)",Base + P/F,0.09000000000000001,0.11748442640162385
+"eICU (48-h landmark, transported)",Base + P/F,0.1,0.10943029016277424
+"eICU (48-h landmark, transported)",Base + P/F,0.11000000000000001,0.09832355256566234
+"eICU (48-h landmark, transported)",Base + P/F,0.12000000000000001,0.09282715691951361
+"eICU (48-h landmark, transported)",Base + P/F,0.13,0.08687495424262391
+"eICU (48-h landmark, transported)",Base + P/F,0.14,0.08306176862687009
+"eICU (48-h landmark, transported)",Base + P/F,0.15000000000000002,0.07573061071562383
+"eICU (48-h landmark, transported)",Base + P/F,0.16000000000000003,0.0697603882317258
+"eICU (48-h landmark, transported)",Base + P/F,0.17000000000000004,0.06621709769012354
+"eICU (48-h landmark, transported)",Base + P/F,0.18000000000000005,0.06245145254000309
+"eICU (48-h landmark, transported)",Base + P/F,0.19,0.05809153102146733
+"eICU (48-h landmark, transported)",Base + P/F,0.2,0.05433917197452229
+"eICU (48-h landmark, transported)",Base + P/F,0.21000000000000002,0.04953438684189308
+"eICU (48-h landmark, transported)",Base + P/F,0.22000000000000003,0.045300506287767425
+"eICU (48-h landmark, transported)",Base + P/F,0.23000000000000004,0.04260071139052031
+"eICU (48-h landmark, transported)",Base + P/F,0.24000000000000005,0.04165269862554476
+"eICU (48-h landmark, transported)",Base + P/F,0.25000000000000006,0.03954352441613587
+"eICU (48-h landmark, transported)",Base + P/F,0.26000000000000006,0.038065932174212426
+"eICU (48-h landmark, transported)",Base + P/F,0.27,0.03358127563039874
+"eICU (48-h landmark, transported)",Base + P/F,0.28,0.03357218683651805
+"eICU (48-h landmark, transported)",Base + P/F,0.29000000000000004,0.033461918004844354
+"eICU (48-h landmark, transported)",Base + P/F,0.30000000000000004,0.03252957233848953
+"eICU (48-h landmark, transported)",Base + P/F,0.31000000000000005,0.03019708298716883
+"eICU (48-h landmark, transported)",Base + P/F,0.32000000000000006,0.0286624203821656
+"eICU (48-h landmark, transported)",Base + P/F,0.33,0.024871660804258955
+"eICU (48-h landmark, transported)",Base + P/F,0.34,0.021520941903107504
+"eICU (48-h landmark, transported)",Base + P/F,0.35000000000000003,0.018618324350808426
+"eICU (48-h landmark, transported)",Base + P/F,0.36000000000000004,0.01383359872611465
+"eICU (48-h landmark, transported)",Base + P/F,0.37000000000000005,0.012991608533009806
+"eICU (48-h landmark, transported)",Base + P/F,0.38000000000000006,0.012353605917402912
+"eICU (48-h landmark, transported)",Base + P/F,0.39000000000000007,0.011890466743239004
+"eICU (48-h landmark, transported)",Base + P/F,0.4000000000000001,0.008757961783439485
+"eICU (48-h landmark, transported)",Base + P/F,0.4100000000000001,0.008042750728705597
+"eICU (48-h landmark, transported)",Base + P/F,0.42000000000000004,0.007138150669887983
+"eICU (48-h landmark, transported)",Base + P/F,0.43000000000000005,0.00611800201139792
+"eICU (48-h landmark, transported)",Base + P/F,0.44000000000000006,0.0049476797088262026
+"eICU (48-h landmark, transported)",Base + P/F,0.45000000000000007,0.003618992472495655
+"eICU (48-h landmark, transported)",Base + P/F,0.4600000000000001,0.003125737202170322
+"eICU (48-h landmark, transported)",Base + P/F,0.4700000000000001,0.002583824059608218
+"eICU (48-h landmark, transported)",Base + P/F,0.4800000000000001,0.0022048015678588894
+"eICU (48-h landmark, transported)",Base + P/F,0.49000000000000005,0.001873360809291869
+"eICU (48-h landmark, transported)",Base + P/F,0.5000000000000001,0.0015923566878980862
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.05,0.17063359034529
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.060000000000000005,0.16052310611193926
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.07,0.15072597767276213
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.08000000000000002,0.1363541955137081
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.09000000000000001,0.12718730314271715
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.1,0.11491507430997877
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.11000000000000001,0.10040792957847276
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.12000000000000001,0.09615662999420961
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.13,0.08790907094223589
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.14,0.08176566434602281
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.15000000000000002,0.07568377669539153
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.16000000000000003,0.07085987261146495
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.17000000000000004,0.06540173432583837
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.18000000000000005,0.06130573248407642
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.19,0.05753125737202171
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.2,0.05433917197452229
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.21000000000000002,0.05133838587438523
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.22000000000000003,0.04699493712232565
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.23000000000000004,0.04594052444370915
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.24000000000000005,0.0424488769694938
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.25000000000000006,0.04140127388535031
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.26000000000000006,0.038991220519882935
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.27,0.038205653956897304
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.28,0.03812809624911536
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.29000000000000004,0.03762223019646542
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.30000000000000004,0.034576888080072796
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.31000000000000005,0.03302409304901689
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.32000000000000006,0.032736980142375416
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.33,0.030468675729632088
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.34,0.026273885350318466
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.35000000000000003,0.02370161685448309
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.36000000000000004,0.020800159235668785
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.37000000000000005,0.017023051258720043
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.38000000000000006,0.014382576535853706
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.39000000000000007,0.011446695207267408
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.4000000000000001,0.011677282377919318
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.4100000000000001,0.011227464104501775
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.42000000000000004,0.009526685701735116
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.43000000000000005,0.008101463850709574
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.44000000000000006,0.007506824385805274
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.45000000000000007,0.006803705848291833
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.4600000000000001,0.006428402925218209
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.4700000000000001,0.008863117413772381
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.4800000000000001,0.006981871631553158
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.49000000000000005,0.006650430872986137
+"eICU (48-h landmark, transported)",Base + P/F + VR,0.5000000000000001,0.00557324840764331

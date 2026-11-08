@@ -116,11 +116,7 @@ def main() -> None:
     eic_lm = pd.read_csv(OUTDIR / "eicu_landmark_round2.csv")
     eic_lm = eic_lm[eic_lm["hospitaldischargestatus"].isin(["Alive", "Expired"])].copy() if \
         "hospitaldischargestatus" in eic_lm.columns else eic_lm
-    poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in eic_lm.columns]
-    eic_lm = eic_lm.drop(columns=poll)
-    for a, b in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
-        if a in eic_lm.columns:
-            eic_lm = eic_lm.rename(columns={a: b})
+    # landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
 
     rows = []
 

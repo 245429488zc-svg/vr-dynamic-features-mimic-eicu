@@ -117,15 +117,7 @@ def main() -> None:
     eic_lm = pd.read_csv(OUTDIR / "eicu_landmark_round2.csv")
     eic_lm = eic_lm[eic_lm["hospitaldischargestatus"].isin(["Alive", "Expired"])].copy() if \
         "hospitaldischargestatus" in eic_lm.columns else eic_lm
-    # 以原生首日均值列为准（R2-2 修复）：删除 M1 从旧 builder 回填的 aps 版本，再映射
-    aps_poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in eic_lm.columns]
-    if aps_poll:
-        eic_lm = eic_lm.drop(columns=aps_poll)
-    nat_map = {"hr_native": "hr", "map_native": "map", "temp_native": "temp",
-               "rr_native": "rr_vitalsign", "spo2_native": "spo2"}
-    for a, b in nat_map.items():
-        if a in eic_lm.columns:
-            eic_lm = eic_lm.rename(columns={a: b})
+    # landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
     eic_lm = eic_lm.dropna(subset=[OUTCOME] + BASE_H + PF_48H + VR_48H).copy()
     stamp(f"[诊断] eICU-lm 协变量均值: " + ", ".join(
         f"{c}={pd.to_numeric(eic_lm[c], errors='coerce').mean():.2f}"
