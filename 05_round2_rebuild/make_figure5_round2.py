@@ -23,7 +23,7 @@ DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mi
 OUTCOME = "hospital_expire_flag"
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
@@ -330,8 +330,8 @@ def write_log(results: pd.DataFrame) -> None:
         "- Core variables plotted: VR initial and VR delta.",
         "- Odds ratios are per 1-SD increase, standardized using the full complete-case cohort.",
         "- Base adjustment set: age, sex, Charlson comorbidity index, sepsis, SOFA, COPD, CHF, PEEP, driving pressure, Vt/PBW, heart rate, MAP, temperature, lactate, BUN, creatinine, WBC, bicarbonate, initial P/F ratio, and minimum P/F ratio.",
-        "- The stratifying variable was omitted from stratified models when applicable.",
-        "- P for interaction was calculated by likelihood-ratio testing of VR-by-subgroup interaction terms.",
+        "- Subgroup odds ratios were obtained from the fully adjusted model fitted within each stratum, with the stratifying variable omitted from that stratum's adjustment set when applicable.",
+        "- P for interaction was obtained by likelihood-ratio testing of VR-by-subgroup interaction terms in the corresponding full-cohort models.",
         "",
         "## Subgroups",
         "",

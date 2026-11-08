@@ -31,6 +31,7 @@ VARS = BASE_A + PF + VR
 
 plt.rcParams["font.family"] = "serif"
 plt.rcParams["font.serif"] = ["Times New Roman", "DejaVu Serif"]
+plt.rcParams["axes.unicode_minus"] = False
 
 df = pd.read_csv(Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv")
 cc = df.dropna(subset=[OUTCOME] + VARS).copy()

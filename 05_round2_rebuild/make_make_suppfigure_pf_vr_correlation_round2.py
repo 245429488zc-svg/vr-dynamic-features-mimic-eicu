@@ -85,7 +85,12 @@ def draw_heatmap(ax, corr_df):
     mat = mat[[label for _, label in PF_FEATURES]]
     mat = mat.loc[[label for _, label in VR_FEATURES]]
 
-    im = ax.imshow(mat.values, cmap="RdBu_r", vmin=-0.75, vmax=0.75, aspect="auto")
+    vals = mat.values
+    x, y = np.meshgrid(np.arange(vals.shape[1] + 1) - 0.5,
+                       np.arange(vals.shape[0] + 1) - 0.5)
+    im = ax.pcolormesh(x, y, vals, cmap="RdBu_r", vmin=-0.75, vmax=0.75,
+                       shading="flat")
+    ax.set_ylim(vals.shape[0] - 0.5, -0.5)
     ax.set_xticks(np.arange(mat.shape[1]))
     ax.set_yticks(np.arange(mat.shape[0]))
     ax.set_xticklabels(mat.columns, rotation=35, ha="right", rotation_mode="anchor")
@@ -99,6 +104,7 @@ def draw_heatmap(ax, corr_df):
     ax.set_title("a. Spearman correlations between VR and P/F features",
                  loc="left", fontweight="bold", fontsize=9)
     cbar = plt.colorbar(im, ax=ax, fraction=0.035, pad=0.02)
+    cbar.solids.set_rasterized(False)
     cbar.set_label("Spearman rho", fontsize=7)
     cbar.ax.tick_params(labelsize=7)
 

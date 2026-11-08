@@ -70,7 +70,12 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
     })
     fig, ax = plt.subplots(figsize=(7.2, 6.2))
     vals = rho_mat.values.astype(float)
-    im = ax.imshow(vals, cmap="RdBu_r", vmin=-1, vmax=1, aspect="equal")
+    x, y = np.meshgrid(np.arange(vals.shape[1] + 1) - 0.5,
+                       np.arange(vals.shape[0] + 1) - 0.5)
+    im = ax.pcolormesh(x, y, vals, cmap="RdBu_r", vmin=-1, vmax=1,
+                       shading="flat")
+    ax.set_aspect("equal")
+    ax.set_ylim(vals.shape[0] - 0.5, -0.5)
 
     ax.set_xticks(np.arange(len(rho_mat.columns)))
     ax.set_yticks(np.arange(len(rho_mat.index)))
@@ -95,6 +100,7 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
         loc="left", fontsize=10.2, fontweight="bold", pad=14,
     )
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.035)
+    cbar.solids.set_rasterized(False)
     cbar.set_label("Spearman rho", fontsize=8)
     cbar.ax.tick_params(labelsize=7)
     fig.text(
