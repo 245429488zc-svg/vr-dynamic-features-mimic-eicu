@@ -354,6 +354,15 @@ def make_excel(mimic_rows, eicu_rows, mimic, eicu) -> None:
 def main() -> None:
     mimic = pd.read_csv(MIMIC_PATH)
     eicu = pd.read_csv(EICU_PATH)
+    # R2-2 harmonization (idempotent): harmonized-model vitals = eICU NATIVE first-day means.
+    # If the ready file already carries native values under the standard names this is a no-op;
+    # if it still has the legacy APS/extreme columns, they are replaced here.
+    if all(c in eicu.columns for c in ("hr_native", "map_native", "temp_native")):
+        _poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in eicu.columns]
+        if _poll:
+            eicu = eicu.drop(columns=_poll)
+        for _a, _b in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
+            eicu = eicu.rename(columns={_a: _b})
     mimic = mimic.dropna(subset=[OUTCOME] + MODEL_A_VARS).copy()
     eicu = eicu.dropna(subset=[OUTCOME] + MODEL_B_VARS).copy()
 

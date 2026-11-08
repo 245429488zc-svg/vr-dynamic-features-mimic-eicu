@@ -235,6 +235,15 @@ def build_docx(table_df: pd.DataFrame) -> None:
 
 def main() -> None:
     df = pd.read_csv(DATA)
+    # R2-2 harmonization (idempotent): harmonized-model vitals = eICU NATIVE first-day means.
+    # If the ready file already carries native values under the standard names this is a no-op;
+    # if it still has the legacy APS/extreme columns, they are replaced here.
+    if all(c in df.columns for c in ("hr_native", "map_native", "temp_native")):
+        _poll = [c for c in ["hr", "map", "temp", "rr_vitalsign", "spo2"] if c in df.columns]
+        if _poll:
+            df = df.drop(columns=_poll)
+        for _a, _b in {"hr_native": "hr", "map_native": "map", "temp_native": "temp"}.items():
+            df = df.rename(columns={_a: _b})
     rows = []
     ors = []
     for model_name, variables in MODELS.items():
