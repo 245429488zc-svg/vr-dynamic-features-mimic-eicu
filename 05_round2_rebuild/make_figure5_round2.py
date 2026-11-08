@@ -302,16 +302,8 @@ def make_figure(results: pd.DataFrame) -> plt.Figure:
     fig, axes = plt.subplots(2, 1, figsize=(8.8, 15.0), sharey=False)
     draw_panel(axes[0], build_plot_rows(results, "VR initial"), "A. VR initial", "#4C78A8")
     draw_panel(axes[1], build_plot_rows(results, "VR delta"), "B. VR delta", "#E45756")
-    fig.suptitle("Figure 5. Subgroup analyses of VR initial and VR delta with hospital mortality", fontsize=12, fontweight="bold", y=0.985)
-    fig.text(
-        0.08,
-        0.025,
-        "Models used the MIMIC-IV fully adjusted complete-case cohort. Stratified models adjusted for the same covariates as the primary model, excluding the stratifying variable when applicable.",
-        ha="left",
-        va="bottom",
-        fontsize=7.4,
-    )
-    fig.subplots_adjust(left=0.22, right=0.70, top=0.94, bottom=0.065, hspace=0.24)
+    # 投稿版: 图内不嵌标题与脚注(标题/说明由稿件图注承载)
+    fig.subplots_adjust(left=0.22, right=0.70, top=0.97, bottom=0.05, hspace=0.24)
     return fig
 
 
@@ -366,7 +358,7 @@ def write_log(results: pd.DataFrame) -> None:
 def main() -> None:
     results = run_subgroup_analysis()
     fig = make_figure(results)
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         fig.savefig(OUTDIR / f"Figure5_subgroup_forest.{ext}", dpi=600 if ext == "png" else None, facecolor="white")
     plt.close(fig)
     write_log(results)
