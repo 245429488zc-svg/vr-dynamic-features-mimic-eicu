@@ -16,9 +16,9 @@
 
 ## Cohort checks
 
-- MIMIC-IV internal (48-h landmark): n=9960, deaths=1730, AUROC 0.830->0.834, Delta=0.004, IDI=0.007, NRI=0.155.
-- MIMIC-IV harmonized reduced (48-h landmark): n=10770, deaths=1856, AUROC 0.795->0.800, Delta=0.006, IDI=0.007, NRI=0.175.
-- eICU (48-h landmark, transported): n=1256, deaths=279, AUROC 0.717->0.728, Delta=0.011, IDI=0.008, NRI=0.243.
+- MIMIC-IV internal (48-h landmark): n=9960, deaths=1730, AUROC 0.822->0.827, Delta=0.004, IDI=0.007, NRI=0.153.
+- MIMIC-IV harmonized reduced (48-h landmark): n=10770, deaths=1856, AUROC 0.778->0.784, Delta=0.006, IDI=0.008, NRI=0.176.
+- eICU (48-h landmark, transported): n=1256, deaths=279, AUROC 0.724->0.735, Delta=0.011, IDI=0.008, NRI=0.228.
 
 ## Validation against Table 3
 

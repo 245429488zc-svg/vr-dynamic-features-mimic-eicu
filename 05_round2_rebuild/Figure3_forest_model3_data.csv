@@ -1,0 +1,10 @@
+study,feature,or,ci_lower,ci_upper,p_value,n,or_ci,core,weight
+VR initial,VR initial,1.286,1.209,1.369,<0.001,10428,1.286 (1.209-1.369),True,1.0
+VR mean,VR mean,1.44,1.344,1.542,<0.001,10428,1.440 (1.344-1.542),False,1.0
+VR maximum,VR maximum,1.348,1.263,1.439,<0.001,10428,1.348 (1.263-1.439),False,1.0
+VR minimum,VR minimum,1.309,1.228,1.396,<0.001,10428,1.309 (1.228-1.396),False,1.0
+VR last,VR last,1.366,1.283,1.455,<0.001,10428,1.366 (1.283-1.455),False,1.0
+VR AUC,VR AUC,1.426,1.332,1.527,<0.001,10428,1.426 (1.332-1.527),False,1.0
+VR delta (adjusted for VR initial),"VR delta
+(adjusted for VR initial)",1.33,1.234,1.434,<0.001,10428,1.330 (1.234-1.434),True,1.0
+VR slope,VR slope,0.987,0.927,1.051,0.693,10428,0.987 (0.927-1.051),False,1.0
