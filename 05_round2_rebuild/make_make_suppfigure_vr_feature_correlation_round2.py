@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -14,8 +13,8 @@ from scipy.stats import spearmanr
 
 
 ROOT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目2/审稿材料")
-DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+DATA = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+OUTDIR = Path(__file__).resolve().parent
 
 FEATURES = [
     ("vr_initial", "VR initial"),
@@ -70,12 +69,7 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
     })
     fig, ax = plt.subplots(figsize=(7.2, 6.2))
     vals = rho_mat.values.astype(float)
-    x, y = np.meshgrid(np.arange(vals.shape[1] + 1) - 0.5,
-                       np.arange(vals.shape[0] + 1) - 0.5)
-    im = ax.pcolormesh(x, y, vals, cmap="RdBu_r", vmin=-1, vmax=1,
-                       shading="flat")
-    ax.set_aspect("equal")
-    ax.set_ylim(vals.shape[0] - 0.5, -0.5)
+    im = ax.imshow(vals, cmap="RdBu_r", vmin=-1, vmax=1, aspect="equal")
 
     ax.set_xticks(np.arange(len(rho_mat.columns)))
     ax.set_yticks(np.arange(len(rho_mat.index)))
@@ -96,19 +90,13 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.set_title(
-        "Supplementary Figure 1. Correlations among early VR features",
+        "Supplementary Figure. Correlations among early VR features",
         loc="left", fontsize=10.2, fontweight="bold", pad=14,
     )
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.035)
-    cbar.solids.set_rasterized(False)
     cbar.set_label("Spearman rho", fontsize=8)
     cbar.ax.tick_params(labelsize=7)
-    fig.text(
-        0.08, 0.025,
-        "MIMIC-IV main analysis cohort. Values are Spearman correlation coefficients.",
-        ha="left", va="bottom", fontsize=7,
-    )
-    fig.subplots_adjust(left=0.20, right=0.92, top=0.88, bottom=0.20)
+    fig.subplots_adjust(left=0.20, right=0.92, top=0.93, bottom=0.20)
     return fig
 
 
@@ -130,8 +118,9 @@ def main() -> None:
 
     fig = make_figure(rho_mat)
     base = OUTDIR / "Supplementary_Figure_VR_feature_correlation"
-    fig.savefig(base.with_suffix(".pdf"), dpi=600, bbox_inches="tight", facecolor="white")
-    fig.savefig(base.with_suffix(".svg"), dpi=600, bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".eps"), bbox_inches="tight", facecolor="white")
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 

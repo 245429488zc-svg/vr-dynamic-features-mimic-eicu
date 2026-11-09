@@ -220,15 +220,6 @@ def make_figure(curves: pd.DataFrame, meta_df: pd.DataFrame) -> plt.Figure:
         curve = curves[curves["variable"].eq(spec["variable"])]
         meta = meta_df[meta_df["variable"].eq(spec["variable"])].iloc[0].to_dict()
         draw_panel(ax, curve, meta, spec)
-    fig.suptitle("Figure 6. Restricted cubic spline analyses of core VR features", fontsize=12, fontweight="bold", y=0.98)
-    fig.text(
-        0.08,
-        0.02,
-        "Models were adjusted as in the fully adjusted MIMIC-IV complete-case model. Curves are shown across the 1st-99th percentile range.",
-        ha="left",
-        va="bottom",
-        fontsize=7.4,
-    )
     fig.subplots_adjust(left=0.08, right=0.985, top=0.85, bottom=0.2, wspace=0.28)
     return fig
 

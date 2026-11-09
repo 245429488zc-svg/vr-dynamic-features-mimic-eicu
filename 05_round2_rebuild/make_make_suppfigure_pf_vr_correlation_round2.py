@@ -175,10 +175,6 @@ def main():
     corr_df.to_csv(OUT / "SuppFigure_PF_VR_spearman_matrix_long.csv", index=False)
 
     fig = plt.figure(figsize=(9.2, 6.8), constrained_layout=False)
-    fig.suptitle(
-        "Supplementary Figure 4. Correlations between P/F and VR features",
-        x=0.01, y=0.995, ha="left", fontsize=11.5, fontweight="bold",
-    )
     gs = gridspec.GridSpec(
         2, 3, figure=fig,
         height_ratios=[1.05, 1.0],
@@ -197,12 +193,6 @@ def main():
             ax.legend(handles[:3], labels[:3], loc="lower left", fontsize=7,
                       handletextpad=0.4, borderaxespad=0.2)
 
-    fig.text(
-        0.01, 0.01,
-        "MIMIC-IV main analysis cohort. Scatter points are a fixed random sample for display; Spearman correlations use all available observations.",
-        fontsize=7,
-        ha="left",
-    )
 
     base = OUT / "Supplementary_Figure_PF_VR_correlation"
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")

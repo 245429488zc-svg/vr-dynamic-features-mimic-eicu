@@ -269,14 +269,7 @@ def make_figure(cal: pd.DataFrame, dca: pd.DataFrame, summary: pd.DataFrame):
     for i, setting in enumerate(settings):
         draw_calibration(axes[i, 0], cal, summary, setting, letters[2 * i])
         draw_dca(axes[i, 1], dca, summary, setting, letters[2 * i + 1])
-    fig.suptitle("Supplementary Figure. Calibration and decision curve analyses for adding VR to P/F-based models",
-                 fontsize=11.2, fontweight="bold", y=0.985)
-    fig.subplots_adjust(left=0.08, right=0.98, top=0.92, bottom=0.075, hspace=0.58, wspace=0.30)
-    fig.text(
-        0.08, 0.025,
-        "Calibration points show deciles of predicted risk. Decision curves compare Base + P/F and Base + P/F + VR models across threshold probabilities.",
-        ha="left", va="bottom", fontsize=7,
-    )
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.97, bottom=0.075, hspace=0.58, wspace=0.30)
     return fig
 
 

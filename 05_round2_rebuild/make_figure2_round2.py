@@ -286,8 +286,7 @@ def make_figure(df: pd.DataFrame, trend: pd.DataFrame) -> plt.Figure:
     ax_legend = fig.add_subplot(gs[3, 1:])
     draw_legend_axis(ax_legend, df)
 
-    fig.suptitle("Figure 2. Early VR dynamic features by hospital mortality", fontsize=13, fontweight="bold", y=0.985)
-    fig.subplots_adjust(left=0.055, right=0.985, top=0.93, bottom=0.06)
+    fig.subplots_adjust(left=0.055, right=0.985, top=0.98, bottom=0.06)
     return fig
 
 

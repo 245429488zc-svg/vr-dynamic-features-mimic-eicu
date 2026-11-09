@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 import re
 
@@ -15,10 +14,10 @@ from matplotlib.transforms import blended_transform_factory
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+OUTDIR = Path(__file__).resolve().parent
 OUTDIR.mkdir(exist_ok=True)
 
-TABLE2_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "Table2_early_VR_mortality.csv"
+TABLE2_PATH = Path(__file__).resolve().parent / "Table2_early_VR_mortality.csv"
 
 FEATURE_LABELS = {
     "VR initial, per 1-SD increase": "VR initial",
@@ -180,7 +179,7 @@ def write_log(df: pd.DataFrame) -> None:
 def main() -> None:
     df = prepare_data()
     fig = make_forest_plot(df)
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         fig.savefig(
             OUTDIR / f"Figure3_VR_dynamic_features_forest.{ext}",
             dpi=600 if ext == "png" else None,

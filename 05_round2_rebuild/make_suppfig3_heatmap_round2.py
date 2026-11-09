@@ -95,10 +95,8 @@ ax.tick_params(labelsize=9)
 ax.legend(frameon=False, fontsize=9, loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2)
 for s in ("top", "right"):
     ax.spines[s].set_visible(False)
-fig.suptitle(
-    "Supplementary Figure 3. Joint relationship of VR initial, VR delta, and predicted hospital mortality",
-    x=0.5, y=0.98, fontsize=11, fontweight="bold")
-fig.subplots_adjust(left=0.11, right=0.90, top=0.87, bottom=0.19)
+
+fig.subplots_adjust(left=0.11, right=0.90, top=0.92, bottom=0.14)
 fig.savefig(OUT / "Supplementary_Figure_3.png", dpi=300)
 fig.savefig(OUT / "Supplementary_Figure_3.pdf")
 fig.savefig(OUT / "Supplementary_Figure_3.svg")

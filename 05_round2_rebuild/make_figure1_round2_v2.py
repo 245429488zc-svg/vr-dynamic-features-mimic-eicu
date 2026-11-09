@@ -162,7 +162,7 @@ def main() -> None:
     add_arrow(ax, (2.45, mimic_last_y - 0.36), (2.45, bottom_y + bottom_h / 2), mutation_scale=18)
     add_arrow(ax, (9.55, eicu_last_y - 0.36), (9.55, bottom_y + bottom_h / 2), mutation_scale=18)
 
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         out = OUTDIR / f"Figure1_study_flow_diagram.{ext}"
         fig.savefig(out, dpi=600 if ext == "png" else None, bbox_inches="tight", facecolor="white")
     plt.close(fig)

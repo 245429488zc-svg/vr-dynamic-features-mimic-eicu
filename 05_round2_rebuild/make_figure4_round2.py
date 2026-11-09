@@ -33,12 +33,12 @@ OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -275,16 +275,7 @@ def make_figure(roc_df: pd.DataFrame, summary_df: pd.DataFrame) -> plt.Figure:
     draw_roc_panel(axes[0, 1], roc_df, summary_df, "MIMIC-IV harmonized reduced (48-h landmark)", "B. MIMIC-IV harmonized reduced model")
     draw_roc_panel(axes[1, 0], roc_df, summary_df, "eICU (48-h landmark, transported)", "C. eICU external validation (transported, 48-h landmark)")
     draw_increment_panel(axes[1, 1], summary_df)
-    fig.suptitle("Figure 4. Incremental predictive value of VR beyond P/F", fontsize=12.2, fontweight="bold", y=0.98)
-    fig.subplots_adjust(left=0.08, right=0.98, top=0.91, bottom=0.11, hspace=0.42, wspace=0.32)
-    fig.text(
-        0.08,
-        0.035,
-        "Base + P/F models included initial and minimum P/F ratio. VR variables included VR initial and VR delta.",
-        ha="left",
-        va="bottom",
-        fontsize=7.5,
-    )
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.97, bottom=0.11, hspace=0.42, wspace=0.32)
     return fig
 
 
