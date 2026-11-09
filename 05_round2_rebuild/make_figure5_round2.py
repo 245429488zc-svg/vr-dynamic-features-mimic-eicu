@@ -254,8 +254,16 @@ def draw_panel(ax, rows: list[dict], title: str, color: str) -> None:
 
     ax.axvline(1, color="#777777", linestyle=(0, (4, 3)), linewidth=0.9)
     ax.set_xscale("log")
-    ax.set_xlim(0.5, 2.3)
-    ax.set_xticks([0.5, 0.75, 1.0, 1.5, 2.0])
+    # 自适应轴域: 覆盖全部点估计与置信区间, 避免右侧裁切(如 VR initial 无脓毒症组 CI 上限 3.28)
+    import math
+    _ci_vals = [r for r in data_rows if isinstance(r.get("CI_upper"), (int, float)) and np.isfinite(r["CI_upper"])]
+    ci_hi = max((r["CI_upper"] for r in _ci_vals), default=2.3)
+    ci_lo = min((r["CI_lower"] for r in _ci_vals), default=0.5)
+    xmax = max(2.3, math.ceil(ci_hi * 1.15 * 10) / 10)
+    xmin = min(0.5, math.floor(ci_lo * 0.9 * 10) / 10)
+    ax.set_xlim(xmin, xmax)
+    _ticks = [t for t in [0.5, 0.75, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0] if xmin <= t <= xmax]
+    ax.set_xticks(_ticks)
     ax.xaxis.set_major_formatter(mticker.FormatStrFormatter("%.2g"))
     ax.xaxis.set_minor_formatter(mticker.NullFormatter())
     ax.set_yticks(y_positions)
