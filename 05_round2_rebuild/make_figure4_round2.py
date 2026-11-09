@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SUPERSEDED 2026-11-05: canonical engine moved to the repository tree
+# (42_GitHub仓库/vr-dynamic-features-code/05_round2_rebuild), run with ROUND2_OUT=<43 dir>.
+# This copy predates the sepsis48 temporal-validity fix — do NOT rerun as-is.
 """Generate Figure 4: incremental predictive value of VR beyond P/F."""
 
 from __future__ import annotations
@@ -16,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+OUTDIR = Path(__file__).resolve().parent
 OUTDIR.mkdir(exist_ok=True)
 
 MIMIC_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv"
@@ -30,12 +33,12 @@ OUTCOME = "hospital_expire_flag"
 RNG = 20260721
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -133,9 +136,8 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
     mimic_a = pd.read_csv(MIMIC_PATH)
     mimic_b = pd.read_csv(HARM_PATH)
     eicu_b = pd.read_csv(EICU_LM_PATH)
-    # eICU landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
-    # Harmonized sepsis slot: admissionDx-recorded sepsis in the eICU cohort.
-    eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
+    # eICU 臂：以原生首日均值列为准（R2-2），清理旧回填并以完整口径收口
+    # (legacy 清理/rename 块已由 run_master_part1 归一, 不再需要)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()
 
     settings = []
@@ -166,7 +168,7 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
                     }
                 )
         _, p_value = delong_test(y, pred_old, pred_new)
-        bt_row = globals()["_BT"].iloc[len(summary_rows)]
+        idi, nri = idi_nri(y, pred_old, pred_new)
         auc_old = roc_auc_score(y, pred_old)
         auc_new = roc_auc_score(y, pred_new)
         summary_rows.append(
@@ -176,10 +178,10 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
                 "Deaths": int(y.sum()),
                 "AUROC before": auc_old,
                 "AUROC after": auc_new,
-                "Delta AUROC (bootstrap)": float(bt_row["delta_auc"]),
+                "Delta AUROC (bootstrap)": float(globals()["_BT"]["delta_auc"].iloc[len(summary_rows)]),
                 "DeLong P value": p_value,
-                "IDI": float(bt_row["idi"]),
-                "NRI": float(bt_row["nri"]),
+                "IDI": idi,
+                "NRI": nri,
                 "Brier before": brier_score_loss(y, pred_old),
                 "Brier after": brier_score_loss(y, pred_new),
             }
@@ -247,7 +249,7 @@ def draw_increment_panel(ax, summary_df: pd.DataFrame):
             ax.text(val + 0.006, y, f"{val:.3f}", va="center", ha="left", fontsize=7.2, color=color)
     ax.axvline(0, color="#808080", linestyle=(0, (4, 3)), linewidth=0.9)
     ax.set_yticks(y_base)
-    ax.set_yticklabels(["MIMIC internal", "MIMIC harmonized", "eICU transported"])
+    ax.set_yticklabels(plot_df["setting"])
     ax.invert_yaxis()
     ax.set_xlim(-0.01, 0.30)
     ax.set_xlabel("Incremental metric value")
@@ -274,7 +276,7 @@ def make_figure(roc_df: pd.DataFrame, summary_df: pd.DataFrame) -> plt.Figure:
     draw_roc_panel(axes[1, 0], roc_df, summary_df, "eICU (48-h landmark, transported)", "C. eICU external validation (transported, 48-h landmark)")
     draw_increment_panel(axes[1, 1], summary_df)
     fig.suptitle("Figure 4. Incremental predictive value of VR beyond P/F", fontsize=12.2, fontweight="bold", y=0.98)
-    fig.subplots_adjust(left=0.08, right=0.98, top=0.91, bottom=0.11, hspace=0.42, wspace=0.42)
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.91, bottom=0.11, hspace=0.42, wspace=0.32)
     fig.text(
         0.08,
         0.035,
@@ -347,7 +349,7 @@ def main() -> None:
     roc_df, summary_df = prepare_predictions()
     validation_notes = validate_against_table3(summary_df)
     fig = make_figure(roc_df, summary_df)
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         fig.savefig(
             OUTDIR / f"Figure4_incremental_value_VR_beyond_PF.{ext}",
             dpi=600 if ext == "png" else None,

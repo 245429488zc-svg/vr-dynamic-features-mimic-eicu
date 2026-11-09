@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SUPERSEDED 2026-11-05: canonical engine moved to the repository tree
+# (42_GitHub仓库/vr-dynamic-features-code/05_round2_rebuild), run with ROUND2_OUT=<43 dir>.
+# This copy predates the sepsis48 temporal-validity fix — do NOT rerun as-is.
 """Generate supplementary calibration and decision curve plots.
 
 The figure uses the same complete-case model settings as Table 3/Figure 4:
@@ -8,7 +11,6 @@ harmonized, and eICU external validation analyses.
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -21,23 +23,23 @@ from sklearn.metrics import brier_score_loss, roc_auc_score
 from sklearn.preprocessing import StandardScaler
 
 
-ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
-MIMIC_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "landmark_cohort_round2.csv"
-HARM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "harm_landmark_mimic.csv"
-EICU_LM_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "eicu_landmark_round2.csv"
+ROOT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目2/审稿材料")
+OUTDIR = Path(__file__).resolve().parent
+MIMIC_PATH = Path(__file__).resolve().parent / "landmark_cohort_round2.csv"
+HARM_PATH = Path(__file__).resolve().parent / "harm_landmark_mimic.csv"
+EICU_LM_PATH = Path(__file__).resolve().parent / "eicu_landmark_round2.csv"
 
 
 OUTCOME = "hospital_expire_flag"
 RNG = 20260722
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -69,8 +71,8 @@ def prepare_predictions() -> pd.DataFrame:
     mimic_b = pd.read_csv(HARM_PATH)
     eicu_b = pd.read_csv(EICU_LM_PATH)
     # landmark frame is native-normalized by run_master_part1 (R2-2); legacy handling removed
-    # harmonized sepsis slot: admissionDx-recorded sepsis (admission-form entries; every sepsis-positive entry in the current eICU landmark cohort carries an offset <=48 h)
-    eicu_b["sepsis48"] = eicu_b["sepsis_h"].astype(int)
+    # (原 poll 清理/rename 块已在 part1 归一, 不再需要)
+    # (native-normalized 由 part1 完成, 无需清理)
     eicu_b = eicu_b.dropna(subset=[OUTCOME] + BASE_B + PF + VR).copy()
 
     rows = []
@@ -229,6 +231,16 @@ def draw_dca(ax, dca: pd.DataFrame, summary: pd.DataFrame, setting: str, panel: 
     ]:
         g = sub[sub["model"].eq(model)]
         ax.plot(g["threshold"], g["net_benefit"], color=COLORS[model], lw=lw, linestyle=ls, label=model)
+    old_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F"))]["Mean net benefit 0.10-0.30"].iloc[0]
+    new_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F + VR"))]["Mean net benefit 0.10-0.30"].iloc[0]
+    ax.text(
+        0.98, 1.08,
+        f"Mean NB 0.10-0.30\nBase+P/F {old_nb:.3f}\n+VR {new_nb:.3f}\nΔ {new_nb-old_nb:.3f}",
+        transform=ax.transAxes,
+        ha="right", va="top", fontsize=6.8,
+        bbox={"facecolor": "white", "edgecolor": "#D0D0D0", "boxstyle": "round,pad=0.25"},
+        clip_on=False,
+    )
     ax.set_xlim(0.05, 0.50)
     ymin = min(-0.02, sub["net_benefit"].quantile(0.01) - 0.01)
     ymax = sub[sub["model"].isin(["Base + P/F", "Base + P/F + VR", "Treat all"])]["net_benefit"].quantile(0.99) + 0.02
@@ -256,7 +268,7 @@ def make_figure(cal: pd.DataFrame, dca: pd.DataFrame, summary: pd.DataFrame):
     for i, setting in enumerate(settings):
         draw_calibration(axes[i, 0], cal, summary, setting, letters[2 * i])
         draw_dca(axes[i, 1], dca, summary, setting, letters[2 * i + 1])
-    fig.suptitle("Supplementary Figure 2. Calibration and decision curve analyses for adding VR to P/F-based models",
+    fig.suptitle("Supplementary Figure. Calibration and decision curve analyses for adding VR to P/F-based models",
                  fontsize=11.2, fontweight="bold", y=0.985)
     fig.subplots_adjust(left=0.08, right=0.98, top=0.92, bottom=0.075, hspace=0.58, wspace=0.30)
     fig.text(
@@ -283,6 +295,7 @@ def main() -> None:
     base = OUTDIR / "Supplementary_Figure_DCA_calibration"
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
     fig.savefig(base.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
+    fig.savefig(base.with_suffix(".eps"), bbox_inches="tight", facecolor="white")
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
