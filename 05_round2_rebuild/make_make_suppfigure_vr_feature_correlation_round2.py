@@ -13,7 +13,8 @@ from scipy.stats import spearmanr
 
 
 ROOT = Path("/Volumes/tongtong/数据库/public/mimmc4/mimmc/项目2/审稿材料")
-DATA = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+import os as _os
+DATA = Path(_os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
 OUTDIR = Path(__file__).resolve().parent
 
 FEATURES = [
