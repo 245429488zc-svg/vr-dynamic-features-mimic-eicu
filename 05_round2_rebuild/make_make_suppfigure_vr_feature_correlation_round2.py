@@ -65,6 +65,7 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
         "font.serif": ["Times New Roman", "Times", "DejaVu Serif"],
         "font.size": 8,
         "pdf.fonttype": 42,
+        "ps.fonttype": 42,  # EPS 文字为可编辑 TrueType, 避免 Type 3
         "svg.fonttype": "none",
         "axes.linewidth": 0.8,
     })
@@ -90,14 +91,11 @@ def make_figure(rho_mat: pd.DataFrame) -> plt.Figure:
 
     for spine in ax.spines.values():
         spine.set_visible(False)
-    ax.set_title(
-        "Supplementary Figure. Correlations among early VR features",
-        loc="left", fontsize=10.2, fontweight="bold", pad=14,
-    )
+    # 不带图内大标题(编号与标题由图注承担); 顶部留白随之收紧
     cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.035)
     cbar.set_label("Spearman rho", fontsize=8)
     cbar.ax.tick_params(labelsize=7)
-    fig.subplots_adjust(left=0.20, right=0.92, top=0.93, bottom=0.20)
+    fig.subplots_adjust(left=0.20, right=0.92, top=0.985, bottom=0.20)
     return fig
 
 
@@ -148,6 +146,7 @@ def main() -> None:
         "- Supplementary_Figure_VR_feature_correlation.pdf",
         "- Supplementary_Figure_VR_feature_correlation.png",
         "- Supplementary_Figure_VR_feature_correlation.svg",
+        "- Supplementary_Figure_VR_feature_correlation.eps",
         "- SuppFigure_VR_feature_spearman_matrix.csv",
         "- SuppFigure_VR_feature_spearman_long.csv",
     ]

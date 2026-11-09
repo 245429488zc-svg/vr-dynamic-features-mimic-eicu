@@ -44,6 +44,14 @@ BASE_B = [
 PF = ["pf_initial", "pf_min"]
 VR = ["vr_initial", "vr_delta"]
 
+# Panel D 行标签用短名: "(48-h landmark)" 在 A/B/C 面板标题与图注中均已说明,
+# 长标签会越过列间距压到 Panel C 的图例上
+SHORT_SETTINGS = {
+    "MIMIC-IV internal (48-h landmark)": "MIMIC-IV internal",
+    "MIMIC-IV harmonized reduced (48-h landmark)": "MIMIC-IV harmonized reduced",
+    "eICU (48-h landmark, transported)": "eICU (transported)",
+}
+
 BLUE = "#4C78A8"
 RED = "#E45756"
 GRAY = "#666666"
@@ -181,7 +189,7 @@ def prepare_predictions() -> tuple[pd.DataFrame, pd.DataFrame]:
                 "Delta AUROC (bootstrap)": float(globals()["_BT"]["delta_auc"].iloc[len(summary_rows)]),
                 "DeLong P value": p_value,
                 "IDI": idi,
-                "NRI": nri,
+                "NRI": float(globals()["_BT"]["nri"].iloc[len(summary_rows)]),  # bootstrap 均值, 与 Table 3 同源
                 "Brier before": brier_score_loss(y, pred_old),
                 "Brier after": brier_score_loss(y, pred_new),
             }
@@ -249,7 +257,7 @@ def draw_increment_panel(ax, summary_df: pd.DataFrame):
             ax.text(val + 0.006, y, f"{val:.3f}", va="center", ha="left", fontsize=7.2, color=color)
     ax.axvline(0, color="#808080", linestyle=(0, (4, 3)), linewidth=0.9)
     ax.set_yticks(y_base)
-    ax.set_yticklabels(plot_df["setting"])
+    ax.set_yticklabels([SHORT_SETTINGS[s] for s in plot_df["setting"]])
     ax.invert_yaxis()
     ax.set_xlim(-0.01, 0.30)
     ax.set_xlabel("Incremental metric value")

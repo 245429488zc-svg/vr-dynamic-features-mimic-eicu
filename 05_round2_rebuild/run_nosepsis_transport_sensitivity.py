@@ -3,7 +3,7 @@
 
 Rationale (Reviewer 2, Comment 2): the harmonized sepsis slot (sepsis48) is the 48-h
 Sepsis-3 definition in MIMIC-IV but the admissionDx text definition in eICU — related,
-not identical constructions (prevalence ~71.5% in the MIMIC fit cohort vs ~16.1% in the
+not identical constructions (prevalence ~71.5% in the MIMIC fit cohort vs ~16.4% in the
 transported eICU landmark cohort). This script removes sepsis from BOTH sides of the
 harmonized/transported specification and re-runs the ladder end-to-end, so that the
 "report how results change" requirement is met with a single-variable-difference test.
@@ -269,7 +269,7 @@ def main() -> None:
         "The harmonized sepsis covariate in Table 3 (sepsis48) is the 48-hour-determinable Sepsis-3 definition in "
         "MIMIC-IV and the recorded admission diagnoses (admissionDx) in eICU: related constructions, not identical "
         "definitions, with markedly different positivity prevalence in the two cohorts (7,697/10,770 [71.5%] in the "
-        "MIMIC-IV harmonized landmark fit cohort; 194/1,206 [16.1%] in the eICU landmark cohort). In this sensitivity "
+        "MIMIC-IV harmonized landmark fit cohort; 206/1,256 [16.4%] in the eICU landmark cohort). In this sensitivity "
         "analysis the sepsis covariate was removed from both sides of the transported specification and the ladder was "
         "re-run end-to-end. Before = Base + P/F model; After = additional inclusion of VR initial and VR delta "
         "(per 1-SD increase, modeled conditional on VR initial). Row 1 is fitted on the MIMIC-IV harmonized landmark "
@@ -278,8 +278,8 @@ def main() -> None:
         "(2,000 draws; derivation settings refit per resample; the transported analysis evaluated with fixed "
         "coefficients per resample). The sepsis48 specification (Table 3, Rows 2-3) remains primary: the VR step "
         "preserves its direction and reporting-precision magnitude in both settings without sepsis, and the "
-        "transported step remains nominally non-significant under either specification (DeLong P = 0.073 with, "
-        "0.177 without).")
+        "transported step remains nominally non-significant under either specification (DeLong P = 0.054 with, "
+        "0.156 without).")
     build_st6_docx(st6, "Supplementary Table 6. Sensitivity analysis: the harmonized/transported 48-hour landmark ladder without the sepsis covariate.",
                    st6_note, OUTDIR / "TableS6_nosepsis_TNR_xiaoliu.docx")
     stamp("ST6 docx 完成")

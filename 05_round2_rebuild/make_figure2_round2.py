@@ -166,7 +166,8 @@ def draw_panel_a(ax, trend: pd.DataFrame) -> None:
             label=f"{GROUP_LABELS[group]}",
         )
         ax.scatter(x, y, color=GROUP_COLORS[group], s=18, zorder=3)
-    ax.set_title("A. VR trajectory during the first 48 h", loc="left", fontsize=10.5, fontweight="bold")
+    # R2 图注口径: 测量层分时段汇总, 不称 patient trajectory
+    ax.set_title("A. Interval-specific VR summaries during the first 48 h", loc="left", fontsize=10.5, fontweight="bold")
     ax.set_xlabel("Time after ICU admission (h)")
     ax.set_ylabel("Ventilatory ratio")
     ax.set_xticks(TIME_MIDPOINTS)
@@ -311,7 +312,7 @@ def write_log(df: pd.DataFrame, trend: pd.DataFrame, summary: pd.DataFrame) -> N
         "",
         "## Figure design",
         "",
-        "- Panel A displays median and IQR of VR across 0-6, 6-12, 12-24, 24-36, and 36-48 h.",
+        "- Panel A displays interval-specific VR summaries (median curve with group-specific interquartile-range bands) across 0-6, 6-12, 12-24, 24-36, and 36-48 h.",
         "- Panels B-H use an aligned three-column layout for VR initial, delta, mean, maximum, minimum, last, and AUC.",
         "- Density histograms are overlaid with KDE curves and group median reference lines.",
         "- Median [IQR] and P values are displayed in the upper-right corner of each density panel.",
