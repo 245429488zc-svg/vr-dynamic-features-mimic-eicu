@@ -35,12 +35,12 @@ OUTCOME = "hospital_expire_flag"
 RNG = 20260722
 
 BASE_A = [
-    "age", "sex", "charlson", "sepsis3", "copd", "chf", "sofa", "peep",
+    "age", "sex", "charlson", "sepsis3_48h", "copd", "chf", "sofa", "peep",
     "driving_pressure", "vt_pbw", "hr", "map", "temp", "lactate",
     "bun", "creatinine", "wbc", "bicarbonate",
 ]
 BASE_B = [
-    "age", "sex", "charlson", "sepsis_h", "copd", "chf", "peep",
+    "age", "sex", "charlson", "sepsis48", "copd", "chf", "peep",
     "vt_pbw", "hr", "map", "temp", "bun", "creatinine", "wbc", "bicarbonate",
 ]
 PF = ["pf_initial", "pf_min"]
@@ -235,12 +235,11 @@ def draw_dca(ax, dca: pd.DataFrame, summary: pd.DataFrame, setting: str, panel: 
     old_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F"))]["Mean net benefit 0.10-0.30"].iloc[0]
     new_nb = summary[(summary["setting"].eq(setting)) & (summary["model"].eq("Base + P/F + VR"))]["Mean net benefit 0.10-0.30"].iloc[0]
     ax.text(
-        0.98, 1.08,
+        0.97, 0.97,
         f"Mean NB 0.10-0.30\nBase+P/F {old_nb:.3f}\n+VR {new_nb:.3f}\nΔ {new_nb-old_nb:.3f}",
         transform=ax.transAxes,
-        ha="right", va="top", fontsize=6.8,
+        ha="right", va="top", fontsize=6.4,
         bbox={"facecolor": "white", "edgecolor": "#D0D0D0", "boxstyle": "round,pad=0.25"},
-        clip_on=False,
     )
     ax.set_xlim(0.05, 0.50)
     ymin = min(-0.02, sub["net_benefit"].quantile(0.01) - 0.01)
