@@ -107,7 +107,6 @@ def make_forest_plot(df: pd.DataFrame) -> plt.Figure:
     ax.set_yticks(y)
     ax.set_yticklabels(plot_df["feature"])
     ax.set_ylim(-0.7, len(plot_df) - 0.3)
-    ax.set_title("Figure 3. Association of early VR dynamic features with hospital mortality", fontsize=10.8, fontweight="bold", pad=14)
 
     for spine in ["top", "right"]:
         ax.spines[spine].set_visible(False)

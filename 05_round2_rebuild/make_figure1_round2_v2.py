@@ -142,12 +142,11 @@ def main() -> None:
         "svg.fonttype": "none",
     })
 
-    fig, ax = plt.subplots(figsize=(16, 8.9))
+    fig, ax = plt.subplots(figsize=(16, 8.55))
     ax.set_xlim(0, 16)
     ax.set_ylim(0, 9.2)
     ax.axis("off")
 
-    ax.text(8, 8.85, "Figure 1. Study flow diagram.", ha="center", va="center", fontsize=14, fontweight="bold")
 
     mimic_last_y = draw_column(ax, "MIMIC-IV", MIMIC_STEPS, x_main=2.45, x_excl=5.95, y_top=7.85, y_gap=1.32)
     eicu_last_y = draw_column(ax, "eICU", EICU_STEPS, x_main=9.55, x_excl=13.10, y_top=7.85, y_gap=1.32)
