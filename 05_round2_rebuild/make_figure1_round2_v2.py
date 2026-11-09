@@ -63,7 +63,8 @@ _ANALYSIS_ROWS = [
     ("  MIMIC-IV", None),
     ("    primary association cohort", "n=12,694; deaths=2,514"),
     ("    complete cases, fully adjusted", "n=10,428; deaths=2,178  (excluded 2,266 for missing covariates)"),
-    ("    complete cases, harmonized", "n=11,251; deaths=2,315  (excluded 1,443; fitted here, transported to eICU)"),
+    ("    complete cases, harmonized", "n=11,251; deaths=2,315  (excluded 1,443 for missing covariates)"),
+("    harmonized landmark fit cohort", "n=10,770; deaths=1,856  (fitted here, transported to eICU)"),
     ("    48-h landmark prediction cohort", "n=9,960; deaths after 48 h = 1,730"),
     ("  eICU", None),
     ("    primary association cohort (replication)", "n=1,420; deaths=396"),
@@ -152,7 +153,7 @@ def main() -> None:
     eicu_last_y = draw_column(ax, "eICU", EICU_STEPS, x_main=9.55, x_excl=13.10, y_top=7.85, y_gap=1.32)
 
     bottom_y = 0.86
-    bottom_h = 1.35
+    bottom_h = 1.56
     bottom_w = 14.8
     analysis_text = "\n".join(ANALYSIS_SETS)
     add_box(ax, 8.0, bottom_y, bottom_w, bottom_h, analysis_text, fontsize=7.0, lw=1.4,
