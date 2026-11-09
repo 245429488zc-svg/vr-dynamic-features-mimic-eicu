@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import numpy as np
@@ -10,7 +9,7 @@ from scipy.stats import spearmanr
 from statsmodels.nonparametric.smoothers_lowess import lowess
 
 
-OUT = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+OUT = Path(__file__).resolve().parent
 DATA = OUT / "mimic_analysis_ready_round2.csv"
 
 
@@ -85,12 +84,7 @@ def draw_heatmap(ax, corr_df):
     mat = mat[[label for _, label in PF_FEATURES]]
     mat = mat.loc[[label for _, label in VR_FEATURES]]
 
-    vals = mat.values
-    x, y = np.meshgrid(np.arange(vals.shape[1] + 1) - 0.5,
-                       np.arange(vals.shape[0] + 1) - 0.5)
-    im = ax.pcolormesh(x, y, vals, cmap="RdBu_r", vmin=-0.75, vmax=0.75,
-                       shading="flat")
-    ax.set_ylim(vals.shape[0] - 0.5, -0.5)
+    im = ax.imshow(mat.values, cmap="RdBu_r", vmin=-0.75, vmax=0.75, aspect="auto", rasterized=True)
     ax.set_xticks(np.arange(mat.shape[1]))
     ax.set_yticks(np.arange(mat.shape[0]))
     ax.set_xticklabels(mat.columns, rotation=35, ha="right", rotation_mode="anchor")
@@ -104,7 +98,6 @@ def draw_heatmap(ax, corr_df):
     ax.set_title("a. Spearman correlations between VR and P/F features",
                  loc="left", fontweight="bold", fontsize=9)
     cbar = plt.colorbar(im, ax=ax, fraction=0.035, pad=0.02)
-    cbar.solids.set_rasterized(False)
     cbar.set_label("Spearman rho", fontsize=7)
     cbar.ax.tick_params(labelsize=7)
 
@@ -127,9 +120,10 @@ def draw_scatter(ax, df, x, y, xlabel, ylabel, subtitle, panel_letter, stats_df)
     else:
         sample = plot
 
-    for grp, label, alpha in [(0, "Survived", 0.28), (1, "Deceased", 0.42)]:
+    # 去透明化(投稿矢量版): alpha 0.28/0.42 的预混不透明散点色
+    for grp, label, dotcolor in [(0, "Survived", "#AFB7C0"), (1, "Deceased", "#C2AEAE")]:
         sub = sample[sample["hospital_expire_flag"] == grp]
-        ax.scatter(sub[x], sub[y], s=7, c=COLORS[grp], alpha=alpha,
+        ax.scatter(sub[x], sub[y], s=7, c=dotcolor,
                    linewidths=0, label=label)
 
     overall = plot.sort_values(x)
@@ -145,7 +139,7 @@ def draw_scatter(ax, df, x, y, xlabel, ylabel, subtitle, panel_letter, stats_df)
         ha="right",
         va="top",
         fontsize=7,
-        bbox=dict(boxstyle="round,pad=0.24", fc="white", ec="#BDBDBD", lw=0.6, alpha=0.92),
+        bbox=dict(boxstyle="round,pad=0.24", fc="white", ec="#BDBDBD", lw=0.6),
     )
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -181,6 +175,10 @@ def main():
     corr_df.to_csv(OUT / "SuppFigure_PF_VR_spearman_matrix_long.csv", index=False)
 
     fig = plt.figure(figsize=(9.2, 6.8), constrained_layout=False)
+    fig.suptitle(
+        "Supplementary Figure 4. Correlations between P/F and VR features",
+        x=0.01, y=0.995, ha="left", fontsize=11.5, fontweight="bold",
+    )
     gs = gridspec.GridSpec(
         2, 3, figure=fig,
         height_ratios=[1.05, 1.0],
@@ -205,14 +203,11 @@ def main():
         fontsize=7,
         ha="left",
     )
-    fig.suptitle(
-        "Supplementary Figure 4. Correlations between P/F and VR features",
-        x=0.01, y=0.995, ha="left", fontsize=11.5, fontweight="bold",
-    )
 
     base = OUT / "Supplementary_Figure_PF_VR_correlation"
-    fig.savefig(base.with_suffix(".pdf"), dpi=600, bbox_inches="tight")
-    fig.savefig(base.with_suffix(".svg"), dpi=600, bbox_inches="tight")
+    fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
+    fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
+    fig.savefig(base.with_suffix(".eps"), dpi=300, bbox_inches="tight")  # imshow 以 300dpi 嵌入, 矢量部分不受影响
     fig.savefig(base.with_suffix(".png"), dpi=600, bbox_inches="tight")
     plt.close(fig)
 

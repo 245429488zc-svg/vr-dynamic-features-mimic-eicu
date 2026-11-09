@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -16,11 +15,11 @@ from scipy.stats import mannwhitneyu
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+OUTDIR = Path(__file__).resolve().parent
 OUTDIR.mkdir(exist_ok=True)
 
-MAIN_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
-TRAJ_PATH = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "trajectory_mimic_48h_round2.csv"
+MAIN_PATH = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
+TRAJ_PATH = Path(__file__).resolve().parent / "trajectory_mimic_48h_round2.csv"
 
 GROUP_ORDER = ["Survived", "Died"]
 GROUP_COLORS = {"Survived": "#4C78A8", "Died": "#E45756"}
@@ -157,7 +156,8 @@ def draw_panel_a(ax, trend: pd.DataFrame) -> None:
         y_smooth = PchipInterpolator(x, y)(x_smooth)
         q1_smooth = PchipInterpolator(x, q1)(x_smooth)
         q3_smooth = PchipInterpolator(x, q3)(x_smooth)
-        ax.fill_between(x_smooth, q1_smooth, q3_smooth, color=GROUP_COLORS[group], alpha=0.13)
+        # 去透明化(投稿矢量版): alpha 0.13 的预混不透明等价色(混合到白)
+        ax.fill_between(x_smooth, q1_smooth, q3_smooth, color=("#DCDEE0" if group == "Survived" else "#E0DCDC"))
         ax.plot(
             x_smooth,
             y_smooth,
@@ -193,8 +193,7 @@ def draw_density_panel(
             stat="density",
             element="bars",
             fill=True,
-            alpha=0.20,
-            color=GROUP_COLORS[group],
+            color=("#C8CCD1" if group == "Survived" else "#D2C7C7"),
             edgecolor=None,
             ax=ax,
         )
@@ -230,7 +229,6 @@ def draw_density_panel(
             "facecolor": "white",
             "edgecolor": "#cfcfcf",
             "boxstyle": "round,pad=0.16",
-            "alpha": 0.86,
         },
     )
     axis_label = label.split(". ", 1)[1] if ". " in label else label
@@ -247,7 +245,7 @@ def draw_legend_axis(ax, df: pd.DataFrame) -> None:
     n_died = int(df["mortality_group"].eq("Died").sum())
     for i, group in enumerate(GROUP_ORDER):
         ax.add_patch(
-            plt.Rectangle((0.05, 0.72 - i * 0.18), 0.08, 0.08, transform=ax.transAxes, color=GROUP_COLORS[group], alpha=0.45)
+            plt.Rectangle((0.05, 0.72 - i * 0.18), 0.08, 0.08, transform=ax.transAxes, color=("#778CA2" if group == "Survived" else "#A67473"))
         )
         n = n_survived if group == "Survived" else n_died
         ax.text(0.16, 0.76 - i * 0.18, f"{GROUP_LABELS[group]} (n={n:,})", transform=ax.transAxes, va="center", fontsize=9)
@@ -332,7 +330,7 @@ def main() -> None:
     trend = trend_summary(traj)
     summary = feature_summary(df)
     fig = make_figure(df, trend)
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         fig.savefig(
             OUTDIR / f"Figure2_early_VR_dynamic_features_density.{ext}",
             dpi=600 if ext == "png" else None,

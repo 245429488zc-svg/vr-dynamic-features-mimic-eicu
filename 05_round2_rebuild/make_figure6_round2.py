@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import numpy as np
@@ -15,10 +14,10 @@ from scipy import stats
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTDIR = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent))
+OUTDIR = Path(__file__).resolve().parent
 OUTDIR.mkdir(exist_ok=True)
 
-DATA = Path(os.environ.get("ROUND2_OUT", Path(__file__).resolve().parent)) / "mimic_analysis_ready_round2.csv"
+DATA = Path(__file__).resolve().parent / "mimic_analysis_ready_round2.csv"
 OUTCOME = "hospital_expire_flag"
 
 BASE_A = [
@@ -177,7 +176,9 @@ def fit_rcs_for_variable(cc_raw: pd.DataFrame, spec: dict) -> tuple[pd.DataFrame
 
 def draw_panel(ax, curve: pd.DataFrame, meta: dict, spec: dict) -> None:
     color = spec["color"]
-    ax.fill_between(curve["x"], curve["CI_lower"], curve["CI_upper"], color=color, alpha=0.18, linewidth=0)
+    # 去透明化(投稿矢量版): alpha 0.18 预混不透明等价色
+    band = "#CDD1D5" if color == "#4C78A8" else "#D6CDCD"
+    ax.fill_between(curve["x"], curve["CI_lower"], curve["CI_upper"], color=band, linewidth=0)
     ax.plot(curve["x"], curve["OR"], color=color, linewidth=2.0)
     ax.axhline(1, color="#777777", linestyle=(0, (4, 3)), linewidth=0.9)
     ax.axvline(meta["reference"], color=color, linestyle=(0, (3, 2)), linewidth=1.0)
@@ -196,7 +197,7 @@ def draw_panel(ax, curve: pd.DataFrame, meta: dict, spec: dict) -> None:
         ha="left",
         va="top",
         fontsize=8,
-        bbox={"facecolor": "white", "edgecolor": "#d8d8d8", "boxstyle": "round,pad=0.22", "alpha": 0.92},
+        bbox={"facecolor": "white", "edgecolor": "#d8d8d8", "boxstyle": "round,pad=0.22"},
     )
     for spine in ["top", "right"]:
         ax.spines[spine].set_visible(False)
@@ -285,7 +286,7 @@ def main() -> None:
     curves.to_csv(OUTDIR / "Figure6_RCS_curve_data.csv", index=False)
     meta_df.to_csv(OUTDIR / "Figure6_RCS_model_summary.csv", index=False)
     fig = make_figure(curves, meta_df)
-    for ext in ("png", "pdf", "svg"):
+    for ext in ("png", "pdf", "svg", "eps"):
         fig.savefig(OUTDIR / f"Figure6_RCS_VR_initial_delta.{ext}", dpi=600 if ext == "png" else None, facecolor="white")
     plt.close(fig)
     write_log(meta_df)
